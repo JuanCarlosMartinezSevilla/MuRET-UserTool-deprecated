@@ -1,6 +1,6 @@
 import collections
 import json
-from file_manager import FileManager
+from DataAugmentation.file_manager import FileManager
 
 
 class CustomJson:

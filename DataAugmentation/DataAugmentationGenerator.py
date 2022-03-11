@@ -1,5 +1,5 @@
-from file_manager import FileManager
-from MuretInterface import MuretInterface
+from DataAugmentation.file_manager import FileManager
+from DataAugmentation.MuretInterface import MuretInterface
 import numpy as np
 import cv2
 import random
@@ -158,7 +158,7 @@ class DataAugmentationGenerator:
                     selected_patch, selected_region_key = MuretInterface.selectRandomRegion(key_region, dict_regions, routes_dict)
 
                     selected_patch_gray = cv2.cvtColor(selected_patch, cv2.COLOR_RGB2GRAY)
-                    thresh_sauvola = threshold_sauvola(image = selected_patch_gray, window_size=window, k=kernel)
+                    thresh_sauvola = threshold_sauvola(image = selected_patch_gray, window_size=101, k=0.2)
                     binary_sauvola = (selected_patch_gray > thresh_sauvola)*255
 
                     min_row_orig = bbox_region[0][0]
@@ -257,15 +257,15 @@ class DataAugmentationGenerator:
 
     
     @staticmethod
-    def generateNewImageFromListByBoundingBoxesRandomSelectionAuto(json_dataset, number_new_images, uniform_rotate, vertical_region_resize, reduction_factor, window, kernel, angle, idx, json_dirpath_out=None):
+    def generateNewImageFromListByBoundingBoxesRandomSelectionAuto(json_dataset, number_new_images, uniform_rotate, vertical_region_resize, reduction_factor, window, kernel, angle, json_dirpath_out=None):
 
         list_json_pathfiles = FileManager.listFilesRecursive(json_dataset)
-        routes_dict = FileManager.createRoutesDict(list_json_pathfiles, idx)
+        routes_dict = FileManager.createRoutesDict(list_json_pathfiles)
         list_json_pathfiles = FileManager.cleanListOnlyJSON(list_json_pathfiles)
 
         if json_dirpath_out is None:
-            json_dirpath_out = json_dataset + 'dataAugmentation/' + f'daug_{idx}/JSON/'
-            src_dirpath_out = json_dataset + 'dataAugmentation/' + f'daug_{idx}/SRC/'
+            json_dirpath_out = "./dataset/JSON/"
+            src_dirpath_out = "./dataset/SRC/"
 
         for idx_new_image in range(number_new_images):
             with_regions = False
@@ -273,7 +273,7 @@ class DataAugmentationGenerator:
                 json_pathfile = random.choice(list_json_pathfiles)
                 img_pathfile = routes_dict[json_pathfile]
 
-                print("ID: " + str(idx_new_image) + "-blur from: " + str(img_pathfile))
+                print("ID: " + str(idx_new_image + 1) + "-blur from: " + str(img_pathfile))
                 img = FileManager.loadImage(img_pathfile, True)
                 blur_img = MuretInterface.applyBlurring(img=img, factor = 2)
                 new_img, new_bbox_regions, new_coords, regions_dicts = DataAugmentationGenerator.generateNewImageRandomAuto(blur_img, json_pathfile, list_json_pathfiles, 
@@ -282,20 +282,12 @@ class DataAugmentationGenerator:
                 if len(new_bbox_regions) > 0:
                     with_regions = True
 
-            src_filepath_out = src_dirpath_out + str(idx_new_image) + ".png"
+            src_filepath_out = src_dirpath_out + 'daugImage' +str(idx_new_image + 1) + ".png"
             #gt_filepath_out = src_filepath_out.replace("/SRC/", "/GT/")
             json_filepath_out = src_filepath_out.replace("/SRC/", "/JSON/").replace(".png", ".dict")
             
             FileManager.saveImageFullPath(new_img, src_filepath_out)
             print("Saved data augmentation image in " + str(src_filepath_out) + " (from " + str(img_pathfile) + ")")
-
-            #gt_imgs = MuretInterface.generateGTImages(new_bbox_regions, (new_img.shape[0], new_img.shape[1]), reduction_factor)
-            #idx_gt = 0
-            #for key_region in new_bbox_regions:
-            #    FileManager.saveImageFullPath(gt_imgs[idx_gt]*255, gt_filepath_out + "_" + str(key_region) + ".png")
-            #    idx_gt+=1
-
-            #json_muret = json.dumps(new_bbox_regions, indent = 4)
             
             src_filename = FileManager.nameOfFileWithExtension(src_filepath_out)
 

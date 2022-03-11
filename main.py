@@ -2,15 +2,24 @@ from distutils import filelist
 from utils import Utils
 from DataAugmentation.file_manager import FileManager
 
+import os
 
 class Main:
 
     def localMain():
 
-        Utils.decompressFile()
-        fileList = FileManager.listFilesRecursive('./dataset')
-        #print(fileList)
-        Utils.readJSONGetImagesFromUrl(fileList)
+        if not os.path.exists('./MuRETPackage'):
+            os.mkdir('./MuRETPackage')
+
+        if not os.path.exists('./dataset'):    
+            Utils.decompressFile()
+            fileList = FileManager.listFilesRecursive('./dataset')
+            #print(fileList)
+            Utils.readJSONGetImagesFromUrl(fileList)
+
+        Utils.callDataAug()
+
+        Utils.callSAE()
 
 
         # Prepare data

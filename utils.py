@@ -3,13 +3,43 @@ import tarfile
 from tqdm import tqdm
 import json
 import urllib.request
+from DataAugmentation.DataAugmentationGenerator import DataAugmentationGenerator
+from SAE.SAE import SAE
+from DataAugmentation.file_manager import FileManager
 
 class Utils:
 
+    @staticmethod
+    def callSAE():
+        epochs = 10
+        classes_to_predict = 'staff'
+        image_size = 256
+        batch_size = 16
+        list_json_pathfiles = FileManager.listFilesRecursive('./dataset')
+        routes_dict = FileManager.createRoutesDict(list_json_pathfiles)
+        generator = SAE.dataGen(routes_dict, batch_size, image_size, classes_to_predict)
+        print("\n--- Training process ---\n")
+        SAE.model(image_size, epochs, generator, len(routes_dict)//batch_size)
+            
 
+    @staticmethod
+    def callDataAug():
+        number_images = 2
+        rotation = True, 
+        vertical_resizing = True,
+        rf = 0.2,
+        window = 101,
+        kernel = 0.2,
+        angle = 3
+
+        DataAugmentationGenerator.generateNewImageFromListByBoundingBoxesRandomSelectionAuto('./dataset', number_images, rotation, vertical_resizing, rf, window, kernel, angle)
+
+    @staticmethod
     def getURLJSON(file, json_classes, path_to_save):
 
-        with open(file) as f:
+        print("File: ", file)
+
+        with open(file, encoding="UTF-8") as f:
             json_read = json.load(f)
 
         url = orig_url = ""
@@ -43,14 +73,14 @@ class Utils:
             os.remove(file)
         return json_classes
 
-
-
+    @staticmethod
     def readJSONGetImagesFromUrl(files):
 
-        path_to_save = "./images"
+        path_to_save = "./dataset/SRC"
 
-        if not os.path.exists("./images"):
-            os.mkdir("./images")
+
+        if not os.path.exists("./dataset/SRC"):
+            os.mkdir("./dataset/SRC")
         
         print("\n---- Fetching images from URLs ----\n")
         print(f"Saving in {path_to_save} \n")

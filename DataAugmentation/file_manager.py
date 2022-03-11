@@ -214,7 +214,7 @@ class FileManager:
         else:
             path_file = path_dir + '/' + filename
             if not os.path.exists(path_dir):
-                os.makedirs(path_dir, 493);
+                os.makedirs(path_dir, 493)
   
         gt_image.dump(path_file)
     
@@ -294,8 +294,7 @@ class FileManager:
         return auxList
 
     @staticmethod
-    def createRoutesDict(list_files, idx):
-        idx = idx + 1
+    def createRoutesDict(list_files):
         routes_dict = {}
         for l in list_files:
             if 'json' in l.split('.')[-1]:
@@ -308,8 +307,7 @@ class FileManager:
                             routes_dict[l] = img_route
             elif 'dict' in l.split('.')[-1]:
                 img_name = l.split('/')[-1][:-5]
-                if f'daug_{idx}' in l.split('/'):
-                    routes_dict[l] = f'/content/dataset/dataAugmentation/daug_{idx}/SRC/{img_name}.png'
+                routes_dict[l] = f'./dataset/SRC/{img_name}.png'
 
         return routes_dict
         

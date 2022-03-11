@@ -1,6 +1,6 @@
-import GTJSONReaderMuret as muret
-from CustomJson import CustomJson
-from file_manager import FileManager
+import DataAugmentation.GTJSONReaderMuret as muret
+from DataAugmentation.CustomJson import CustomJson
+from DataAugmentation.file_manager import FileManager
 import numpy as np
 import cv2
 import random
@@ -42,7 +42,7 @@ class MuretInterface:
 
             total_symbols += MuretInterface.countNumberSymbols(js.dictionary)
 
-            gtjson = GTJSONReaderMuret()
+            gtjson = muret.GTJSONReaderMuret()
             gtjson.load(js)
 
             #print(gtjson)

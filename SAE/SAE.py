@@ -171,7 +171,7 @@ class SAE:
         while True:
             yield(SAE.image_gen(routes_dict, batch_size, img_tam, classes_to_predict))
 
-    def model(img_tam, epochs, generator, steps, idx):
+    def model(img_tam, epochs, generator, steps):
         input_img = Input(shape=(img_tam, img_tam, 1))
 
         #Encoding
@@ -205,4 +205,4 @@ class SAE:
             steps_per_epoch=steps,
             epochs=epochs)
         
-        SAEmodel.save(f'/content/models/model{idx+1}/model{idx+1}.h5')
+        SAEmodel.save(f'./MuRETPackage/DocumentAnalysis/DocumentAnalysis.h5')
