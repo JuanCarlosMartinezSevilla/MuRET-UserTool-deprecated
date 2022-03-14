@@ -1,8 +1,10 @@
 import numpy as np
 import itertools
-from augmentation import ImageModificator
+from CRNN.augmentation import ImageModificator
 import cv2
 import json
+import os
+from DataAugmentation.file_manager import FileManager
 
 def augmentation(image):
     mod = ImageModificator({ImageModificator.Contrast,
@@ -47,6 +49,59 @@ def levenshtein(a,b):
 
     return current[n]
 
+def parse_lst_dict(lst_path: dict):
+    path = "./datasetStaves"
+    path_to_save = "./datasetStaves/SRC"
+    path_to_save_pred = "./datasetStaves/PRED"
+
+    #if not os.path.exists(path):
+    #        os.makedirs(path_to_save)
+    #        os.makedirs(path_to_save_pred)
+
+    X = []
+    Y = []
+    vocabulary = set()
+    
+
+    for key in lst_path:
+        json_path = key
+        page_path = lst_path[key]
+        image_id = 0
+        name = page_path.split('/')[-1].split('.')[-2]
+        with open(json_path) as json_file:
+            data = json.load(json_file)
+            image = cv2.imread(page_path, cv2.IMREAD_COLOR)
+            for page in data['pages']:
+                if 'regions' in page:
+                    for region in page['regions']:
+                        if region['type'] == 'staff' and 'symbols' in region:
+                            symbols = region['symbols']
+
+                            if len(symbols) > 0:
+                                top, left, bottom, right = region['bounding_box']['fromY'], region['bounding_box'][
+                                    'fromX'], \
+                                                           region['bounding_box']['toY'], region['bounding_box']['toX']
+
+                                X.append(image[top:bottom, left:right])
+                                #cv2.imwrite(os.path.join(path_to_save, name + '_' +str(image_id) +'.png'), image[top:bottom, left:right])
+                                
+
+                                gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
+                                      for s in symbols]
+                                
+                                json_pred = {'prediction': gt}
+
+                                #FileManager.saveString(str(json_pred), os.path.join(path_to_save_pred, name + '_' +str(image_id) + '.dict'), True)
+
+                                image_id += 1
+                                Y.append(gt)
+                                vocabulary.update(gt)
+
+    w2i = {symbol: idx for idx, symbol in enumerate(vocabulary)}
+    i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
+
+    print("{} samples loaded with {}-sized vocabulary".format(len(X), len(w2i)))
+    return X, Y, w2i, i2w
 
 def parse_lst(lst_path):
     X = []

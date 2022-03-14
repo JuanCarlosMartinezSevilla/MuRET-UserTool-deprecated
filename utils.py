@@ -6,8 +6,18 @@ import urllib.request
 from DataAugmentation.DataAugmentationGenerator import DataAugmentationGenerator
 from SAE.SAE import SAE
 from DataAugmentation.file_manager import FileManager
+from CRNN.utils import parse_lst_dict as CRNNParse
+import cv2
 
 class Utils:
+
+    def printCV2(X, Y, window_name, flag):
+        for i, a in enumerate(X[:10]):
+            if flag:
+                print(Y[i])
+            cv2.imshow(window_name, X[i])
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
 
     @staticmethod
     def callSAE():
@@ -20,7 +30,100 @@ class Utils:
         generator = SAE.dataGen(routes_dict, batch_size, image_size, classes_to_predict)
         print("\n--- Training process ---\n")
         SAE.model(image_size, epochs, generator, len(routes_dict)//batch_size)
+
+    @staticmethod
+    def SymbolsHeightParse(lst_path: dict):
+        X = []
+        Y = []
+
+        for key in lst_path:
+            json_path = key
+            page_path = lst_path[key]
+
+            if not 'daugImage' in json_path:
+                with open(json_path) as json_file:
+                    data = json.load(json_file)
+                    image = cv2.imread(page_path, cv2.IMREAD_COLOR)
+                    for page in data['pages']:
+                        if 'regions' in page:
+                            for region in page['regions']:
+                                if region['type'] == 'staff' and 'symbols' in region:
+                                    symbols = region['symbols']
+
+                                    if len(symbols) > 0:
+                                        topR, leftR, bottomR, rightR = region['bounding_box']['fromY'], region['bounding_box']['fromX'], \
+                                                                       region['bounding_box']['toY'], region['bounding_box']['toX']
+                                        for s in symbols:
+                                            if 'bounding_box' in s and 'position_in_staff' in s:
+                                                top, left, bottom, right = s['bounding_box']['fromY'], s['bounding_box']['fromX'], \
+                                                                           s['bounding_box']['toY'], s['bounding_box']['toX']
+                                        
+                                                X.append(image[topR:bottomR, left:right])
+                                                Y.append(s['position_in_staff'])
+                                            #if 'approximateX' in s and 'position_in_staff' in s:
+                                            #    left, right = s['approximateX'], s['approximateX'] + 10
+                                            #    X.append(image[topR:bottomR, left:right])
+                                            #    Y.append(s['position_in_staff'])
+                                                
+        
+        print("{} samples loaded".format(len(X)))
+        return X, Y
+
+    @staticmethod
+    def createHeightDataset(fileList):
+
+        X, Y = Utils.SymbolsHeightParse(fileList)
+
+        Utils.printCV2(X, Y, 'Symbol height', True)
+
+    @staticmethod
+    def SymbolsParse(lst_path: dict):
+
+        X = []
+        Y = []
+
+        for key in lst_path:
+            json_path = key
+            page_path = lst_path[key]
+
+            if not 'daugImage' in json_path:
+                
+                with open(json_path) as json_file:
+                    data = json.load(json_file)
+                    image = cv2.imread(page_path, cv2.IMREAD_COLOR)
+                    for page in data['pages']:
+                        if 'regions' in page:
+                            for region in page['regions']:
+                                
+                                if region['type'] == 'staff' and 'symbols' in region:
+                                    symbols = region['symbols']
+
+                                    if len(symbols) > 0:
+                                        for s in symbols:
+                                            if 'bounding_box' in s and 'agnostic_symbol_type' in s:
+                                                print("Reading symbols", json_path)
+                                                top, left, bottom, right = s['bounding_box']['fromY'], s['bounding_box']['fromX'], \
+                                                                        s['bounding_box']['toY'], s['bounding_box']['toX']
+                                        
+                                                X.append(image[top:bottom, left:right])
+                                                Y.append(s['agnostic_symbol_type'])
+                                                
+        
+        Ydiff = set(Y)
+        print("{} samples loaded with {} different symbols".format(len(X), len(Ydiff)))
+        return X, Y
+
+    @staticmethod
+    def createSymbolsDataset(fileList):
+        X, Y = Utils.SymbolsParse(fileList)
+
+        Utils.printCV2(X, Y, 'Symbol', True)
             
+    @staticmethod
+    def createStavesDataset(fileList):
+        X, Y, w2i, i2w = CRNNParse(fileList)
+        
+        Utils.printCV2(X, Y, 'Staff', False)
 
     @staticmethod
     def callDataAug():
@@ -37,7 +140,7 @@ class Utils:
     @staticmethod
     def getURLJSON(file, json_classes, path_to_save):
 
-        print("File: ", file)
+        #print("File: ", file)
 
         with open(file, encoding="UTF-8") as f:
             json_read = json.load(f)
@@ -83,7 +186,7 @@ class Utils:
             os.mkdir("./dataset/SRC")
         
         print("\n---- Fetching images from URLs ----\n")
-        print(f"Saving in {path_to_save} \n")
+        print(f"Saving images in {path_to_save} \n")
         
         json_classes = []
         for f in tqdm(files):
@@ -92,7 +195,8 @@ class Utils:
     @staticmethod
     def decompressFile ():  
 
-        tar_file = "./capitan.tgz"
+        #tar_file = "./capitan.tgz"
+        tar_file = "./seils.tgz"
         path = "./dataset"
         
         print("\nExtracting from .tgz file \n")
@@ -101,7 +205,7 @@ class Utils:
         
         members = tar.getmembers()
 
-        for member in tqdm(members):
+        for member in members:
             tar.extract(member, path=path)            
         tar.close()
 

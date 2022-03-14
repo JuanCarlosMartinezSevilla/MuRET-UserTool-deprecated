@@ -1,4 +1,3 @@
-from distutils import filelist
 from utils import Utils
 from DataAugmentation.file_manager import FileManager
 
@@ -16,11 +15,19 @@ class Main:
             fileList = FileManager.listFilesRecursive('./dataset')
             #print(fileList)
             Utils.readJSONGetImagesFromUrl(fileList)
+        
+        fileList = FileManager.listFilesRecursive('./dataset')
+        fileList = FileManager.createRoutesDict(fileList)
 
-        Utils.callDataAug()
+        ## UNCOMMENT TO LAUNCH DATA AUG
+        #Utils.callDataAug()
 
-        Utils.callSAE()
+        ## UNCOMMENT TO LAUNCH SAE
+        #Utils.callSAE()
 
+        #Utils.createStavesDataset(fileList)
+        #Utils.createSymbolsDataset(fileList)
+        Utils.createHeightDataset(fileList)
 
         # Prepare data
         # SAE

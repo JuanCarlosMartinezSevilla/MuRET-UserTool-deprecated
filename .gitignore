@@ -1,7 +1,8 @@
 .MuRET
 /images
 /dataset
-
+seils.tgz
+capitan.tgz
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

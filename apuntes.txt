@@ -1,0 +1,5 @@
+Descomprimo las imágenes en /dataset
+
+Una vez descomprimo las imágenes, llamo al dataAugmentation y creo otras nuevas. Las guardo en /dataset
+
+Para el E2E tengo que crear otro dataset que sea el de pentagramas.
