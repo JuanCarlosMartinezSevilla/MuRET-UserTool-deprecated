@@ -7,7 +7,13 @@ import logging
 
 
 def main(args):
-    dg = DataGenerator(dataset_list_path=args.train,
+    #dg = DataGenerator(dataset_list_path=args.train,
+    #                   aug_factor=args.aug_train,
+    #                   batch_size=8,
+    #                   num_channels=3,
+    #                   width_reduction=8)
+
+    dg = DataGenerator(dataset_list_path=args.train, # pasar mi diccionario de rutas
                        aug_factor=args.aug_train,
                        batch_size=8,
                        num_channels=3,

@@ -20,18 +20,14 @@ class Main:
         fileList = FileManager.createRoutesDict(fileList)
 
         ## UNCOMMENT TO LAUNCH DATA AUG
-        #Utils.callDataAug()
+        Utils.callDataAug()
 
         ## UNCOMMENT TO LAUNCH SAE
         #Utils.callSAE()
 
         #Utils.createStavesDataset(fileList)
         #Utils.createSymbolsDataset(fileList)
-        Utils.createHeightDataset(fileList)
-
-        # Prepare data
-        # SAE
-
+        #Utils.createHeightDataset(fileList)
 
 
 if __name__ == '__main__':
