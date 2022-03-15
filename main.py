@@ -1,6 +1,7 @@
 from utils import Utils
 from DataAugmentation.file_manager import FileManager
 
+
 import os
 
 class Main:
@@ -20,14 +21,14 @@ class Main:
         fileList = FileManager.createRoutesDict(fileList)
 
         ## UNCOMMENT TO LAUNCH DATA AUG
-        Utils.callDataAug()
+        #Utils.callDataAug()
 
         ## UNCOMMENT TO LAUNCH SAE
         #Utils.callSAE()
 
-        #Utils.createStavesDataset(fileList)
-        #Utils.createSymbolsDataset(fileList)
-        #Utils.createHeightDataset(fileList)
+        Utils.createStavesDataset(fileList)
+        Utils.createSymbolsDataset(fileList)
+        Utils.createHeightDataset(fileList)
 
 
 if __name__ == '__main__':
