@@ -5,7 +5,7 @@ import os
 
 class Main:
 
-    def localMain():
+    def localMain(args):
 
         if not os.path.exists('./MuRETPackage'):
             os.mkdir('./MuRETPackage')
@@ -19,16 +19,32 @@ class Main:
         fileList = FileManager.listFilesRecursive('./dataset')
         fileList = FileManager.createRoutesDict(fileList)
 
-        ## UNCOMMENT TO LAUNCH DATA AUG
-        Utils.callDataAug()
+        
 
         ## UNCOMMENT TO LAUNCH SAE
-        #Utils.callSAE()
+        if args[0]:
+            Utils.callDataAug(10)
+            Utils.callSAE()
 
-        #Utils.createStavesDataset(fileList)
-        #Utils.createSymbolsDataset(fileList)
-        #Utils.createHeightDataset(fileList)
+        if args[1]:
+            Utils.createStavesDataset(fileList)
+            # Launch E2E
+        
+        if args[2]:
+            Utils.createSymbolsDataset(fileList)
+            # Launch Symbol Classifier
+
+        if args[3]:
+            Utils.createHeightDataset(fileList)
+            # Launch Height Classifier
+
 
 
 if __name__ == '__main__':
-    Main.localMain()
+    DocumentAnalysis = True
+    E2E = True
+    SymbolAnalysis = True
+    HeightAnalysis = True
+
+    args = [DocumentAnalysis, E2E, SymbolAnalysis, HeightAnalysis]
+    Main.localMain(args)

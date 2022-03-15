@@ -74,7 +74,7 @@ class Utils:
 
         X, Y = Utils.SymbolsHeightParse(fileList)
 
-        Utils.printCV2(X, Y, 'Symbol height', True)
+        #Utils.printCV2(X, Y, 'Symbol height', True)
 
     @staticmethod
     def SymbolsParse(lst_path: dict):
@@ -117,17 +117,16 @@ class Utils:
     def createSymbolsDataset(fileList):
         X, Y = Utils.SymbolsParse(fileList)
 
-        Utils.printCV2(X, Y, 'Symbol', True)
+        #Utils.printCV2(X, Y, 'Symbol', True)
             
     @staticmethod
     def createStavesDataset(fileList):
         X, Y, w2i, i2w = CRNNParse(fileList)
         
-        Utils.printCV2(X, Y, 'Staff', False)
+        #Utils.printCV2(X, Y, 'Staff', False)
 
     @staticmethod
-    def callDataAug():
-        number_images = 2
+    def callDataAug(number_images):
         rotation = True, 
         vertical_resizing = True,
         rf = 0.2,
@@ -196,7 +195,7 @@ class Utils:
     def decompressFile ():  
 
         #tar_file = "./capitan.tgz"
-        tar_file = "./seils.tgz"
+        tar_file = "./capitan.tgz"
         path = "./dataset"
         
         print("\nExtracting from .tgz file \n")
