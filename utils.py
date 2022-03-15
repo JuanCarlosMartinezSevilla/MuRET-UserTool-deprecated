@@ -7,6 +7,7 @@ from DataAugmentation.DataAugmentationGenerator import DataAugmentationGenerator
 from SAE.SAE import SAE
 from DataAugmentation.file_manager import FileManager
 from CRNN.utils import parse_lst_dict as CRNNParse
+from CRNN.experiment import main as CRNNMain
 import cv2
 
 class Utils:
@@ -101,7 +102,7 @@ class Utils:
                                     if len(symbols) > 0:
                                         for s in symbols:
                                             if 'bounding_box' in s and 'agnostic_symbol_type' in s:
-                                                print("Reading symbols", json_path)
+                                                #print("Reading symbols", json_path)
                                                 top, left, bottom, right = s['bounding_box']['fromY'], s['bounding_box']['fromX'], \
                                                                         s['bounding_box']['toY'], s['bounding_box']['toX']
                                         
@@ -122,6 +123,7 @@ class Utils:
     @staticmethod
     def createStavesDataset(fileList):
         X, Y, w2i, i2w = CRNNParse(fileList)
+        CRNNMain(fileList)
         
         #Utils.printCV2(X, Y, 'Staff', False)
 

@@ -13,7 +13,7 @@ def main(args):
     #                   num_channels=3,
     #                   width_reduction=8)
 
-    dg = DataGenerator(dataset_list_path=args.train, # pasar mi diccionario de rutas
+    dg = DataGenerator(dataset_list_path=fileList, # pasar mis conjuntos de datos
                        aug_factor=args.aug_train,
                        batch_size=8,
                        num_channels=3,
