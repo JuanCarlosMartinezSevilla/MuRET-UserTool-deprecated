@@ -7,7 +7,7 @@ from DataAugmentation.DataAugmentationGenerator import DataAugmentationGenerator
 from SAE.SAE import SAE
 from DataAugmentation.file_manager import FileManager
 from CRNN.utils import parse_lst_dict as CRNNParse
-from CRNN.experiment import main as CRNNMain
+#from CRNN.experiment import main as CRNNMain
 import cv2
 
 class Utils:
