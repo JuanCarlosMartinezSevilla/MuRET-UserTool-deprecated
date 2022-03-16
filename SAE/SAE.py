@@ -132,6 +132,7 @@ class SAE:
             while loop:
                 json_path = random.choice(list(routes_dict))
                 df, loop = SAE.read_json_file_from_dir (json_path, df, routes_dict, classes)
+                #print(json_path)
 
 
         for index, img_name in enumerate(df['Filename']):
@@ -164,6 +165,15 @@ class SAE:
 
             GrayImages.append(gray_img_resized)
             BinarizedImages.append(bin_img_resized)
+
+            cv2.imshow('Image', GrayImages[0])
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
+
+            cv2.imshow('GTImage', BinarizedImages[0]*255)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
 
         return np.array(GrayImages), np.array(BinarizedImages)
 

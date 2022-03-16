@@ -24,20 +24,20 @@ class Main:
 
         ## UNCOMMENT TO LAUNCH SAE
         if args[0]:
-            Utils.callDataAug(10)
-            Utils.callSAE()
+            #Utils.callDataAug(1)
+            Utils.callSAE(fileList)
 
-        if args[1]:
-            Utils.createStavesDataset(fileList)
-            # Launch E2E
-        
-        if args[2]:
-            Utils.createSymbolsDataset(fileList)
-            # Launch Symbol Classifier
-
-        if args[3]:
-            Utils.createHeightDataset(fileList)
-            # Launch Height Classifier
+        #if args[1]:
+        #    Utils.createStavesDataset(fileList)
+        #    # Launch E2E
+        #
+        #if args[2]:
+        #    Utils.createSymbolsDataset(fileList)
+        #    # Launch Symbol Classifier
+        #
+        #if args[3]:
+        #    Utils.createHeightDataset(fileList)
+        #    # Launch Height Classifier
 
 
 
