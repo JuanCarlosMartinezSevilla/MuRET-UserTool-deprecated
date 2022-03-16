@@ -26,12 +26,12 @@ class Utils:
         classes_to_predict = 'staff'
         image_size = 512
         batch_size = 8
-        routes_dict = FileManager.createRoutesDict(fileList)
+        list_json_pathfiles = FileManager.listFilesRecursive('./dataset')
+        routes_dict = FileManager.createRoutesDict(list_json_pathfiles)
         generator = SAE.dataGen(routes_dict, batch_size, image_size, classes_to_predict)
-        next(generator)
         
         print("\n--- Training process ---\n")
-        #SAE.model(image_size, epochs, generator, len(routes_dict)//batch_size)
+        SAE.model(image_size, epochs, generator, len(routes_dict)//batch_size)
 
     @staticmethod
     def SymbolsHeightParse(lst_path: dict):

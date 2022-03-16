@@ -126,7 +126,6 @@ class SAE:
         df['Pag_coords'] = None
         df['Staves'] = None
 
-
         for i in range(0, num_img):
             loop = True
             while loop:
@@ -166,12 +165,14 @@ class SAE:
             GrayImages.append(gray_img_resized)
             BinarizedImages.append(bin_img_resized)
 
-            cv2.imshow('Image', GrayImages[0])
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+        
 
+            background = GrayImages[0]
+            overlay = BinarizedImages[0]*255
 
-            cv2.imshow('GTImage', BinarizedImages[0]*255)
+            added_image = cv2.addWeighted(background,1,overlay,0.5,0)
+
+            cv2.imshow('GTImage', added_image)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
 
@@ -179,6 +180,7 @@ class SAE:
 
     def dataGen(routes_dict, batch_size, img_tam, classes_to_predict):
         while True:
+            #print(routes_dict)
             yield(SAE.image_gen(routes_dict, batch_size, img_tam, classes_to_predict))
 
     def model(img_tam, epochs, generator, steps):
