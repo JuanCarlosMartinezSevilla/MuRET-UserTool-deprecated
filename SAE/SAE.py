@@ -20,8 +20,13 @@ class SAE:
     def process_muret_json (path, df, routes_dict, classes):
     
         with open (path) as f:
-          json_read = json.load(f)
+            json_read = json.load(f)
         
+	a = False
+        if 'dict' in path.split('.')[-1]:
+	    a = True
+	    print("Esto es un dict")
+
         filename = routes_dict[path]
         loop = False
 
@@ -29,7 +34,8 @@ class SAE:
             # Esto es una lista
             pages = json_read['pages']
             num_pages = len(pages)
-
+	    if a:
+	        print(pages)
             # array | each element all single pag coords
             # (if we have an image with 2 pages, we will have 2 components in the array)
             all_pages_coords = []
@@ -131,7 +137,7 @@ class SAE:
             while loop:
                 json_path = random.choice(list(routes_dict))
                 df, loop = SAE.read_json_file_from_dir (json_path, df, routes_dict, classes)
-                #print(json_path)
+                print(json_path)
 
 
         for index, img_name in enumerate(df['Filename']):
