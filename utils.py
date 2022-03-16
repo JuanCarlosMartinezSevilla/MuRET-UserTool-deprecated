@@ -75,7 +75,7 @@ class Utils:
 
         X, Y = Utils.SymbolsHeightParse(fileList)
 
-        #Utils.printCV2(X, Y, 'Symbol height', True)
+        Utils.printCV2(X, Y, 'Symbol height', True)
 
     @staticmethod
     def SymbolsParse(lst_path: dict):
@@ -118,14 +118,14 @@ class Utils:
     def createSymbolsDataset(fileList):
         X, Y = Utils.SymbolsParse(fileList)
 
-        #Utils.printCV2(X, Y, 'Symbol', True)
+        Utils.printCV2(X, Y, 'Symbol', True)
             
     @staticmethod
     def createStavesDataset(fileList):
         X, Y, w2i, i2w = CRNNParse(fileList)
-        CRNNMain(fileList)
+        #CRNNMain(fileList)
         
-        #Utils.printCV2(X, Y, 'Staff', False)
+        Utils.printCV2(X, Y, 'Staff', False)
 
     @staticmethod
     def callDataAug(number_images):
