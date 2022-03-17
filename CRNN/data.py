@@ -24,7 +24,7 @@ class DataGenerator:
         for _ in range(self.batch_size):
 
             # aug factor == 0 means no augmentation at all
-            print(self.idx)
+            #print(self.idx)
             sample_image = self.X[self.idx]
             sample_image = U.normalize(sample_image)
             sample_image = U.resize(sample_image, Config.img_height)
