@@ -17,10 +17,12 @@ def main(args=None, fileList=None):
 
     model_tr, model_pr = get_model(vocabulary_size=len(dg.w2i))
 
-    X_val, Y_val, _, _ = U.parse_lst(args.validation)
+    #X_val, Y_val, _, _ = U.parse_lst(args.validation)
+    X_val, Y_val, _, _ = U.parse_lst_dict(fileList)
     evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=args.aug_test)
 
-    X_test, Y_test, _, _ = U.parse_lst(args.test)
+    #X_test, Y_test, _, _ = U.parse_lst(args.test)
+    X_test, Y_test, _, _ = U.parse_lst_dict(fileList)
     evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=args.aug_test)
 
     if args.model:
