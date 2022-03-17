@@ -21,8 +21,7 @@ def processImage(path_to_image, model):
     gray_img_resized = np.expand_dims(gray_img_resized, axis=2)
     return gray_img_resized
 
-if __name__ == '__main__':
-
+def run():
     pred = processImage('./dataset/SRC/ingegneri_gianon_A.jpg', model)
     ImagesToPredict.append(pred)
 
@@ -36,3 +35,10 @@ if __name__ == '__main__':
         cv2.imshow('a',pred*255)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+
+def getConfig():
+    print(model.get_config())
+
+if __name__ == '__main__':
+    #run()
+    getConfig()
