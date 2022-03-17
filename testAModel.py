@@ -1,3 +1,4 @@
+from random import sample
 import numpy as np
 import cv2
 from tensorflow.keras.models import load_model
@@ -42,8 +43,25 @@ def run(model):
 def getConfig(model):
     print(model.get_config())
 
+def resize(image, height):
+    width = int(float(height * image.shape[1]) / image.shape[0])
+    return cv2.resize(image, (width, height))
+
+def normalize(image):
+    return (255. - image) / 255.
+
+
 if __name__ == '__main__':
-    model = load_model('./MuRETPackage/DocumentAnalysis/DocumentAnalysis.h5')
-    
-    run(model)
+    #model = load_model('./MuRETPackage/DocumentAnalysis/DocumentAnalysis.h5')
+    a= []
+    model = load_model('./MuRETPackage/EndToEnd/EndToEnd.h5')
+    sample_image = cv2.imread('./ligaturesDataset/SRC/16r.jpg', cv2.IMREAD_COLOR)
+    sample_image = sample_image[1286:1369, 647:728]
+    sample_image = normalize(sample_image)
+    sample_image = resize(sample_image, 128)
+    a.append(sample_image)
+    print(a[0].shape)
+    pred = model.predict(a)
+    print(pred)
+    #run(model)
     #getConfig(model)

@@ -5,24 +5,29 @@ import os
 
 class Main:
 
-    def localMain(args):
-
+    def seeDir(args, aux_path):
         if not os.path.exists('./MuRETPackage'):
             os.mkdir('./MuRETPackage')
 
+        
+        if not os.path.exists(aux_path) or args[0]:   
 
-        if not os.path.exists('./dataset') or args[0]:   
-
-            if args[0] and os.path.exists('./dataset'):
-                shutil.rmtree('./dataset')
+            if args[0] and os.path.exists(aux_path):
+                shutil.rmtree(aux_path)
 
             Utils.decompressFile()
-            fileList = FileManager.listFilesRecursive('./dataset')
+            fileList = FileManager.listFilesRecursive(aux_path)
             #print(fileList)
             Utils.readJSONGetImagesFromUrl(fileList)
         
-        fileList = FileManager.listFilesRecursive('./dataset')
+        fileList = FileManager.listFilesRecursive(aux_path)
         fileList = FileManager.createRoutesDict(fileList)
+        return fileList
+
+
+    def localMain(args):
+
+        fileList = Main.seeDir(args, aux_path = './dataset')
 
         ## UNCOMMENT TO LAUNCH SAE
         #if args[1]:
@@ -42,22 +47,18 @@ class Main:
         #    Utils.createHeightDataset(fileList)
         #    # Launch Height Classifier
 
-    def ligatures():
-        #fileList = FileManager.listFilesRecursive('./ligaturesDataset')
-        ##print(fileList)
-        #Utils.readJSONGetImagesFromUrl(fileList, True)
-        fileList = FileManager.listFilesRecursive('./ligaturesDataset')
-        fileList = FileManager.createRoutesDict(fileList)
+    def ligatures(args):
+        fileList = Main.seeDir(args, aux_path = './ligaturesDataset')
         Utils.callE2ELigatures(fileList)
 
 
 if __name__ == '__main__':
-    #NewDatasetLoad = False
-    #DocumentAnalysis = True
-    #E2E = True
-    #SymbolAnalysis = True
-    #HeightAnalysis = True
+    NewDatasetLoad = False
+    DocumentAnalysis = True
+    E2E = True
+    SymbolAnalysis = True
+    HeightAnalysis = True
     #
-    #args = [NewDatasetLoad, DocumentAnalysis, E2E, SymbolAnalysis, HeightAnalysis]
+    args = [NewDatasetLoad, DocumentAnalysis, E2E, SymbolAnalysis, HeightAnalysis]
     #Main.localMain(args)
-    Main.ligatures()
+    Main.ligatures(args)

@@ -7,7 +7,7 @@ class DataGenerator:
 
     def __init__(self, dataset_list_path, aug_factor, width_reduction, num_channels, batch_size, ligatures):
         self.ligatures = ligatures
-        print(dataset_list_path)
+        #print(dataset_list_path)
         if ligatures:
             self.X, self.Y, self.w2i, self.i2w = U.parse_lst_dict_ligatures(dataset_list_path) # llamar con mi diccionario
         else:

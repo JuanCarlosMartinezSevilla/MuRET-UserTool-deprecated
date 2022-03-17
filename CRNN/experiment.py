@@ -18,12 +18,18 @@ def main(args, fileList, ligatures):
     model_tr, model_pr = get_model(vocabulary_size=len(dg.w2i))
 
     #X_val, Y_val, _, _ = U.parse_lst(args.validation)
-    X_val, Y_val, _, _ = U.parse_lst_dict(fileList)
+    if ligatures:
+        X_val, Y_val, _, _ = U.parse_lst_dict_ligatures(fileList)
+    else:
+        X_val, Y_val, _, _ = U.parse_lst_dict(fileList)
     #evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=args.aug_test)
     evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=0)
 
     #X_test, Y_test, _, _ = U.parse_lst(args.test)
-    X_test, Y_test, _, _ = U.parse_lst_dict(fileList)
+    if ligatures:
+        X_test, Y_test, _, _ = U.parse_lst_dict_ligatures(fileList)
+    else:
+        X_test, Y_test, _, _ = U.parse_lst_dict(fileList)
     #evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=args.aug_test)
     evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=0)
 
@@ -48,7 +54,10 @@ def main(args, fileList, ligatures):
             print("\tSER improved from {} to {} --> Saving model.".format(best_ser_val, ser_val))
             best_ser_val = ser_val
             #model_pr.save_weights("model_weights.h5")
-            model_pr.save(f'./MuRETPackage/EndToEnd/EndToEnd.h5')
+            if ligatures:
+                model_pr.save(f'./MuRETPackage/EndToEnd/EndToEndLigatures.h5')
+            else:
+                model_pr.save(f'./MuRETPackage/EndToEnd/EndToEnd.h5')
 
 
 def build_argument_parser():
