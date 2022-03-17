@@ -1,5 +1,5 @@
 import tensorflow as tf
-from config import Config
+from CRNN.config import Config
 
 
 def ctc_lambda_func(args):
