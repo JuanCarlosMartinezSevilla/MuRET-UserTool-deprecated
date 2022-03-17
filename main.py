@@ -45,7 +45,7 @@ class Main:
     def ligatures():
         fileList = FileManager.listFilesRecursive('./ligaturesDataset')
         #print(fileList)
-        Utils.readJSONGetImagesFromUrl(fileList)
+        Utils.readJSONGetImagesFromUrlLigatures(fileList, True)
         fileList = FileManager.listFilesRecursive('./ligaturesDataset')
         fileList = FileManager.createRoutesDict(fileList)
         Utils.callE2ELigatures(fileList)
