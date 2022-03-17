@@ -47,7 +47,7 @@ class Main:
 
 
 if __name__ == '__main__':
-    NewDatasetLoad = True
+    NewDatasetLoad = False
     DocumentAnalysis = True
     E2E = True
     SymbolAnalysis = True
