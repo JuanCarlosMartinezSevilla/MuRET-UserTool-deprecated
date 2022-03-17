@@ -140,7 +140,7 @@ class SAE:
             while loop:
                 json_path = random.choice(list(routes_dict))
                 df, loop = SAE.read_json_file_from_dir (json_path, df, routes_dict, classes)
-                print(json_path)
+                #print(json_path)
 
 
         for index, img_name in enumerate(df['Filename']):
@@ -176,10 +176,10 @@ class SAE:
 
         
 
-            background = GrayImages[0]
-            overlay = BinarizedImages[0]*255
+            #background = GrayImages[0]
+            #overlay = BinarizedImages[0]*255
 
-            added_image = cv2.addWeighted(background,1,overlay,0.5,0)
+            #added_image = cv2.addWeighted(background,1,overlay,0.5,0)
 
            # cv2.imshow('GTImage', added_image)
            # cv2.waitKey(0)
