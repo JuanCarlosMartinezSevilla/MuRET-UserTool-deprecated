@@ -27,8 +27,9 @@ def main(args=None, fileList=None):
     #evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=args.aug_test)
     evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=3)
 
-    if args.model:
-        best_ser_val = 100
+    #if args.model:
+    #    best_ser_val = 100
+    best_ser_val = 100
 
     for super_epoch in range(1000):
         print("Epoch {}".format(super_epoch))
@@ -42,12 +43,12 @@ def main(args=None, fileList=None):
         ser_test = evaluator_test.eval(model_pr, dg.i2w)
         print("\tEpoch {}\t{:.2f}\t{:.2f}".format(super_epoch, ser_val, ser_test))
 
-        if args.model:
-            if ser_val < best_ser_val:
-                print("\tSER improved from {} to {} --> Saving model.".format(best_ser_val, ser_val))
-                best_ser_val = ser_val
-                #model_pr.save_weights("model_weights.h5")
-                model_pr.save(f'./MuRETPackage/EndToEnd/EndToEnd.h5')
+        #if args.model:
+        if ser_val < best_ser_val:
+            print("\tSER improved from {} to {} --> Saving model.".format(best_ser_val, ser_val))
+            best_ser_val = ser_val
+            #model_pr.save_weights("model_weights.h5")
+            model_pr.save(f'./MuRETPackage/EndToEnd/EndToEnd.h5')
 
 
 def build_argument_parser():
