@@ -42,14 +42,19 @@ class Main:
         #    Utils.createHeightDataset(fileList)
         #    # Launch Height Classifier
 
+    def ligatures():
+        fileList = FileManager.listFilesRecursive('./ligaturesDataset')
+        fileList = FileManager.createRoutesDict(fileList)
+        Utils.callE2ELigatures(fileList)
 
 
 if __name__ == '__main__':
-    NewDatasetLoad = False
-    DocumentAnalysis = True
-    E2E = True
-    SymbolAnalysis = True
-    HeightAnalysis = True
-
-    args = [NewDatasetLoad, DocumentAnalysis, E2E, SymbolAnalysis, HeightAnalysis]
-    Main.localMain(args)
+    #NewDatasetLoad = False
+    #DocumentAnalysis = True
+    #E2E = True
+    #SymbolAnalysis = True
+    #HeightAnalysis = True
+    #
+    #args = [NewDatasetLoad, DocumentAnalysis, E2E, SymbolAnalysis, HeightAnalysis]
+    #Main.localMain(args)
+    Main.ligatures()

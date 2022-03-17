@@ -6,13 +6,13 @@ import argparse
 import logging
 
 
-def main(args, fileList):
+def main(args, fileList, ligatures):
     #print(fileList)
     dg = DataGenerator(dataset_list_path=fileList,
                        aug_factor=3, # seq (1 5)
                        batch_size=8,
                        num_channels=3,
-                       width_reduction=8)
+                       width_reduction=8, ligatures=ligatures)
 
 
     model_tr, model_pr = get_model(vocabulary_size=len(dg.w2i))
@@ -36,7 +36,7 @@ def main(args, fileList):
         model_tr.fit(dg,
                      steps_per_epoch=100,
                      epochs=1,
-                     verbose=0)
+                     verbose=1)
 
         print("\tEvaluating...")
         ser_val = evaluator_val.eval(model_pr, dg.i2w)

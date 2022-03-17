@@ -5,13 +5,18 @@ from CRNN.utils_crnn import UtilsCRNN as U
 
 class DataGenerator:
 
-    def __init__(self, dataset_list_path, aug_factor, width_reduction, num_channels, batch_size=16):
-        self.X, self.Y, self.w2i, self.i2w = U.parse_lst_dict(dataset_list_path) # llamar con mi diccionario
+    def __init__(self, dataset_list_path, aug_factor, width_reduction, num_channels, batch_size=16, ligatures=ligatures):
+        self.ligatures = ligatures
+        if self.ligatures:
+            self.X, self.Y, self.w2i, self.i2w = U.parse_lst_dict_ligatures(dataset_list_path) # llamar con mi diccionario
+        else:
+            self.X, self.Y, self.w2i, self.i2w = U.parse_lst_dict(dataset_list_path) # llamar con mi diccionario
         self.aug_factor = aug_factor
         self.batch_size = batch_size
         self.width_reduction = width_reduction
         self.num_channels = num_channels
         self.idx = 0
+        
 
     def __iter__(self):
         return self

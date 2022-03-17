@@ -21,8 +21,13 @@ class Utils:
             cv2.destroyAllWindows()
 
     @staticmethod
+    def callE2ELigatures(fileList):
+                                # ligatures
+        CRNNMain(None, fileList, True)
+
+    @staticmethod
     def callE2E(fileList):
-        CRNNMain(None, fileList)
+        CRNNMain(None, fileList, False)
 
     @staticmethod
     def callSAE(fileList):
