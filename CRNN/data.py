@@ -5,9 +5,9 @@ from CRNN.utils_crnn import UtilsCRNN as U
 
 class DataGenerator:
 
-    def __init__(self, dataset_list_path, aug_factor, width_reduction, num_channels, batch_size=16, ligatures=ligatures):
+    def __init__(self, dataset_list_path, aug_factor, width_reduction, num_channels, batch_size, ligatures):
         self.ligatures = ligatures
-        if self.ligatures:
+        if ligatures:
             self.X, self.Y, self.w2i, self.i2w = U.parse_lst_dict_ligatures(dataset_list_path) # llamar con mi diccionario
         else:
             self.X, self.Y, self.w2i, self.i2w = U.parse_lst_dict(dataset_list_path) # llamar con mi diccionario

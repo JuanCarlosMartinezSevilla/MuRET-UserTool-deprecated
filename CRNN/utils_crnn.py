@@ -52,8 +52,6 @@ class UtilsCRNN():
         X = []
         Y = []
         vocabulary = set()
-
-
         
         if not lst_path == None:
             for key in lst_path:
