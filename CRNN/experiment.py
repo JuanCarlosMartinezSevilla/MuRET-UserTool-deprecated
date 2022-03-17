@@ -1,6 +1,6 @@
-from data import DataGenerator
-from model import get_model
-from evaluator import ModelEvaluator
+from CRNN.data import DataGenerator
+from CRNN.model import get_model
+from CRNN.evaluator import ModelEvaluator
 import utils as U
 import argparse
 import logging

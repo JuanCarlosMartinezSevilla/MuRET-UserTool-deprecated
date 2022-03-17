@@ -1,5 +1,5 @@
 import numpy as np
-from config import Config
+from CRNN.config import Config
 import utils as U
 
 

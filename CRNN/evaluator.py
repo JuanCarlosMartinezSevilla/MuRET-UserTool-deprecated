@@ -1,5 +1,5 @@
 import utils as U
-from config import Config
+from CRNN.config import Config
 import numpy as np
 
 class ModelEvaluator:

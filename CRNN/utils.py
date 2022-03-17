@@ -1,6 +1,6 @@
 import numpy as np
 import itertools
-from augmentation import ImageModificator
+from CRNN.augmentation import ImageModificator
 import cv2
 import json
 import os
