@@ -1,10 +1,9 @@
 import numpy as np
 import itertools
-from CRNN.augmentation import ImageModificator
+from augmentation import ImageModificator
 import cv2
 import json
 import os
-from DataAugmentation.file_manager import FileManager
 
 def augmentation(image):
     mod = ImageModificator({ImageModificator.Contrast,

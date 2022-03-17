@@ -1,9 +1,6 @@
 from utils import Utils
 from DataAugmentation.file_manager import FileManager
 import shutil
-
-
-
 import os
 
 class Main:
