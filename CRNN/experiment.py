@@ -6,8 +6,8 @@ import argparse
 import logging
 
 
-def main(args=None, fileList=None):
-    print(fileList)
+def main(args, fileList):
+    #print(fileList)
     dg = DataGenerator(dataset_list_path=fileList,
                        aug_factor=3, # seq (1 5)
                        batch_size=8,

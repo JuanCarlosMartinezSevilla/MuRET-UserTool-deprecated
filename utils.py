@@ -22,7 +22,7 @@ class Utils:
 
     @staticmethod
     def callE2E(fileList):
-        CRNNMain(fileList)
+        CRNNMain(None, fileList)
 
     @staticmethod
     def callSAE(fileList):

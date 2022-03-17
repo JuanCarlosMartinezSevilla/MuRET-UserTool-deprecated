@@ -24,8 +24,6 @@ class Main:
         fileList = FileManager.listFilesRecursive('./dataset')
         fileList = FileManager.createRoutesDict(fileList)
 
-        
-
         ## UNCOMMENT TO LAUNCH SAE
         #if args[1]:
             #Utils.callDataAug(1)
