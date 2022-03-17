@@ -43,9 +43,9 @@ class Main:
         #    # Launch Height Classifier
 
     def ligatures():
-        fileList = FileManager.listFilesRecursive('./ligaturesDataset')
-        #print(fileList)
-        Utils.readJSONGetImagesFromUrl(fileList, True)
+        #fileList = FileManager.listFilesRecursive('./ligaturesDataset')
+        ##print(fileList)
+        #Utils.readJSONGetImagesFromUrl(fileList, True)
         fileList = FileManager.listFilesRecursive('./ligaturesDataset')
         fileList = FileManager.createRoutesDict(fileList)
         Utils.callE2ELigatures(fileList)

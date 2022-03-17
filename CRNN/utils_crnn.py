@@ -71,8 +71,10 @@ class UtilsCRNN():
                             symbols = l['symbols']
                             if len(symbols) > 0:
                                 X.append(image[top:bottom, left:right])
-                                show=cv2.imread(image[top:bottom, left:right])
+                                show=image[top:bottom, left:right]
                                 cv2.imshow('a', show)
+                                cv2.waitKey(0)
+                                cv2.destroyAllWindows()
 
                                 gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
                                     for s in symbols]

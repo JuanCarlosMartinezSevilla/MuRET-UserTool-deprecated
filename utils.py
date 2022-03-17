@@ -191,7 +191,7 @@ class Utils:
     @staticmethod
     def getURLJSONLigatures(file, json_classes, path_to_save):
 
-        #print("File: ", file)
+        print("File: ", file)
 
         with open(file, encoding="UTF-8") as f:
             json_read = json.load(f)
