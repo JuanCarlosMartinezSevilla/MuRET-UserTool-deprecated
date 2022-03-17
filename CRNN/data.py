@@ -1,6 +1,6 @@
 import numpy as np
 from CRNN.config import Config
-import utils_crnn as U
+from CRNN.utils_crnn import UtilsCRNN as U
 
 
 class DataGenerator:
