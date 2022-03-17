@@ -19,11 +19,13 @@ def main(args=None, fileList=None):
 
     #X_val, Y_val, _, _ = U.parse_lst(args.validation)
     X_val, Y_val, _, _ = U.parse_lst_dict(fileList)
-    evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=args.aug_test)
+    #evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=args.aug_test)
+    evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=3)
 
     #X_test, Y_test, _, _ = U.parse_lst(args.test)
     X_test, Y_test, _, _ = U.parse_lst_dict(fileList)
-    evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=args.aug_test)
+    #evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=args.aug_test)
+    evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=3)
 
     if args.model:
         best_ser_val = 100
