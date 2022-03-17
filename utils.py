@@ -6,7 +6,7 @@ import urllib.request
 from DataAugmentation.DataAugmentationGenerator import DataAugmentationGenerator
 from SAE.SAE import SAE
 from DataAugmentation.file_manager import FileManager
-from CRNN.utils_crnn import parse_lst_dict as CRNNParse
+from CRNN.utils_crnn import UtilsCRNN
 import cv2
 from CRNN.experiment import main as CRNNMain
 
@@ -127,7 +127,7 @@ class Utils:
             
     @staticmethod
     def createStavesDataset(fileList):
-        X, Y, w2i, i2w = CRNNParse(fileList)
+        X, Y, w2i, i2w = UtilsCRNN.parse_lst_dict(fileList)
         #CRNNMain(fileList)
         
         Utils.printCV2(X, Y, 'Staff', False)
