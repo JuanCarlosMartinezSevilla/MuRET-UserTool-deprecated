@@ -6,8 +6,7 @@ import urllib.request
 from DataAugmentation.DataAugmentationGenerator import DataAugmentationGenerator
 from SAE.SAE import SAE
 from DataAugmentation.file_manager import FileManager
-from CRNN.utils import parse_lst_dict as CRNNParse
-#from CRNN.experiment import main as CRNNMain
+from CRNN.utils_crnn import parse_lst_dict as CRNNParse
 import cv2
 from CRNN.experiment import main as CRNNMain
 

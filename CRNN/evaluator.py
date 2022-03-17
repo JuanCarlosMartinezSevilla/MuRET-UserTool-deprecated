@@ -1,4 +1,4 @@
-import utils as U
+import utils_crnn as U
 from CRNN.config import Config
 import numpy as np
 

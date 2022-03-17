@@ -1,7 +1,7 @@
 from CRNN.data import DataGenerator
 from CRNN.model import get_model
 from CRNN.evaluator import ModelEvaluator
-import utils as U
+import utils_crnn as U
 import argparse
 import logging
 
