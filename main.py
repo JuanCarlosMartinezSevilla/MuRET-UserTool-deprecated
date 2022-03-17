@@ -34,9 +34,10 @@ class Main:
             #Utils.callDataAug(1)
             #Utils.callSAE(fileList)
 
-        #if args[2]:
-        #    Utils.createStavesDataset(fileList)
-        #    # Launch E2E
+        if args[2]:
+            #Utils.createStavesDataset(fileList)
+            # Launch E2E
+            Utils.callE2E(fileList)
         #
         #if args[3]:
         #    Utils.createSymbolsDataset(fileList)

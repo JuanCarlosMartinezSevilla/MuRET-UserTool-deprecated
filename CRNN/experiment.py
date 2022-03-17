@@ -1,23 +1,18 @@
-from data import DataGenerator
-from model import get_model
-from evaluator import ModelEvaluator
-import utils as U
+from CRNN.data import DataGenerator
+from CRNN.model import get_model
+from CRNN.evaluator import ModelEvaluator
+import CRNN.utils as U
 import argparse
 import logging
 
 
-def main(args):
-    #dg = DataGenerator(dataset_list_path=args.train,
-    #                   aug_factor=args.aug_train,
-    #                   batch_size=8,
-    #                   num_channels=3,
-    #                   width_reduction=8)
-
-    dg = DataGenerator(dataset_list_path=fileList, # pasar mis conjuntos de datos
-                       aug_factor=args.aug_train,
+def main(args=None, fileList=None):
+    dg = DataGenerator(dataset_list_path=fileList,
+                       aug_factor=3, # seq (1 5)
                        batch_size=8,
                        num_channels=3,
                        width_reduction=8)
+
 
     model_tr, model_pr = get_model(vocabulary_size=len(dg.w2i))
 
@@ -46,10 +41,14 @@ def main(args):
             if ser_val < best_ser_val:
                 print("\tSER improved from {} to {} --> Saving model.".format(best_ser_val, ser_val))
                 best_ser_val = ser_val
-                model_pr.save_weights("model_weights.h5")
+                #model_pr.save_weights("model_weights.h5")
+                model_pr.save(f'./MuRETPackage/EndToEnd/EndToEnd.h5')
 
 
 def build_argument_parser():
+
+    #python -u experiment.py -tr /media/jcalvo/Data/Datasets/MuRET/5-CV/Capitan/train_gt_fold$f.dat  -val /media/jcalvo/Data/Datasets/MuRET/5-CV/Capitan/val_gt_fold$f.dat -ts /media/jcalvo/Data/Datasets/MuRET/5-CV/Capitan/test_gt_fold$f.dat -a $a -b $b -f $fusion > LOG_$f-$fusion-$a-$b.log
+
     parser = argparse.ArgumentParser(description=__doc__, add_help=True,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
 

@@ -1,12 +1,12 @@
 import numpy as np
-from config import Config
-import utils as U
+from CRNN.config import Config
+import CRNN.utils as U
 
 
 class DataGenerator:
 
     def __init__(self, dataset_list_path, aug_factor, width_reduction, num_channels, batch_size=16):
-        self.X, self.Y, self.w2i, self.i2w = U.parse_lst(dataset_list_path) # llamar con mi diccionario
+        self.X, self.Y, self.w2i, self.i2w = U.parse_lst_dict(dataset_list_path) # llamar con mi diccionario
         self.aug_factor = aug_factor
         self.batch_size = batch_size
         self.width_reduction = width_reduction
