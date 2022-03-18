@@ -10,20 +10,30 @@ def ctc_lambda_func(args):
 
 def get_model(vocabulary_size):
     input = tf.keras.layers.Input(shape=(Config.img_height, None, 3))
-    conv_filters = [16, 32, 64]
+    conv_filters = [32,64,64,128]
     inner = input
-    for f in conv_filters:
-        inner = tf.keras.layers.Conv2D(f, 3, padding='same')(inner)
+    for i,f in enumerate(conv_filters):
+        if i == 0:
+            inner = tf.keras.layers.Conv2D(f, 5, padding='same')(inner)
+        else:
+            inner = tf.keras.layers.Conv2D(f, 3, padding='same')(inner)
+
         inner = tf.keras.layers.BatchNormalization()(inner)
         inner = tf.keras.layers.LeakyReLU(alpha=0.2)(inner)
-        inner = tf.keras.layers.MaxPooling2D(pool_size=(2, 2))(inner)
+
+        if i == 0:
+            inner = tf.keras.layers.MaxPooling2D(pool_size=(2, 2))(inner)
+        
+        else:    
+            inner = tf.keras.layers.MaxPooling2D(pool_size=(2, 1))(inner)
+        
 
     inner = tf.keras.layers.Permute((2, 1, 3))(inner)
     inner = tf.keras.layers.Reshape(
         target_shape=(-1, (Config.img_height // (2 ** len(conv_filters))) * conv_filters[-1]),
         name='reshape')(inner)
 
-    inner = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, return_sequences=True, dropout=0.25))(inner)
+    inner = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(512, return_sequences=True, dropout=0.25))(inner)
 
     inner = tf.keras.layers.Dense(vocabulary_size + 1, name='dense2')(inner)
     y_pred = tf.keras.layers.Activation('softmax', name='softmax')(inner)

@@ -56,7 +56,7 @@ def normalize(image):
 if __name__ == '__main__':
     #model = load_model('./MuRETPackage/DocumentAnalysis/DocumentAnalysis.h5')
     a= []
-    model = load_model('./MuRETPackage/EndToEnd/EndToEnd.h5')
+    model = load_model('./MuRETPackage/EndToEnd/EndToEndLigatures.h5')
     sample_image = cv2.imread('./ligaturesDataset/SRC/16r.jpg', cv2.IMREAD_COLOR)
     sample_image = sample_image[1286:1369, 647:728]
     sample_image = normalize(sample_image)
