@@ -4,6 +4,7 @@ from CRNN.augmentation import ImageModificator
 import cv2
 import json
 import os
+import sys
 
 class UtilsCRNN():
 
@@ -21,6 +22,12 @@ class UtilsCRNN():
 
     def normalize(image):
         return (255. - image) / 255.
+
+    def greedy_decoding_aux(prediction, i2w):
+        out_best = np.argmax(prediction, axis=1)
+        out_best = [k for k, g in itertools.groupby(out_best[0])]
+        print(out_best)
+        return [i2w[f"{s}"] for s in out_best if s != len(i2w)]
 
     def greedy_decoding(prediction, i2w):
         out_best = np.argmax(prediction, axis=1)
@@ -87,6 +94,8 @@ class UtilsCRNN():
         i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
 
         print("{} samples loaded with {}-sized vocabulary".format(len(X), len(w2i)))
+        with open('./ligaturesDataset/i2w.json', 'w') as fp:
+            json.dump(i2w, fp)
         return X, Y, w2i, i2w
 
     def parse_lst_dict(lst_path: dict):

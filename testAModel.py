@@ -1,8 +1,10 @@
 from random import sample
+from matplotlib.pyplot import axis
 import numpy as np
 import cv2
 from tensorflow.keras.models import load_model
-
+from CRNN.utils_crnn import UtilsCRNN as U
+import json
 
 def processImage(path_to_image, model):
     image = cv2.imread(path_to_image)
@@ -59,9 +61,13 @@ if __name__ == '__main__':
     sample_image = sample_image[1286:1369, 647:728]
     sample_image = normalize(sample_image)
     sample_image = resize(sample_image, 128)
-    a.append(sample_image)
-    print(a[0].shape)
+    a = np.expand_dims(sample_image, axis= 0)
+
     pred = model.predict(a)
-    print(pred)
+    with open('i2w.json') as json_file:
+        i2w = json.load(json_file)
+    h = U.greedy_decoding_aux(pred, i2w)
+    print(h)
+    
     #run(model)
     #getConfig(model)
