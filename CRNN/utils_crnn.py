@@ -25,8 +25,9 @@ class UtilsCRNN():
 
     def greedy_decoding_aux(prediction, i2w):
         out_best = np.argmax(prediction, axis=1)
-        out_best = [k for k, g in itertools.groupby(out_best[0])]
-        print(out_best)
+	print(out_best)
+	out_best = [k for k, g in itertools.groupby(out_best[0])]
+	print(out_best)
         return [i2w[f"{s}"] for s in out_best if s != len(i2w)]
 
     def greedy_decoding(prediction, i2w):
