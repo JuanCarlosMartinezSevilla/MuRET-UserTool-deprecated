@@ -9,18 +9,17 @@ class Main:
         if not os.path.exists('./MuRETPackage'):
             os.mkdir('./MuRETPackage')
 
+        if args[0] and os.path.exists(aux_path):
+            shutil.rmtree(aux_path)
+
+        if not os.path.exists(aux_path):
+            os.mkdir(aux_path)  
+
         
-        if not os.path.exists(aux_path) or args[0]:   
-
-            if args[0] and os.path.exists(aux_path):
-                shutil.rmtree(aux_path)
-            else:
-                os.mkdir(aux_path)
-
             Utils.decompressFile()
             fileList = FileManager.listFilesRecursive(aux_path)
             #print(fileList)
-            Utils.readJSONGetImagesFromUrl(fileList)
+            Utils.readJSONGetImagesFromUrl(fileList, True)
         
         fileList = FileManager.listFilesRecursive(aux_path)
         fileList = FileManager.createRoutesDict(fileList)
@@ -55,7 +54,7 @@ class Main:
 
 
 if __name__ == '__main__':
-    NewDatasetLoad = False
+    NewDatasetLoad = True
     DocumentAnalysis = True
     E2E = True
     SymbolAnalysis = True

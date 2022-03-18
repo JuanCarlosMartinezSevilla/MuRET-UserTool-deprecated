@@ -191,8 +191,6 @@ class Utils:
     @staticmethod
     def getURLJSONLigatures(file, json_classes, path_to_save):
 
-        print("File: ", file)
-
         with open(file, encoding="UTF-8") as f:
             json_read = json.load(f)
 
@@ -257,8 +255,8 @@ class Utils:
     def decompressFile ():  
 
         #tar_file = "./capitan.tgz"
-        tar_file = "./capitan.tgz"
-        path = "./dataset"
+        tar_file = "./LigaturesDataset.tgz"
+        path = "./ligaturesDataset"
         
         print("\nExtracting from .tgz file \n")
 
