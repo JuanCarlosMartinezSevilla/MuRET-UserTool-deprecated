@@ -14,6 +14,8 @@ class Main:
 
             if args[0] and os.path.exists(aux_path):
                 shutil.rmtree(aux_path)
+            else:
+                os.mkdir(aux_path)
 
             Utils.decompressFile()
             fileList = FileManager.listFilesRecursive(aux_path)
