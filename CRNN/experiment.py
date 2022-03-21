@@ -1,3 +1,4 @@
+from pyexpat import model
 from CRNN.data import DataGenerator
 from CRNN.model import get_model
 from CRNN.evaluator import ModelEvaluator
@@ -5,11 +6,28 @@ from CRNN.utils_crnn import UtilsCRNN as U
 import argparse
 import logging
 import itertools
+import tqdm
+from sklearn.model_selection import train_test_split
+import tensorflowjs as tfjs
 
+def split_data(fileList):
+    aux = []
+    [aux.append(k) for k in fileList.keys()]
+    train, test = train_test_split(aux, test_size=0.2)
+    test, val = train_test_split(test, test_size=0.5)
+
+    train_dict = {name: fileList[f'{name}'] for name in train}
+    val_dict = {name: fileList[f'{name}'] for name in val}
+    test_dict = {name: fileList[f'{name}'] for name in test}
+    
+    return train_dict, val_dict, test_dict
 
 def main(args, fileList, ligatures):
+
+    train_dict, val_dict, test_dict = split_data(fileList)
+
     #print(fileList)
-    dg = DataGenerator(dataset_list_path=fileList,
+    dg = DataGenerator(dataset_list_path=train_dict,
                        aug_factor=3, # seq (1 5)
                        batch_size=4,
                        num_channels=3,
@@ -19,19 +37,19 @@ def main(args, fileList, ligatures):
     model_tr, model_pr = get_model(vocabulary_size=len(dg.w2i))
 
     #X_val, Y_val, _, _ = U.parse_lst(args.validation)
-    fileList = dict(itertools.islice(fileList.items(), 4))
+    #fileList = dict(itertools.islice(fileList.items(), 4))
     if ligatures:
-        X_val, Y_val, _, _ = U.parse_lst_dict_ligatures(fileList)
+        X_val, Y_val, _, _ = U.parse_lst_dict_ligatures(val_dict)
     else:
-        X_val, Y_val, _, _ = U.parse_lst_dict(fileList)
+        X_val, Y_val, _, _ = U.parse_lst_dict(val_dict)
     #evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=args.aug_test)
     evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=0)
 
     #X_test, Y_test, _, _ = U.parse_lst(args.test)
     if ligatures:
-        X_test, Y_test, _, _ = U.parse_lst_dict_ligatures(fileList)
+        X_test, Y_test, _, _ = U.parse_lst_dict_ligatures(test_dict)
     else:
-        X_test, Y_test, _, _ = U.parse_lst_dict(fileList)
+        X_test, Y_test, _, _ = U.parse_lst_dict(test_dict)
     #evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=args.aug_test)
     evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=0)
 
@@ -58,8 +76,13 @@ def main(args, fileList, ligatures):
             #model_pr.save_weights("model_weights.h5")
             if ligatures:
                 model_pr.save(f'./MuRETPackage/EndToEnd/EndToEndLigatures.h5')
+                # Save model to use it with tensorflow.js
+                EndToEndLigatures = model_pr
+                tfjs.converters.save_keras_model(EndToEndLigatures, './MuRETPackage/EndToEnd/')
             else:
                 model_pr.save(f'./MuRETPackage/EndToEnd/EndToEnd.h5')
+                EndToEnd = model_pr
+                tfjs.converters.save_keras_model(EndToEnd, './MuRETPackage/EndToEnd/')
 
 
 def build_argument_parser():

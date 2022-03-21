@@ -194,25 +194,19 @@ class SAE:
     def model(img_tam, epochs, generator, steps):
         input_img = Input(shape=(img_tam, img_tam, 1))
 
-        #Encoding
-        x = Conv2D(128, (5, 5), activation='relu', padding='same')(input_img)
-        x = MaxPooling2D((2,2))(x)
+        x = input_img
+        
+        filters = [128, 128, 128, 128, 128, 128]
+        kernel = (5, 5)
+        pool = (2, 2)
 
-        x = Conv2D(128, (5, 5), activation='relu', padding='same')(x)
-        x = MaxPooling2D((2,2))(x)
-
-        x = Conv2D(128, (5, 5), activation='relu', padding='same')(x)
-        encoded = MaxPooling2D((2,2))(x)
-
-        #Decoding
-        x = Conv2D(128, (5, 5), activation='relu', padding='same')(encoded)
-        x = UpSampling2D((2,2))(x)
-
-        x = Conv2D(128, (5, 5), activation='relu', padding='same')(x)
-        x = UpSampling2D((2,2))(x)
-
-        x = Conv2D(128, (5, 5), activation='relu', padding='same')(x)
-        x = UpSampling2D((2,2))(x)
+        for idx, f in enumerate(filters):
+            if idx <= 2:
+                x = Conv2D(f, kernel, activation='relu', padding='same')(x)
+                x = MaxPooling2D(pool)(x)
+            else:
+                x = Conv2D(f, kernel, activation='relu', padding='same')(x)
+                x = UpSampling2D(pool)(x)
 
         decoded = Conv2D(1, (5, 5), activation='sigmoid', padding='same')(x)
 

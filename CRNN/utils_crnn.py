@@ -56,7 +56,6 @@ class UtilsCRNN():
         return current[n]
 
     def parse_lst_dict_ligatures(lst_path: dict):
-        print("Longitud diccionario", len(lst_path))
 
         X = []
         Y = []
@@ -73,17 +72,14 @@ class UtilsCRNN():
                     image = cv2.imread(page_path, cv2.IMREAD_COLOR)
                     for l in data['ligatures']:
                         if 'bounding_box' in l:
-                            top, left, bottom, right = l['bounding_box']['fromY'], l['bounding_box'][
-                                            'fromX'], \
-                                                                l['bounding_box']['toY'], l['bounding_box']['toX']
+                            top, left, bottom, right = l['bounding_box']['fromY'], \
+                                                       l['bounding_box']['fromX'], \
+                                                       l['bounding_box']['toY'],   \
+                                                       l['bounding_box']['toX']
                         if 'symbols' in l:
                             symbols = l['symbols']
                             if len(symbols) > 0:
                                 X.append(image[top:bottom, left:right])
-                                #show=image[top:bottom, left:right]
-                                #cv2.imshow('a', show)
-                                #cv2.waitKey(0)
-                                #cv2.destroyAllWindows()
 
                                 gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
                                     for s in symbols]
@@ -96,8 +92,12 @@ class UtilsCRNN():
         i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
 
         print("{} samples loaded with {}-sized vocabulary".format(len(X), len(w2i)))
-        with open('./dataset/i2w.json', 'w') as fp:
+        
+        #Saving for tests
+        
+        with open('./MuRETPackage/EndToEnd/i2w.json', 'w') as fp:
             json.dump(i2w, fp)
+        
         return X, Y, w2i, i2w
 
     def parse_lst_dict(lst_path: dict):
@@ -106,14 +106,11 @@ class UtilsCRNN():
         Y = []
         vocabulary = set()
 
-
-        
         if not lst_path == None:
             for key in lst_path:
                 json_path = key
                 page_path = lst_path[key]
-                image_id = 0
-                name = page_path.split('/')[-1].split('.')[-2]
+
                 with open(json_path) as json_file:
                     data = json.load(json_file)
                     image = cv2.imread(page_path, cv2.IMREAD_COLOR)
@@ -124,22 +121,16 @@ class UtilsCRNN():
                                     symbols = region['symbols']
 
                                     if len(symbols) > 0:
-                                        top, left, bottom, right = region['bounding_box']['fromY'], region['bounding_box'][
-                                            'fromX'], \
-                                                                region['bounding_box']['toY'], region['bounding_box']['toX']
+                                        top, left, bottom, right = region['bounding_box']['fromY'], \
+                                                                   region['bounding_box']['fromX'], \
+                                                                   region['bounding_box']['toY'],   \
+                                                                   region['bounding_box']['toX']
 
                                         X.append(image[top:bottom, left:right])
-                                        #cv2.imwrite(os.path.join(path_to_save, name + '_' +str(image_id) +'.png'), image[top:bottom, left:right])
-                                        
 
                                         gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
                                             for s in symbols]
                                         
-                                        json_pred = {'prediction': gt}
-
-                                        #FileManager.saveString(str(json_pred), os.path.join(path_to_save_pred, name + '_' +str(image_id) + '.dict'), True)
-
-                                        image_id += 1
                                         Y.append(gt)
                                         vocabulary.update(gt)
 
@@ -147,6 +138,7 @@ class UtilsCRNN():
         i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
 
         print("{} samples loaded with {}-sized vocabulary".format(len(X), len(w2i)))
+        
         return X, Y, w2i, i2w
 
     def parse_lst(lst_path):
