@@ -27,10 +27,7 @@ def split_data(fileList):
 def main(args, fileList, ligatures):
 
     fileList = U.clean_data(fileList)
-    
-
     train_dict, val_dict, test_dict = split_data(fileList)
-    ##TODO maybe we are getting json without ligatures on it
 
     #print(fileList)
     print("\n=== Train data ===")
@@ -76,7 +73,7 @@ def main(args, fileList, ligatures):
         print(f"\tEvaluating...\tBest SER val: {best_ser_val:.2f}")
         ser_val = evaluator_val.eval(model_pr, dg.i2w)
         ser_test = evaluator_test.eval(model_pr, dg.i2w)
-        print("\tEpoch {}\t\tSER_val: {:.2f}\tSER_test: {:.2f}".format(super_epoch, ser_val, ser_test))
+        print("\tEpoch {}\t\tSER_val: {:.2f}\tSER_test: {:.2f}\n".format(super_epoch, ser_val, ser_test))
 
         #if args.model:
         if ser_val < best_ser_val:
