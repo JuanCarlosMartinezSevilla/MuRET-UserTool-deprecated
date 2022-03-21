@@ -73,10 +73,10 @@ def main(args, fileList, ligatures):
                      epochs=1,
                      verbose=1)
 
-        print("\tEvaluating...")
+        print(f"\tEvaluating...\t Best SER val: {best_ser_val}")
         ser_val = evaluator_val.eval(model_pr, dg.i2w)
         ser_test = evaluator_test.eval(model_pr, dg.i2w)
-        print("\tEpoch {}\t{:.2f}\t{:.2f}".format(super_epoch, ser_val, ser_test))
+        print("\tEpoch {}\tSER_val {:.2f}\tSER_test{:.2f}".format(super_epoch, ser_val, ser_test))
 
         #if args.model:
         if ser_val < best_ser_val:
