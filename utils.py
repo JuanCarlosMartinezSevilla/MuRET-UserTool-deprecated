@@ -152,26 +152,22 @@ class Utils:
     @staticmethod
     def getURLJSON(file, json_classes, path_to_save):
 
-        #print("File: ", file)
-
         with open(file, encoding="UTF-8") as f:
             json_read = json.load(f)
 
-        url = orig_url = ""
         erase = False
         if 'url' in json_read.keys():
             url = json_read['url']
+            
+            url_split = [True if 'localhost' in u else False for u in url.split('/')]
+            
+            if True in url_split:
+                url = re.sub('(localhost:)\w+', 'muret.dlsi.ua.es/images', url)
+                
+            filename = json_read["filename"]
+            urllib.request.urlretrieve(url, os.path.join(path_to_save, filename))
         else:
             erase = True
-        if 'original' in json_read.keys():
-            orig_url = json_read['original']
-            if url == orig_url:
-                filename = json_read["filename"]
-                urllib.request.urlretrieve(orig_url, os.path.join(path_to_save, json_read["filename"]))
-            elif url != "":
-                urllib.request.urlretrieve(url, path_to_save)
-            else:
-                urllib.request.urlretrieve(orig_url, path_to_save)
             
         if 'pages' in json_read:
             pages = json_read['pages']
@@ -181,9 +177,7 @@ class Utils:
                     for r in regions:
                         if r['type'] not in json_classes:
                             json_classes.append(r['type'])
-                    #print(json_classes)
-            
-            #print(f"File {json_read['filename']} saved in {path_to_save}")
+
         if erase:
             os.remove(file)
         return json_classes
@@ -204,7 +198,6 @@ class Utils:
             orig_url = json_read['original']
             
             if url == orig_url:
-                orig_url = re.sub('(localhost:)\w+', 'muret.dlsi.ua.es/images', orig_url)
                 filename = json_read["filename"]
                 urllib.request.urlretrieve(orig_url, os.path.join(path_to_save, json_read["filename"]))
             elif url != "":
@@ -228,35 +221,25 @@ class Utils:
         return json_classes
 
     @staticmethod
-    def readJSONGetImagesFromUrl(files, ligature):
+    def readJSONGetImagesFromUrl(files, path):
 
-        path_to_save = "./dataset/SRC"
+        path_to_save = os.path.join(path, 'SRC')
 
-
-        if not os.path.exists("./dataset/SRC"):
-            os.mkdir("./dataset/SRC")
+        if not os.path.exists(path_to_save):
+            os.mkdir(path_to_save)
         
         print("\n---- Fetching images from URLs ----\n")
         print(f"Saving images in {path_to_save} \n")
         json_classes = []
-        if not ligature:
-            for f in tqdm(files):
-                json_classes = Utils.getURLJSON(f, json_classes, path_to_save)
-        else:
-            path_to_save = "./ligaturesDataset/SRC"
-
-            if not os.path.exists("./ligaturesDataset/SRC"):
-                os.mkdir("./ligaturesDataset/SRC")
-
-            for f in tqdm(files):
-                json_classes = Utils.getURLJSONLigatures(f, json_classes, path_to_save)
+        for f in tqdm(files):
+            json_classes = Utils.getURLJSON(f, json_classes, path_to_save)
+        print(f'\nImporting finished, images saved in: {path_to_save}')
 
     @staticmethod
-    def decompressFile ():  
+    def decompressFile (aux_path, path ):  
 
         #tar_file = "./capitan.tgz"
-        tar_file = "./LigaturesDataset.tgz"
-        path = "./ligaturesDataset"
+        tar_file = aux_path
         
         print("\nExtracting from .tgz file \n")
 

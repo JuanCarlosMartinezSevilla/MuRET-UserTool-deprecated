@@ -4,6 +4,7 @@ from CRNN.evaluator import ModelEvaluator
 from CRNN.utils_crnn import UtilsCRNN as U
 import argparse
 import logging
+import itertools
 
 
 def main(args, fileList, ligatures):
@@ -18,6 +19,7 @@ def main(args, fileList, ligatures):
     model_tr, model_pr = get_model(vocabulary_size=len(dg.w2i))
 
     #X_val, Y_val, _, _ = U.parse_lst(args.validation)
+    fileList = dict(itertools.islice(fileList.items(), 4))
     if ligatures:
         X_val, Y_val, _, _ = U.parse_lst_dict_ligatures(fileList)
     else:

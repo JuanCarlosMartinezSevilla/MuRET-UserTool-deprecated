@@ -1,13 +1,14 @@
 import numpy as np
 from CRNN.config import Config
 from CRNN.utils_crnn import UtilsCRNN as U
-
+import itertools
 
 class DataGenerator:
 
     def __init__(self, dataset_list_path, aug_factor, width_reduction, num_channels, batch_size, ligatures):
         self.ligatures = ligatures
         #print(dataset_list_path)
+        dataset_list_path = dict(itertools.islice(dataset_list_path.items(), 4))
         if ligatures:
             self.X, self.Y, self.w2i, self.i2w = U.parse_lst_dict_ligatures(dataset_list_path) # llamar con mi diccionario
         else:

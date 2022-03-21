@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import cv2
 import numpy as np
 import random
+import tensorflowjs as tfjs
 
 class SAE:
         # Function | Reads JSON files from path and calls "process_muret_json" function
@@ -225,3 +226,6 @@ class SAE:
             epochs=epochs)
         
         SAEmodel.save(f'./MuRETPackage/DocumentAnalysis/DocumentAnalysis.h5')
+        
+        # Save model to use it with tensorflow.js
+        tfjs.converters.save_keras_model(SAEmodel, './MuRETPackage/DocumentAnalysis/')

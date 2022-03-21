@@ -56,6 +56,7 @@ class UtilsCRNN():
         return current[n]
 
     def parse_lst_dict_ligatures(lst_path: dict):
+        print("Longitud diccionario", len(lst_path))
 
         X = []
         Y = []
@@ -95,7 +96,7 @@ class UtilsCRNN():
         i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
 
         print("{} samples loaded with {}-sized vocabulary".format(len(X), len(w2i)))
-        with open('./ligaturesDataset/i2w.json', 'w') as fp:
+        with open('./dataset/i2w.json', 'w') as fp:
             json.dump(i2w, fp)
         return X, Y, w2i, i2w
 
