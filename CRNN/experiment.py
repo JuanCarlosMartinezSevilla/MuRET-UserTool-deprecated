@@ -8,7 +8,7 @@ import logging
 import itertools
 import tqdm
 from sklearn.model_selection import train_test_split
-import tensorflowjs as tfjs
+#import tensorflowjs as tfjs
 
 def split_data(fileList):
     aux = []
