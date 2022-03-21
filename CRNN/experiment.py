@@ -11,6 +11,8 @@ from sklearn.model_selection import train_test_split
 #import tensorflowjs as tfjs
 
 def split_data(fileList):
+    print("\n=== Number of images ===")
+    print(len(fileList))
     aux = []
     [aux.append(k) for k in fileList.keys()]
     train, test = train_test_split(aux, test_size=0.2)
@@ -25,11 +27,13 @@ def split_data(fileList):
 def main(args, fileList, ligatures):
 
     fileList = U.clean_data(fileList)
+    
 
     train_dict, val_dict, test_dict = split_data(fileList)
     ##TODO maybe we are getting json without ligatures on it
 
     #print(fileList)
+    print("\n=== Train data ===")
     dg = DataGenerator(dataset_list_path=train_dict,
                        aug_factor=3, # seq (1 5)
                        batch_size=8,
@@ -42,6 +46,7 @@ def main(args, fileList, ligatures):
     #X_val, Y_val, _, _ = U.parse_lst(args.validation)
     #fileList = dict(itertools.islice(fileList.items(), 4))
     if ligatures:
+        print("\n=== Validation data ===")
         X_val, Y_val, _, _ = U.parse_lst_dict_ligatures(val_dict)
     else:
         X_val, Y_val, _, _ = U.parse_lst_dict(val_dict)
@@ -50,6 +55,7 @@ def main(args, fileList, ligatures):
 
     #X_test, Y_test, _, _ = U.parse_lst(args.test)
     if ligatures:
+        print("\n=== Test data ===")
         X_test, Y_test, _, _ = U.parse_lst_dict_ligatures(test_dict)
     else:
         X_test, Y_test, _, _ = U.parse_lst_dict(test_dict)
