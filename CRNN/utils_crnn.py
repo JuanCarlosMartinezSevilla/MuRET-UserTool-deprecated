@@ -55,6 +55,24 @@ class UtilsCRNN():
 
         return current[n]
 
+    def clean_data(fileList):
+        aux_dict = {}
+        if not fileList == None:
+            for key in fileList:
+                json_path = key
+                page_path = fileList[key]
+            
+                with open(json_path) as json_file:
+                    data = json.load(json_file)
+                    for l in data['ligatures']:
+                        if 'symbols' in l:
+                            symbols = l['symbols']
+                            if len(symbols) > 0:
+                                aux_dict[f'{json_path}'] =  page_path
+        
+        return aux_dict
+
+
     def parse_lst_dict_ligatures(lst_path: dict):
 
         X = []
@@ -65,8 +83,6 @@ class UtilsCRNN():
             for key in lst_path:
                 json_path = key
                 page_path = lst_path[key]
-                image_id = 0
-                name = page_path.split('/')[-1].split('.')[-2]
                 with open(json_path) as json_file:
                     data = json.load(json_file)
                     image = cv2.imread(page_path, cv2.IMREAD_COLOR)

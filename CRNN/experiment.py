@@ -24,7 +24,10 @@ def split_data(fileList):
 
 def main(args, fileList, ligatures):
 
+    fileList = U.clean_data(fileList)
+
     train_dict, val_dict, test_dict = split_data(fileList)
+    ##TODO maybe we are getting json without ligatures on it
 
     #print(fileList)
     dg = DataGenerator(dataset_list_path=train_dict,
