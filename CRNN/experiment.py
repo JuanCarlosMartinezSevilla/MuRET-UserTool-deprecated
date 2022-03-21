@@ -29,7 +29,7 @@ def main(args, fileList, ligatures):
     #print(fileList)
     dg = DataGenerator(dataset_list_path=train_dict,
                        aug_factor=3, # seq (1 5)
-                       batch_size=4,
+                       batch_size=8,
                        num_channels=3,
                        width_reduction=8, ligatures=ligatures)
 

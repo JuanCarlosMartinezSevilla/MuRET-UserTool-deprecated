@@ -22,12 +22,6 @@ class SAE:
     
         with open (path) as f:
             json_read = json.load(f)
-	    
-        a = False
-        
-        if 'dict' in path.split('.')[-1]:
-            a = True
-            print("Esto es un dict")
 
         filename = routes_dict[path]
         loop = False
@@ -37,8 +31,6 @@ class SAE:
             pages = json_read['pages']
             num_pages = len(pages)
 	        
-            if a:
-               print(pages)
             
             # array | each element all single pag coords
             # (if we have an image with 2 pages, we will have 2 components in the array)
