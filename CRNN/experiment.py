@@ -76,7 +76,7 @@ def main(args, fileList, ligatures):
         print(f"\tEvaluating...\tBest SER val: {best_ser_val:.2f}")
         ser_val = evaluator_val.eval(model_pr, dg.i2w)
         ser_test = evaluator_test.eval(model_pr, dg.i2w)
-        print("\tEpoch {}\tSER_val: {:.2f}\tSER_test: {:.2f}".format(super_epoch, ser_val, ser_test))
+        print("\tEpoch {}\t\tSER_val: {:.2f}\tSER_test: {:.2f}".format(super_epoch, ser_val, ser_test))
 
         #if args.model:
         if ser_val < best_ser_val:
