@@ -78,11 +78,11 @@ def main(args, fileList, ligatures):
                 model_pr.save(f'./MuRETPackage/EndToEnd/EndToEndLigatures.h5')
                 # Save model to use it with tensorflow.js
                 EndToEndLigatures = model_pr
-                tfjs.converters.save_keras_model(EndToEndLigatures, './MuRETPackage/EndToEnd/')
+                #tfjs.converters.save_keras_model(EndToEndLigatures, './MuRETPackage/EndToEnd/')
             else:
                 model_pr.save(f'./MuRETPackage/EndToEnd/EndToEnd.h5')
                 EndToEnd = model_pr
-                tfjs.converters.save_keras_model(EndToEnd, './MuRETPackage/EndToEnd/')
+                #tfjs.converters.save_keras_model(EndToEnd, './MuRETPackage/EndToEnd/')
 
 
 def build_argument_parser():
