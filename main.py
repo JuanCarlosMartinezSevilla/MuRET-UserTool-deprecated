@@ -71,10 +71,6 @@ class Main:
             print("symbol_classifier")
         
 
-    def ligatures(args):
-        fileList = Main.seeDir(args, aux_path = './ligaturesDataset')
-        Utils.callE2ELigatures(fileList)
-
     def validate_file(f):
         if not os.path.exists(f):
             # Argparse uses the ArgumentTypeError to give a rejection message like:
@@ -111,8 +107,4 @@ if __name__ == '__main__':
 
     print(args)
 
-
-
-    #args = [NewDatasetLoad, DocumentAnalysis, E2E, SymbolAnalysis, HeightAnalysis]
     Main.local_main(args)
-    #Main.ligatures(args)
