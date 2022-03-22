@@ -22,26 +22,31 @@ class Utils:
             cv2.destroyAllWindows()
 
     @staticmethod
-    def callE2ELigatures(fileList):
+    def callE2ELigatures(fileList, args):
                                 # ligatures
-        CRNNMain(None, fileList, True)
+        CRNNMain(fileList, True, args)
 
     @staticmethod
-    def callE2E(fileList):
-        CRNNMain(None, fileList, False)
+    def callE2E(fileList, args):
+        CRNNMain(fileList, False, args)
 
     @staticmethod
-    def callSAE(fileList):
+    def callSAE(args):
         epochs = 10
         classes_to_predict = 'staff'
         image_size = 512
         batch_size = 8
         list_json_pathfiles = FileManager.listFilesRecursive('./dataset')
         routes_dict = FileManager.createRoutesDict(list_json_pathfiles)
+        values = {"epochs":epochs, 
+                  "classes": classes_to_predict,
+                  "image_size": image_size,
+                  "batch_size": batch_size,
+                  "routes": routes_dict}
         generator = SAE.dataGen(routes_dict, batch_size, image_size, classes_to_predict)
         
         print("\n--- Training process ---\n")
-        SAE.model(image_size, epochs, generator, len(routes_dict)//batch_size)
+        SAE.model(image_size, epochs, generator, len(routes_dict)//batch_size, args)
 
     @staticmethod
     def SymbolsHeightParse(lst_path: dict):

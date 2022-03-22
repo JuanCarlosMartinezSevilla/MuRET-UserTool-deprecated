@@ -53,23 +53,20 @@ class Main:
 
         fileList = Main.seeDir(args)
 
-        
         if args.doc_analysis:
             print("doc_analysis")
             Utils.callDataAug(1)
-            Utils.callSAE(fileList)
+            Utils.callSAE(args)
 
         if args.end_to_end:
-            #Utils.createStavesDataset(fileList)
             # Launch E2E
-            Utils.callE2E(fileList)
-            print("e2e")
+            Utils.callE2E(fileList, args)
         
         if args.end_to_end_ligatures:
-            Utils.callE2ELigatures(fileList)
+            Utils.callE2ELigatures(fileList, args)
             
         if args.symb_classifier:
-            #Utils.createSymbolsDataset(fileList)
+            #Utils.callSymbClassifier(fileList, args)
             # Launch Symbol Classifier
             print("symbol_classifier")
         
@@ -89,10 +86,8 @@ class Main:
         parser = argparse.ArgumentParser(description=__doc__, add_help=True,
                                             formatter_class=argparse.RawDescriptionHelpFormatter)
 
-        #parser.add_argument('-p', '--path', action='store', required=True,
-        #                        help='Path to dataset .tgz file.')
         parser.add_argument("-p", "--path", required=True, type=Main.validate_file,
-                        help="Path to dataset .tgz file.")
+                                help="Path to dataset .tgz file.")
         parser.add_argument('-da', '--doc_analysis', action='store_true',
                                 help='Train a document analysis model.')
         parser.add_argument('-e2e', '--end_to_end', action='store_true',
@@ -103,6 +98,8 @@ class Main:
                                 help='Train a symbol classifier model.')
         parser.add_argument('-rl', '--reload', action='store_true',
                                 help='Reload dataset.')
+        parser.add_argument('-h5', '--h5', action='store_true',
+                                help='Save models in .h5 format.')
 
         return parser
 

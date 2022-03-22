@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import cv2
 import numpy as np
 import random
-#import tensorflowjs as tfjs
+import tensorflowjs as tfjs
 
 class SAE:
         # Function | Reads JSON files from path and calls "process_muret_json" function
@@ -183,7 +183,7 @@ class SAE:
             #print(routes_dict)
             yield(SAE.image_gen(routes_dict, batch_size, img_tam, classes_to_predict))
 
-    def model(img_tam, epochs, generator, steps):
+    def model(img_tam, epochs, generator, steps, args):
         input_img = Input(shape=(img_tam, img_tam, 1))
 
         x = input_img
@@ -211,7 +211,8 @@ class SAE:
             steps_per_epoch=steps,
             epochs=epochs)
         
-        SAEmodel.save(f'./MuRETPackage/DocumentAnalysis/DocumentAnalysis.h5')
+        if args.h5:
+            SAEmodel.save(f'./MuRETPackage/DocumentAnalysis/DocumentAnalysis.h5')
         
         # Save model to use it with tensorflow.js
-        #tfjs.converters.save_keras_model(SAEmodel, './MuRETPackage/DocumentAnalysis/')
+        tfjs.converters.save_keras_model(SAEmodel, './MuRETPackage/DocumentAnalysis/')

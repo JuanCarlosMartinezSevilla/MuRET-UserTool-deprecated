@@ -3,12 +3,13 @@ from CRNN.data import DataGenerator
 from CRNN.model import get_model
 from CRNN.evaluator import ModelEvaluator
 from CRNN.utils_crnn import UtilsCRNN as U
+from CRNN.config import Config
 import argparse
 import logging
 import itertools
 import tqdm
 from sklearn.model_selection import train_test_split
-#import tensorflowjs as tfjs
+import tensorflowjs as tfjs
 
 def split_data(fileList):
     print("\n=== Number of images ===")
@@ -24,7 +25,7 @@ def split_data(fileList):
     
     return train_dict, val_dict, test_dict
 
-def main(args, fileList, ligatures):
+def main(fileList, ligatures, args):
 
     fileList = U.clean_data(fileList)
     train_dict, val_dict, test_dict = split_data(fileList)
@@ -38,12 +39,13 @@ def main(args, fileList, ligatures):
                        width_reduction=8, ligatures=ligatures)
 
 
+
     model_tr, model_pr = get_model(vocabulary_size=len(dg.w2i))
 
     #X_val, Y_val, _, _ = U.parse_lst(args.validation)
     #fileList = dict(itertools.islice(fileList.items(), 4))
+    print("\n=== Validation data ===")
     if ligatures:
-        print("\n=== Validation data ===")
         X_val, Y_val, _, _ = U.parse_lst_dict_ligatures(val_dict)
     else:
         X_val, Y_val, _, _ = U.parse_lst_dict(val_dict)
@@ -51,8 +53,8 @@ def main(args, fileList, ligatures):
     evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=0)
 
     #X_test, Y_test, _, _ = U.parse_lst(args.test)
+    print("\n=== Test data ===")
     if ligatures:
-        print("\n=== Test data ===")
         X_test, Y_test, _, _ = U.parse_lst_dict_ligatures(test_dict)
     else:
         X_test, Y_test, _, _ = U.parse_lst_dict(test_dict)
@@ -62,8 +64,14 @@ def main(args, fileList, ligatures):
     #if args.model:
     #    best_ser_val = 100
     best_ser_val = 100
+    epochs = 1000
 
-    for super_epoch in range(1000):
+    values = {"epochs": epochs, 
+              "image_size": Config.img_height,
+              "batch_size": 8,
+              "routes": fileList}
+
+    for super_epoch in range(epochs):
         print("Epoch {}".format(super_epoch))
         model_tr.fit(dg,
                      steps_per_epoch=100,
@@ -81,19 +89,19 @@ def main(args, fileList, ligatures):
             best_ser_val = ser_val
             #model_pr.save_weights("model_weights.h5")
             if ligatures:
-                model_pr.save(f'./MuRETPackage/EndToEnd/EndToEndLigatures.h5')
+                if args.h5:
+                    model_pr.save(f'./MuRETPackage/EndToEnd/EndToEndLigatures.h5')
                 # Save model to use it with tensorflow.js
                 EndToEndLigatures = model_pr
-                #tfjs.converters.save_keras_model(EndToEndLigatures, './MuRETPackage/EndToEnd/')
+                tfjs.converters.save_keras_model(EndToEndLigatures, './MuRETPackage/EndToEnd/')
             else:
-                model_pr.save(f'./MuRETPackage/EndToEnd/EndToEnd.h5')
+                if args.h5:
+                    model_pr.save(f'./MuRETPackage/EndToEnd/EndToEnd.h5')
                 EndToEnd = model_pr
-                #tfjs.converters.save_keras_model(EndToEnd, './MuRETPackage/EndToEnd/')
+                tfjs.converters.save_keras_model(EndToEnd, './MuRETPackage/EndToEnd/')
 
 
 def build_argument_parser():
-
-    #python -u experiment.py -tr /media/jcalvo/Data/Datasets/MuRET/5-CV/Capitan/train_gt_fold$f.dat  -val /media/jcalvo/Data/Datasets/MuRET/5-CV/Capitan/val_gt_fold$f.dat -ts /media/jcalvo/Data/Datasets/MuRET/5-CV/Capitan/test_gt_fold$f.dat -a $a -b $b -f $fusion > LOG_$f-$fusion-$a-$b.log
 
     parser = argparse.ArgumentParser(description=__doc__, add_help=True,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
