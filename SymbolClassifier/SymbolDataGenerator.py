@@ -1,7 +1,125 @@
+from calendar import EPOCH
+import json
+from sklearn.model_selection import train_test_split
+import cv2
+import random
+from SymbolClassifier.SymbCNN import SymbolCNN
+import numpy as np
+
 class SymbDG:
 
-    def main():
-        print("hola")
+    def split_data(fileList):
+        print("\n=== Number of images ===")
+        print(len(fileList))
+        aux = []
+        [aux.append(k) for k in fileList.keys()]
+        train, test = train_test_split(aux, test_size=0.2)
+        test, val = train_test_split(test, test_size=0.5)
+
+        train_dict = {name: fileList[f'{name}'] for name in train}
+        val_dict = {name: fileList[f'{name}'] for name in val}
+        test_dict = {name: fileList[f'{name}'] for name in test}
+        
+        return train_dict, val_dict, test_dict
+
+
+    def parse_files(files: dict):
+
+        X_pos = list() 
+        X_glyph = list()
+        Y_pos = list() 
+        Y_glyph = list()
+
+        if not files == None:
+            for key in files:
+                json_path = key
+                img_path = files[key]
+                with open(json_path) as json_file:
+                    data = json.load(json_file)
+                    img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+                    if 'pages' in data:
+                        pages = data['pages']
+                        for p in pages:
+                            if 'regions' in p:
+                                regions = p['regions']
+                                for r in regions:
+                                    # Stave coords
+                                    top_r, _, bottom_r, _ = r['bounding_box']['fromY'], \
+                                                            r['bounding_box']['fromX'], \
+                                                            r['bounding_box']['toY'],   \
+                                                            r['bounding_box']['toX']
+                                    if 'symbols' in r:
+                                        symbols = r['symbols']
+                                        if len(symbols) > 0:
+                                            for s in symbols:
+                                                if 'bounding_box' in s:
+                                                    # Symbol coords
+                                                    top_s, left_s, bottom_s, right_s = s['bounding_box']['fromY'], \
+                                                                                       s['bounding_box']['fromX'], \
+                                                                                       s['bounding_box']['toY'],   \
+                                                                                       s['bounding_box']['toX']
+                                                    if 'agnostic_symbol_type' in s: 
+                                                        if 'position_in_staff' in s:
+                                                            # Symbol type and position
+                                                            type_s = s['agnostic_symbol_type']
+                                                            pos_s = s['position_in_staff']
+
+                                                            X_glyph.append(img[top_s:bottom_s, left_s:right_s])
+                                                            Y_glyph.append(type_s)
+                                                            X_pos.append(img[top_r:bottom_r, left_s:right_s])
+                                                            Y_pos.append(pos_s)
+
+        Y_glyph_cats = set(Y_glyph)
+        Y_pos_cats = set(Y_pos)
+        print(f"{len(X_glyph)} symbols loaded with {len(Y_glyph_cats)} different types and {len(Y_pos_cats)} different positions.")
+
+        return X_glyph, X_pos, Y_glyph, Y_pos, Y_glyph_cats, Y_pos_cats
+
+    def resize_glyph(image):
+        # Normalizing images
+        height = 40
+        width = 40
+        return cv2.resize(image, (width, height))
+
+    def resize_pos(image):
+        # Normalizing images
+        height = 112
+        width = 40
+        return cv2.resize(image, (width, height))
+
+    def batchCreator(X_g, X_p, Y_g, Y_p):
+        batch_size = 2
+        while True:
+            input_gen = []
+            output_gen = []
+            for f in range(batch_size):
+                idx = random.randint(0,len(X_g)-1)
+                input_gen = np.array(input_gen, [SymbDG.resize_glyph(X_g[idx]), SymbDG.resize_pos(X_p[idx])])
+                output_gen = np.array(output_gen, [Y_g[idx], Y_p[idx]])
+
+            yield (input_gen, output_gen)
+        
+
+    def main(fileList: dict, args):
+        train_dict, val_dict, test_dict = SymbDG.split_data(fileList)
+
+        X_g, X_p, Y_g, Y_p, Y_g_cats, Y_p_cats = SymbDG.parse_files(train_dict)
+
+        generator = SymbDG.batchCreator(X_g, X_p, Y_g, Y_p)
+
+        a = next(generator)
+        print(a[0].shape)
+        print(a[1].shape)
+
+
+        model = SymbolCNN.model(1, generator, 2, len(Y_g_cats), len(Y_p_cats))
+
+        model.fit(generator,
+                steps_per_epoch=2,
+                epochs=1,
+                verbose=1)
+
+        
 
 if __name__ == '__main__':
     SymbDG.main()

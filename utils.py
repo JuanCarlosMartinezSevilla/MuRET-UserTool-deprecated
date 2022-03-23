@@ -9,6 +9,7 @@ from DataAugmentation.file_manager import FileManager
 from CRNN.utils_crnn import UtilsCRNN
 import cv2
 from CRNN.experiment import main as CRNNMain
+from SymbolClassifier.SymbolDataGenerator import SymbDG
 import re
 
 class Utils:
@@ -20,6 +21,10 @@ class Utils:
             cv2.imshow(window_name, X[i])
             cv2.waitKey(0)
             cv2.destroyAllWindows()
+
+    @staticmethod
+    def callSymbClassifier(fileList, args):
+        SymbDG.main(fileList, args)
 
     @staticmethod
     def callE2ELigatures(fileList, args):

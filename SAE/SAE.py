@@ -1,5 +1,5 @@
-from tensorflow.keras.layers import Input, Dense, Conv2D
-from tensorflow.keras.layers import MaxPooling2D, UpSampling2D, Dropout
+from tensorflow.keras.layers import Input, Conv2D
+from tensorflow.keras.layers import MaxPooling2D, UpSampling2D
 from tensorflow.keras.models import Model
 import json
 import pandas as pd

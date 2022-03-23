@@ -66,9 +66,7 @@ class Main:
             Utils.callE2ELigatures(fileList, args)
             
         if args.symb_classifier:
-            #Utils.callSymbClassifier(fileList, args)
-            # Launch Symbol Classifier
-            print("symbol_classifier")
+            Utils.callSymbClassifier(fileList, args)
         
 
     def validate_file(f):

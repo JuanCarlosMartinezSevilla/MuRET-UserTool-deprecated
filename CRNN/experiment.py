@@ -1,4 +1,3 @@
-from pyexpat import model
 from CRNN.data import DataGenerator
 from CRNN.model import get_model
 from CRNN.evaluator import ModelEvaluator
