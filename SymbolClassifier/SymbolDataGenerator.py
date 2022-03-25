@@ -90,14 +90,23 @@ class SymbDG:
     def batchCreator(X_g, X_p, Y_g, Y_p):
         batch_size = 2
         while True:
-            input_gen = []
-            output_gen = []
+            
             for f in range(batch_size):
                 idx = random.randint(0,len(X_g)-1)
-                input_gen = np.array(input_gen, [SymbDG.resize_glyph(X_g[idx]), SymbDG.resize_pos(X_p[idx])])
-                output_gen = np.array(output_gen, [Y_g[idx], Y_p[idx]])
 
-            yield (input_gen, output_gen)
+
+                if f == 0:
+                    input_g = np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)
+                    input_p = np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)
+                    output_g = np.expand_dims(Y_g[idx], axis=0)
+                    output_p = np.expand_dims(Y_p[idx], axis=0)
+                else:
+                    input_g = np.concatenate((input_g, np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)), axis=0)
+                    input_p = np.concatenate((input_p, np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)), axis=0)
+                    output_g = np.concatenate((output_g, np.expand_dims(Y_g[idx], axis=0)), axis=0)
+                    output_p = np.concatenate((output_p, np.expand_dims(Y_p[idx], axis=0)), axis=0)
+                
+            yield input_g, input_p, output_g, output_p
         
 
     def main(fileList: dict, args):
@@ -107,12 +116,13 @@ class SymbDG:
 
         generator = SymbDG.batchCreator(X_g, X_p, Y_g, Y_p)
 
-        a = next(generator)
-        print(a[0].shape)
-        print(a[1].shape)
+        
+        # [ 
+        #   [[img_glyph , img_pos ]] ,
+        #   [[gt_glyph  , gt_pos  ]] 
+        # ]
 
-
-        model = SymbolCNN.model(1, generator, 2, len(Y_g_cats), len(Y_p_cats))
+        model = SymbolCNN.model(len(Y_g_cats), len(Y_p_cats))
 
         model.fit(generator,
                 steps_per_epoch=2,
