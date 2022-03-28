@@ -6,6 +6,9 @@ from SymbolClassifier.SymbCNN import SymbolCNN
 import numpy as np
 import os
 import tensorflowjs as tfjs
+from SymbolClassifier.configuration import Configuration
+from description import SymbolClassifierDescription
+import sys
 
 class SymbDG:
 
@@ -73,7 +76,7 @@ class SymbDG:
 
         Y_glyph_cats = set(Y_glyph)
         Y_pos_cats = set(Y_pos)
-        print(f"\t{len(X_glyph)} symbols loaded with {len(Y_glyph_cats)} different types and {len(Y_pos_cats)} different positions.")
+        print(f"{len(X_glyph)} symbols loaded with {len(Y_glyph_cats)} different types and {len(Y_pos_cats)} different positions.\n")
 
         return X_glyph, X_pos, Y_glyph, Y_pos, Y_glyph_cats, Y_pos_cats
 
@@ -86,15 +89,15 @@ class SymbDG:
 
     def resize_glyph(image):
         # Normalizing images
-        height = 40
-        width = 40
+        height = Configuration.img_height_g
+        width = Configuration.img_width_g
         img = cv2.resize(image, (width, height)) / 255
         return img
 
     def resize_pos(image):
         # Normalizing images
-        height = 112
-        width = 40
+        height = Configuration.img_height_p
+        width = Configuration.img_width_p
         img = cv2.resize(image, (width, height))/255
         return img
 
@@ -140,7 +143,7 @@ class SymbDG:
         SymbDG.save_dict('i2w_glyphs', i2w_glyphs_vocab)
         SymbDG.save_dict('i2w_pos', i2w_pos_vocab)
 
-        return w2i_glyphs_vocab, w2i_pos_vocab
+        return w2i_glyphs_vocab, w2i_pos_vocab, i2w_glyphs_vocab, i2w_pos_vocab
         
 
     def main(fileList: dict, args):
@@ -151,9 +154,19 @@ class SymbDG:
 
         X_g, X_p, Y_g, Y_p, Y_g_cats, Y_p_cats = SymbDG.parse_files(train_dict)
 
-        w2i_g, w2i_p = SymbDG.createVocabs(Y_g_cats, Y_p_cats)
+        w2i_g, w2i_p, i2w_g, i2w_p = SymbDG.createVocabs(Y_g_cats, Y_p_cats)
 
         generator = SymbDG.batchCreator(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
+
+        description = SymbolClassifierDescription('SymbolClassifier', None, Configuration.img_height_g, Configuration.img_width_g,
+                                                batch_size, fileList)
+
+        description.i2w_g = i2w_g
+        description.w2i_g = w2i_g
+        description.i2w_p = i2w_p
+        description.w2i_p = w2i_p
+        description.input_h_2 = Configuration.img_height_p
+        description.input_w_2 = Configuration.img_width_p
 
         
         # [ 
@@ -170,6 +183,12 @@ class SymbDG:
         #        steps_per_epoch=steps,
         #        epochs=15,
         #        verbose=1)
+        epochs = 15
+
+        description.model_epochs = epochs
+        description.save_description()
+
+        sys.exit(-1)
 
         model.fit(generator,
                 steps_per_epoch=1,

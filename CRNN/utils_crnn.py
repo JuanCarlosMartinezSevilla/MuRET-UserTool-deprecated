@@ -155,7 +155,7 @@ class UtilsCRNN():
         w2i = {symbol: idx for idx, symbol in enumerate(vocabulary)}
         i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
 
-        print("{} samples loaded with {}-sized vocabulary".format(len(X), len(w2i)))
+        print("{} samples loaded with {}-sized vocabulary\n".format(len(X), len(w2i)))
         
         return X, Y, w2i, i2w
 

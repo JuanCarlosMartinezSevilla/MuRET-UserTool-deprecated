@@ -8,6 +8,9 @@ import logging
 from sklearn.model_selection import train_test_split
 import tensorflowjs as tfjs
 
+from description import Description, End2EndDescription
+import sys
+
 def split_data(fileList):
     print(f"\n ■ Number of images in the dataset: {len(fileList)}")
     aux = []
@@ -23,15 +26,18 @@ def split_data(fileList):
 
 def main(fileList, ligatures, args):
 
+    description = End2EndDescription('EndToEnd', None, None, None, None, fileList)
+
     if ligatures:
         fileList = U.clean_data(fileList)
     train_dict, val_dict, test_dict = split_data(fileList)
 
     #print(fileList)
     print("\n=== Train data ===")
+    batch_size = 8
     dg = DataGenerator(dataset_list_path=train_dict,
                        aug_factor=3, # seq (1 5)
-                       batch_size=8,
+                       batch_size=batch_size,
                        num_channels=3,
                        width_reduction=8, ligatures=ligatures)
 
@@ -50,7 +56,7 @@ def main(fileList, ligatures, args):
     evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=0)
 
     #X_test, Y_test, _, _ = U.parse_lst(args.test)
-    print("\n=== Test data ===\n")
+    print("\n=== Test data ===")
     if ligatures:
         X_test, Y_test, _, _ = U.parse_lst_dict_ligatures(test_dict)
     else:
@@ -61,12 +67,15 @@ def main(fileList, ligatures, args):
     #if args.model:
     #    best_ser_val = 100
     best_ser_val = 100
-    epochs = 1
+    epochs = 1000
 
-    values = {"epochs": epochs, 
-              "image_size": Config.img_height,
-              "batch_size": 8,
-              "routes": fileList}
+    description.model_epochs = epochs
+    description.batch = batch_size
+    description.input_h = Config.img_height
+    description.i2w = dg.i2w
+    description.w2i = dg.w2i
+    description.save_description()
+    sys.exit(-1)
 
     for super_epoch in range(epochs):
         print("Epoch {}".format(super_epoch))
