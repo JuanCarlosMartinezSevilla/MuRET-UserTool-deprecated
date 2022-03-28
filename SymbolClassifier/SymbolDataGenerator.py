@@ -5,6 +5,7 @@ import cv2
 import random
 from SymbolClassifier.SymbCNN import SymbolCNN
 import numpy as np
+import os
 
 class SymbDG:
 
@@ -87,7 +88,7 @@ class SymbDG:
         width = 40
         return cv2.resize(image, (width, height))
 
-    def batchCreator(X_g, X_p, Y_g, Y_p):
+    def batchCreator(X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
         batch_size = 2
         while True:
             
@@ -98,15 +99,37 @@ class SymbDG:
                 if f == 0:
                     input_g = np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)
                     input_p = np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)
-                    output_g = np.expand_dims(Y_g[idx], axis=0)
-                    output_p = np.expand_dims(Y_p[idx], axis=0)
+                    output_g = np.expand_dims(w2i_g[Y_g[idx]], axis=0)
+                    output_p = np.expand_dims(w2i_p[Y_p[idx]], axis=0)
                 else:
                     input_g = np.concatenate((input_g, np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)), axis=0)
                     input_p = np.concatenate((input_p, np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)), axis=0)
-                    output_g = np.concatenate((output_g, np.expand_dims(Y_g[idx], axis=0)), axis=0)
-                    output_p = np.concatenate((output_p, np.expand_dims(Y_p[idx], axis=0)), axis=0)
+                    output_g = np.concatenate((output_g, np.expand_dims(w2i_g[Y_g[idx]], axis=0)), axis=0)
+                    output_p = np.concatenate((output_p, np.expand_dims(w2i_p[Y_p[idx]], axis=0)), axis=0)
                 
-            yield input_g, input_p, output_g, output_p
+            yield (input_g, input_p), (output_g, output_p)
+
+    def save_dict(name, data):
+
+        if not os.path.exists('./MuRETPackage/SymbolClassifier'):
+            os.mkdir('./MuRETPackage/SymbolClassifier')
+        
+        with open(f'./MuRETPackage/SymbolClassifier/{name}.json', 'w') as fp:
+            json.dump(data, fp, indent=4)
+
+    def createVocabs(glyphs, positions):
+        w2i_glyphs_vocab = {i: idx for idx, i in enumerate(glyphs)}
+        w2i_pos_vocab    = {i: idx for idx, i in enumerate(positions)}
+
+        i2w_glyphs_vocab = {w2i_glyphs_vocab[i] : i for i in w2i_glyphs_vocab}
+        i2w_pos_vocab    = {w2i_pos_vocab[i]    : i for i in w2i_pos_vocab}
+
+        SymbDG.save_dict('w2i_glyphs', w2i_glyphs_vocab)
+        SymbDG.save_dict('w2i_pos', w2i_pos_vocab)
+        SymbDG.save_dict('i2w_glyphs', i2w_glyphs_vocab)
+        SymbDG.save_dict('i2w_pos', i2w_pos_vocab)
+
+        return w2i_glyphs_vocab, w2i_pos_vocab
         
 
     def main(fileList: dict, args):
@@ -114,13 +137,16 @@ class SymbDG:
 
         X_g, X_p, Y_g, Y_p, Y_g_cats, Y_p_cats = SymbDG.parse_files(train_dict)
 
-        generator = SymbDG.batchCreator(X_g, X_p, Y_g, Y_p)
+        w2i_g, w2i_p = SymbDG.createVocabs(Y_g_cats, Y_p_cats)
+
+        generator = SymbDG.batchCreator(X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
 
         
         # [ 
         #   [[img_glyph , img_pos ]] ,
         #   [[gt_glyph  , gt_pos  ]] 
         # ]
+
 
         model = SymbolCNN.model(len(Y_g_cats), len(Y_p_cats))
 

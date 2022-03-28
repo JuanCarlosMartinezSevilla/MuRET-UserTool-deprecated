@@ -26,7 +26,8 @@ def split_data(fileList):
 
 def main(fileList, ligatures, args):
 
-    fileList = U.clean_data(fileList)
+    if ligatures:
+        fileList = U.clean_data(fileList)
     train_dict, val_dict, test_dict = split_data(fileList)
 
     #print(fileList)
@@ -63,7 +64,7 @@ def main(fileList, ligatures, args):
     #if args.model:
     #    best_ser_val = 100
     best_ser_val = 100
-    epochs = 1000
+    epochs = 1
 
     values = {"epochs": epochs, 
               "image_size": Config.img_height,
@@ -73,7 +74,7 @@ def main(fileList, ligatures, args):
     for super_epoch in range(epochs):
         print("Epoch {}".format(super_epoch))
         model_tr.fit(dg,
-                     steps_per_epoch=100,
+                     steps_per_epoch=1,
                      epochs=1,
                      verbose=1)
 

@@ -39,7 +39,7 @@ class Utils:
     def callSAE(args):
         epochs = 10
         classes_to_predict = 'staff'
-        image_size = 512
+        image_size = 128
         batch_size = 8
         list_json_pathfiles = FileManager.listFilesRecursive('./dataset')
         routes_dict = FileManager.createRoutesDict(list_json_pathfiles)

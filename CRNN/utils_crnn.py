@@ -64,11 +64,12 @@ class UtilsCRNN():
             
                 with open(json_path) as json_file:
                     data = json.load(json_file)
-                    for l in data['ligatures']:
-                        if 'symbols' in l:
-                            symbols = l['symbols']
-                            if len(symbols) > 0:
-                                aux_dict[f'{json_path}'] =  page_path
+                    if 'ligatures' in data:
+                        for l in data['ligatures']:
+                            if 'symbols' in l:
+                                symbols = l['symbols']
+                                if len(symbols) > 0:
+                                    aux_dict[f'{json_path}'] =  page_path
         
         return aux_dict
 
@@ -113,6 +114,9 @@ class UtilsCRNN():
         
         with open('./MuRETPackage/EndToEnd/i2w.json', 'w') as fp:
             json.dump(i2w, fp)
+
+        with open('./MuRETPackage/EndToEnd/w2i.json', 'w') as fp:
+            json.dump(w2i, fp)
         
         return X, Y, w2i, i2w
 
