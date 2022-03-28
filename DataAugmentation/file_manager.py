@@ -1,5 +1,5 @@
 import cv2
-import os, sys
+import os
 from os import listdir
 from os.path import isfile, join, exists
 import numpy as np

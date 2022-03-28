@@ -1,0 +1,11 @@
+scikit-learn
+tensorflow
+tensorflowjs
+numpy
+pandas
+matplotlib
+opencv-python
+rich
+tqdm
+urllib3
+

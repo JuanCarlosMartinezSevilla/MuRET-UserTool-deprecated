@@ -1,6 +1,5 @@
 from enum import Enum
 import numpy as np
-import random
 
 from DataAugmentation.CustomJson import CustomJson
 from DataAugmentation.file_manager import FileManager

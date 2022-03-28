@@ -1,3 +1,4 @@
+from unicodedata import name
 from tensorflow import keras
 from tensorflow.keras import layers, losses, Model
 
@@ -35,8 +36,8 @@ class SymbolCNN:
 
         x_ff = layers.Dense(256)(x_concat)
 
-        out_glyph  = layers.Dense(cats_glyph,  activation="softmax")(x_ff)
-        out_pos    = layers.Dense(cats_pos,    activation="softmax")(x_ff)
+        out_glyph  = layers.Dense(cats_glyph,  activation="softmax", name='Glyphs_Dense')(x_ff)
+        out_pos    = layers.Dense(cats_pos,    activation="softmax", name='Positions_Dense')(x_ff)
 
         model = Model(inputs=[input_img_glyph, input_img_pos], outputs=[out_glyph, out_pos])
 

@@ -5,14 +5,11 @@ from CRNN.utils_crnn import UtilsCRNN as U
 from CRNN.config import Config
 import argparse
 import logging
-import itertools
-import tqdm
 from sklearn.model_selection import train_test_split
 import tensorflowjs as tfjs
 
 def split_data(fileList):
-    print("\n=== Number of images ===")
-    print(len(fileList))
+    print(f"\n ■ Number of images in the dataset: {len(fileList)}")
     aux = []
     [aux.append(k) for k in fileList.keys()]
     train, test = train_test_split(aux, test_size=0.2)
@@ -53,7 +50,7 @@ def main(fileList, ligatures, args):
     evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=0)
 
     #X_test, Y_test, _, _ = U.parse_lst(args.test)
-    print("\n=== Test data ===")
+    print("\n=== Test data ===\n")
     if ligatures:
         X_test, Y_test, _, _ = U.parse_lst_dict_ligatures(test_dict)
     else:
@@ -98,7 +95,7 @@ def main(fileList, ligatures, args):
                 if args.h5:
                     model_pr.save(f'./MuRETPackage/EndToEnd/EndToEnd.h5')
                 EndToEnd = model_pr
-                tfjs.converters.save_keras_model(EndToEnd, './MuRETPackage/EndToEnd/')
+                tfjs.converters.save_keras_model(EndToEnd, './MuRETPackage/EndToEnd/tfjs/')
 
 
 def build_argument_parser():

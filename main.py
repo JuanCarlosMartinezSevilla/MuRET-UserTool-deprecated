@@ -1,11 +1,10 @@
-from ast import Store
 from utils import Utils
 from DataAugmentation.file_manager import FileManager
 import shutil
 import os
 import argparse
-from pathlib import Path
 import errno
+from messages import Messages
 
 class Main:
 
@@ -51,22 +50,33 @@ class Main:
 
     def local_main(args):
 
+        Messages.welcome()
+
         fileList = Main.seeDir(args)
 
         if args.doc_analysis:
-            print("doc_analysis")
-            Utils.callDataAug(1)
+            Messages.using_document()
+
+            new_images = 1
+
+            Messages.new_images(new_images)
+
+            Utils.callDataAug(new_images)
             Utils.callSAE(args)
 
         if args.end_to_end:
             # Launch E2E
+            Messages.e2e()
             Utils.callE2E(fileList, args)
         
         if args.end_to_end_ligatures:
             Utils.callE2ELigatures(fileList, args)
             
         if args.symb_classifier:
+            Messages.sc()
             Utils.callSymbClassifier(fileList, args)
+        
+        Messages.end()
         
 
     def validate_file(f):

@@ -205,20 +205,14 @@ class SAE:
         SAEmodel = Model(input_img, decoded)
         SAEmodel.compile(optimizer='adam', loss = 'binary_crossentropy')
 
-        #SAEmodel.fit(
-        #    generator,
-        #    verbose=1,
-        #    steps_per_epoch=steps,
-        #    epochs=epochs)
-
         SAEmodel.fit(
             generator,
             verbose=1,
-            steps_per_epoch=1,
-            epochs=1)
+            steps_per_epoch=steps,
+            epochs=epochs)
         
         if args.h5:
             SAEmodel.save(f'./MuRETPackage/DocumentAnalysis/DocumentAnalysis.h5')
         
         # Save model to use it with tensorflow.js
-        tfjs.converters.save_keras_model(SAEmodel, './MuRETPackage/DocumentAnalysis/')
+        tfjs.converters.save_keras_model(SAEmodel, './MuRETPackage/DocumentAnalysis/tfjs/')

@@ -1,4 +1,3 @@
-from calendar import EPOCH
 import json
 from sklearn.model_selection import train_test_split
 import cv2
@@ -6,12 +5,12 @@ import random
 from SymbolClassifier.SymbCNN import SymbolCNN
 import numpy as np
 import os
+import tensorflowjs as tfjs
 
 class SymbDG:
 
     def split_data(fileList):
-        print("\n=== Number of images ===")
-        print(len(fileList))
+        print(f"\n ■ Number of images in the dataset: {len(fileList )-1}")
         aux = []
         [aux.append(k) for k in fileList.keys()]
         train, test = train_test_split(aux, test_size=0.2)
@@ -65,31 +64,43 @@ class SymbDG:
                                                             type_s = s['agnostic_symbol_type']
                                                             pos_s = s['position_in_staff']
 
-                                                            X_glyph.append(img[top_s:bottom_s, left_s:right_s])
-                                                            Y_glyph.append(type_s)
-                                                            X_pos.append(img[top_r:bottom_r, left_s:right_s])
-                                                            Y_pos.append(pos_s)
+                                                            if (bottom_s - top_s) != 0 and (right_s - left_s) != 0:
+                                                                if (bottom_r - top_r) != 0 and (right_s - left_s) != 0:
+                                                                    X_glyph.append(img[top_s:bottom_s, left_s:right_s])
+                                                                    Y_glyph.append(type_s)
+                                                                    X_pos.append(img[top_r:bottom_r, left_s:right_s])
+                                                                    Y_pos.append(pos_s)
 
         Y_glyph_cats = set(Y_glyph)
         Y_pos_cats = set(Y_pos)
-        print(f"{len(X_glyph)} symbols loaded with {len(Y_glyph_cats)} different types and {len(Y_pos_cats)} different positions.")
+        print(f"\t{len(X_glyph)} symbols loaded with {len(Y_glyph_cats)} different types and {len(Y_pos_cats)} different positions.")
 
         return X_glyph, X_pos, Y_glyph, Y_pos, Y_glyph_cats, Y_pos_cats
+
+
+    def printCV2(X, window_name='sample'):
+        
+        cv2.imshow(window_name, X)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     def resize_glyph(image):
         # Normalizing images
         height = 40
         width = 40
-        return cv2.resize(image, (width, height))
+        img = cv2.resize(image, (width, height)) / 255
+        return img
 
     def resize_pos(image):
         # Normalizing images
         height = 112
         width = 40
-        return cv2.resize(image, (width, height))
+        img = cv2.resize(image, (width, height))/255
+        return img
 
-    def batchCreator(X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
-        batch_size = 2
+
+    def batchCreator(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
+
         while True:
             
             for f in range(batch_size):
@@ -133,13 +144,16 @@ class SymbDG:
         
 
     def main(fileList: dict, args):
+
+        batch_size = 32
+
         train_dict, val_dict, test_dict = SymbDG.split_data(fileList)
 
         X_g, X_p, Y_g, Y_p, Y_g_cats, Y_p_cats = SymbDG.parse_files(train_dict)
 
         w2i_g, w2i_p = SymbDG.createVocabs(Y_g_cats, Y_p_cats)
 
-        generator = SymbDG.batchCreator(X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
+        generator = SymbDG.batchCreator(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
 
         
         # [ 
@@ -149,13 +163,23 @@ class SymbDG:
 
 
         model = SymbolCNN.model(len(Y_g_cats), len(Y_p_cats))
+        steps = len(X_g)//batch_size
+
+        print('\n=== Starting training process ===\n')
+        #model.fit(generator,
+        #        steps_per_epoch=steps,
+        #        epochs=15,
+        #        verbose=1)
 
         model.fit(generator,
-                steps_per_epoch=2,
+                steps_per_epoch=1,
                 epochs=1,
                 verbose=1)
 
-        
+        if args.h5:
+            model.save(f'./MuRETPackage/SymbolClassifier/SymbolClassifier.h5')
+        SymbolClassifier = model
+        tfjs.converters.save_keras_model(SymbolClassifier, './MuRETPackage/SymbolClassifier/tfjs/')
 
 if __name__ == '__main__':
     SymbDG.main()

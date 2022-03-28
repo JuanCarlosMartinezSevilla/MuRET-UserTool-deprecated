@@ -3,8 +3,6 @@ import itertools
 from CRNN.augmentation import ImageModificator
 import cv2
 import json
-import os
-import sys
 
 class UtilsCRNN():
 
