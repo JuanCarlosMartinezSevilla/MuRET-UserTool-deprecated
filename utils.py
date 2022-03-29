@@ -50,7 +50,7 @@ class Utils:
         description.model_epochs = 500
         description.save_description()
 
-        sys.exit(-1)
+        #sys.exit(-1)
 
         generator = SAE.dataGen(routes_dict, batch_size, image_size, classes_to_predict)
         
