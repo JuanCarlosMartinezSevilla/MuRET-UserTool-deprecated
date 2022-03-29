@@ -28,8 +28,8 @@ def main(fileList, ligatures, args):
 
     description = End2EndDescription('EndToEnd', None, None, None, None, fileList)
 
-    if ligatures:
-        fileList = U.clean_data(fileList)
+    #if ligatures:
+    #    fileList = U.clean_data(fileList)
     train_dict, val_dict, test_dict = split_data(fileList)
 
     #print(fileList)
@@ -75,7 +75,7 @@ def main(fileList, ligatures, args):
     description.i2w = dg.i2w
     description.w2i = dg.w2i
     description.save_description()
-    sys.exit(-1)
+    
 
     for super_epoch in range(epochs):
         print("Epoch {}".format(super_epoch))

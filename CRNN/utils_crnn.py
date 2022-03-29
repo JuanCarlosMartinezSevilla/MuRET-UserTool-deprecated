@@ -74,6 +74,8 @@ class UtilsCRNN():
 
     def parse_lst_dict_ligatures(lst_path: dict):
 
+        print("Tamaño dataset ligatures: ", len(lst_path))
+
         X = []
         Y = []
         vocabulary = set()

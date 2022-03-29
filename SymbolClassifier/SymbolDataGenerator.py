@@ -188,7 +188,7 @@ class SymbDG:
         description.model_epochs = epochs
         description.save_description()
 
-        sys.exit(-1)
+        #sys.exit(-1)
 
         model.fit(generator,
                 steps_per_epoch=1,
