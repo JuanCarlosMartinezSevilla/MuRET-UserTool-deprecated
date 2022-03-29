@@ -191,8 +191,8 @@ class SymbDG:
         #sys.exit(-1)
 
         model.fit(generator,
-                steps_per_epoch=1,
-                epochs=1,
+                steps_per_epoch=steps,
+                epochs=15,
                 verbose=1)
 
         if args.h5:

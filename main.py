@@ -61,7 +61,7 @@ class Main:
 
             Messages.new_images(new_images)
 
-            #Utils.callDataAug(new_images)
+            Utils.callDataAug(new_images)
             Utils.callSAE(args)
 
         if args.end_to_end:

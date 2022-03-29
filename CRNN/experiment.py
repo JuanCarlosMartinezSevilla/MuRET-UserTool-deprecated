@@ -78,9 +78,9 @@ def main(fileList, ligatures, args):
     
 
     for super_epoch in range(epochs):
-        print("Epoch {}".format(super_epoch))
+        print("Epoch {}/{}".format(super_epoch, epochs))
         model_tr.fit(dg,
-                     steps_per_epoch=1,
+                     steps_per_epoch=100,
                      epochs=1,
                      verbose=1)
 
