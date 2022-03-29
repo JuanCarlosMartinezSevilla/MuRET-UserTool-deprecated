@@ -107,7 +107,7 @@ class SymbDG:
         while True:
             
             for f in range(batch_size):
-                idx = random.randint(0,len(X_g))
+                idx = random.randint(0,len(X_g)-1)
 
 
                 if f == 0:

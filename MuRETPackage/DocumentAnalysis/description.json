@@ -5,7 +5,6 @@
     "img_width": 512,
     "classes": "staff",
     "data": {
-        "./dataset/JSON/daugImage1.dict": "./dataset/SRC/daugImage1.png",
         "./dataset/json_agnostic_symbol_images1521821994097720602/b-3-28/00517.jpg.json": "./dataset/SRC/00517.jpg",
         "./dataset/json_agnostic_symbol_images1521821994097720602/b-3-28/00518.JPG.json": "./dataset/SRC/00518.JPG",
         "./dataset/json_agnostic_symbol_images1521821994097720602/b-3-28/00519.JPG.json": "./dataset/SRC/00519.JPG",
@@ -141,5 +140,5 @@
         "./dataset/json_agnostic_symbol_images1521821994097720602/b-59-850/12702.JPG.json": "./dataset/SRC/12702.JPG",
         "./dataset/json_agnostic_symbol_images1521821994097720602/b-59-850/12703.JPG.json": "./dataset/SRC/12703.JPG"
     },
-    "date": "2022-03-28T13:18:38.461707"
+    "date": "2022-03-29T08:31:20.507663"
 }
