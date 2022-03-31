@@ -107,7 +107,7 @@ class SymbDG:
         while True:
             
             for f in range(batch_size):
-                idx = random.randint(0,len(X_g))
+                idx = random.randint(0,len(X_g)-1)
 
 
                 if f == 0:
@@ -175,7 +175,7 @@ class SymbDG:
         # ]
 
 
-        model = SymbolCNN.model(len(Y_g_cats), len(Y_p_cats))
+        model, model_g, model_p = SymbolCNN.model(len(Y_g_cats), len(Y_p_cats))
         steps = len(X_g)//batch_size
 
         print('\n=== Starting training process ===\n')
