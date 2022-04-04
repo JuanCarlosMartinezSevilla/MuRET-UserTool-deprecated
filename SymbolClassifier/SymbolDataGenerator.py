@@ -68,11 +68,12 @@ class SymbDG:
                                                             pos_s = s['position_in_staff']
 
                                                             if (bottom_s - top_s) != 0 and (right_s - left_s) != 0:
-                                                                if (bottom_r - top_r) != 0 and (right_s - left_s) != 0:
-                                                                    X_glyph.append(img[top_s:bottom_s, left_s:right_s])
-                                                                    Y_glyph.append(type_s)
-                                                                    X_pos.append(img[top_r:bottom_r, left_s:right_s])
-                                                                    Y_pos.append(pos_s)
+                                                                if (right_s - left_s) != 0:
+                                                                    if (bottom_r - top_r) != 0 and (right_s - left_s) != 0:
+                                                                        X_glyph.append(img[top_s:bottom_s, left_s:right_s])
+                                                                        Y_glyph.append(type_s)
+                                                                        X_pos.append(img[top_r:bottom_r, left_s:right_s])
+                                                                        Y_pos.append(pos_s)
 
         Y_glyph_cats = set(Y_glyph)
         Y_pos_cats = set(Y_pos)
