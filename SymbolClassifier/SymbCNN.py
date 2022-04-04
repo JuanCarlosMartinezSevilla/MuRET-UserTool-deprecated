@@ -42,8 +42,8 @@ class SymbolCNN:
         model = Model(inputs=[input_img_glyph, input_img_pos], outputs=[out_glyph, out_pos])
 
         # To obtain 2 models that its weights are modified when training with 2 inp and 2 outp
-        model_g = Model(inputs=[input_img_glyph], outputs=[out_glyph])
-        model_p = Model(inputs=[input_img_pos], outputs=[out_pos])
+        model_g = Model(inputs=input_img_glyph, outputs=out_glyph)
+        model_p = Model(inputs=input_img_pos, outputs=out_pos)
 
         model.compile(optimizer='RMSprop', loss=losses.SparseCategoricalCrossentropy())
         return model,  model_g, model_p
