@@ -18,9 +18,6 @@ class Main:
 
             if not os.path.exists('./MuRETPackage'):
                 os.mkdir('./MuRETPackage')
-            else:
-                os.rmdir('./MuRETPackage')
-                os.mkdir('./MuRETPackage')
 
             if os.path.exists(path_to_download_images):
                 shutil.rmtree(path_to_download_images)

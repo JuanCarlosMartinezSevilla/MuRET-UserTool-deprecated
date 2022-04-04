@@ -26,7 +26,7 @@ def split_data(fileList):
 
 def main(fileList, ligatures, args):
 
-    description = End2EndDescription('EndToEnd', None, None, None, None, fileList)
+    description = End2EndDescription('agnostic_end2end', None, None, None, None, fileList)
 
     #if ligatures:
     #    fileList = U.clean_data(fileList)

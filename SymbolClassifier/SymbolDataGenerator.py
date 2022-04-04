@@ -125,10 +125,10 @@ class SymbDG:
 
     def save_dict(name, data):
 
-        if not os.path.exists('./MuRETPackage/SymbolClassifier'):
-            os.mkdir('./MuRETPackage/SymbolClassifier')
+        if not os.path.exists('./MuRETPackage/agnostic_symbol_and_position_from_image'):
+            os.mkdir('./MuRETPackage/agnostic_symbol_and_position_from_image')
         
-        with open(f'./MuRETPackage/SymbolClassifier/{name}.json', 'w') as fp:
+        with open(f'./MuRETPackage/agnostic_symbol_and_position_from_image/{name}.json', 'w') as fp:
             json.dump(data, fp, indent=4)
 
     def createVocabs(glyphs, positions):
@@ -158,7 +158,7 @@ class SymbDG:
 
         generator = SymbDG.batchCreator(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
 
-        description = SymbolClassifierDescription('SymbolClassifier', None, Configuration.img_height_g, Configuration.img_width_g,
+        description = SymbolClassifierDescription('agnostic_symbol_and_position_from_image', None, Configuration.img_height_g, Configuration.img_width_g,
                                                 batch_size, fileList)
 
         description.i2w_g = i2w_g

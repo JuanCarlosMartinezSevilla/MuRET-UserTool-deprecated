@@ -46,7 +46,7 @@ class Utils:
         list_json_pathfiles = FileManager.listFilesRecursive('./dataset')
         routes_dict = FileManager.createRoutesDict(list_json_pathfiles)
         
-        description = DocumentAnalysisDescription('DocumentAnalysis', epochs, image_size, image_size, batch_size, routes_dict, classes_to_predict)
+        description = DocumentAnalysisDescription('document_analysis', epochs, image_size, image_size, batch_size, routes_dict, classes_to_predict)
         description.model_epochs = 500
         description.save_description()
 
