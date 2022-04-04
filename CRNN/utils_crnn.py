@@ -134,25 +134,26 @@ class UtilsCRNN():
                 with open(json_path) as json_file:
                     data = json.load(json_file)
                     image = cv2.imread(page_path, cv2.IMREAD_COLOR)
-                    for page in data['pages']:
-                        if 'regions' in page:
-                            for region in page['regions']:
-                                if region['type'] == 'staff' and 'symbols' in region:
-                                    symbols = region['symbols']
-
-                                    if len(symbols) > 0:
-                                        top, left, bottom, right = region['bounding_box']['fromY'], \
-                                                                   region['bounding_box']['fromX'], \
-                                                                   region['bounding_box']['toY'],   \
-                                                                   region['bounding_box']['toX']
-
-                                        X.append(image[top:bottom, left:right])
-
-                                        gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
-                                            for s in symbols]
-                                        
-                                        Y.append(gt)
-                                        vocabulary.update(gt)
+                    if 'pages' in data:
+                        for page in data['pages']:
+                            if 'regions' in page:
+                                for region in page['regions']:
+                                    if region['type'] == 'staff' and 'symbols' in region:
+                                        symbols = region['symbols']
+    
+                                        if len(symbols) > 0:
+                                            top, left, bottom, right = region['bounding_box']['fromY'], \
+                                                                       region['bounding_box']['fromX'], \
+                                                                       region['bounding_box']['toY'],   \
+                                                                       region['bounding_box']['toX']
+    
+                                            X.append(image[top:bottom, left:right])
+    
+                                            gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
+                                                for s in symbols]
+                                            
+                                            Y.append(gt)
+                                            vocabulary.update(gt)
 
         w2i = {symbol: idx for idx, symbol in enumerate(vocabulary)}
         i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
