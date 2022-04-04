@@ -57,7 +57,7 @@ class Main:
         if args.doc_analysis:
             Messages.using_document()
 
-            new_images = 50
+            new_images = args.new_images
 
             Messages.new_images(new_images)
 
@@ -102,7 +102,7 @@ class Main:
                                 help='Train a symbol classifier model.')
         parser.add_argument('-rl', '--reload', action='store_true',
                                 help='Reload dataset.')
-        parser.add_argument('-ni', '--new_images', action='store', type=int,
+        parser.add_argument('-ni', '--new_images', action='store', type=int, required=True,
                                 help='Number of new images.')
         parser.add_argument('-h5', '--h5', action='store_true',
                                 help='Save models in .h5 format.')
