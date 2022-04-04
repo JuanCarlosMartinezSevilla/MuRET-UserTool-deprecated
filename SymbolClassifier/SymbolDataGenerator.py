@@ -89,6 +89,7 @@ class SymbDG:
 
     def resize_glyph(image):
         # Normalizing images
+        print(image.shape)
         height = Configuration.img_height_g
         width = Configuration.img_width_g
         img = cv2.resize(image, (width, height)) / 255
