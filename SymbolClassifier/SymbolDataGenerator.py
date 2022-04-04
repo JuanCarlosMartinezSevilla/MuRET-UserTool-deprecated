@@ -102,7 +102,7 @@ class SymbDG:
         return img
 
 
-    def batchCreator(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
+    def batchCreatorP(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
 
         while True:
             
@@ -121,7 +121,28 @@ class SymbDG:
                     output_g = np.concatenate((output_g, np.expand_dims(w2i_g[Y_g[idx]], axis=0)), axis=0)
                     output_p = np.concatenate((output_p, np.expand_dims(w2i_p[Y_p[idx]], axis=0)), axis=0)
                 
-            yield (input_g, input_p), (output_g, output_p)
+            yield (input_p), (output_p)
+    
+    def batchCreatorG(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
+
+        while True:
+            
+            for f in range(batch_size):
+                idx = random.randint(0,len(X_g)-1)
+
+
+                if f == 0:
+                    input_g = np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)
+                    input_p = np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)
+                    output_g = np.expand_dims(w2i_g[Y_g[idx]], axis=0)
+                    output_p = np.expand_dims(w2i_p[Y_p[idx]], axis=0)
+                else:
+                    input_g = np.concatenate((input_g, np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)), axis=0)
+                    input_p = np.concatenate((input_p, np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)), axis=0)
+                    output_g = np.concatenate((output_g, np.expand_dims(w2i_g[Y_g[idx]], axis=0)), axis=0)
+                    output_p = np.concatenate((output_p, np.expand_dims(w2i_p[Y_p[idx]], axis=0)), axis=0)
+                
+            yield (input_g), (output_g)
 
     def save_dict(name, data):
 
@@ -145,6 +166,11 @@ class SymbDG:
 
         return w2i_glyphs_vocab, w2i_pos_vocab, i2w_glyphs_vocab, i2w_pos_vocab
         
+    def batchCreatorMain(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
+        gen_p = SymbDG.batchCreatorP(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
+        gen_g = SymbDG.batchCreatorG(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
+
+        return gen_p, gen_g
 
     def main(fileList: dict, args):
 
@@ -156,7 +182,7 @@ class SymbDG:
 
         w2i_g, w2i_p, i2w_g, i2w_p = SymbDG.createVocabs(Y_g_cats, Y_p_cats)
 
-        generator = SymbDG.batchCreator(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
+        generator_p, generator_g = SymbDG.batchCreatorMain(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
 
         description = SymbolClassifierDescription('agnostic_symbol_and_position_from_image', None, Configuration.img_height_g, Configuration.img_width_g,
                                                 batch_size, fileList)
@@ -175,14 +201,12 @@ class SymbDG:
         # ]
 
 
-        model, model_g, model_p = SymbolCNN.model(len(Y_g_cats), len(Y_p_cats))
+        model_p = SymbolCNN.model(len(Y_p_cats), 112, 40)
+        model_g = SymbolCNN.model(len(Y_g_cats), 40, 40)
+        #model, model_g, model_p = SymbolCNN.model(len(Y_g_cats), len(Y_p_cats))
         steps = len(X_g)//batch_size
 
         print('\n=== Starting training process ===\n')
-        #model.fit(generator,
-        #        steps_per_epoch=steps,
-        #        epochs=15,
-        #        verbose=1)
         epochs = 15
 
         description.model_epochs = epochs
@@ -190,10 +214,16 @@ class SymbDG:
 
         #sys.exit(-1)
 
-        model.fit(generator,
+        model_p.fit(generator_p,
                 steps_per_epoch=steps,
-                epochs=15,
+                epochs=50,
                 verbose=1)
+
+        model_g.fit(generator_g,
+                steps_per_epoch=steps,
+                epochs=50,
+                verbose=1)
+
 
         # model_g, model_p
         if args.h5:
