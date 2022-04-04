@@ -195,10 +195,13 @@ class SymbDG:
                 epochs=15,
                 verbose=1)
 
+        # model_g, model_p
         if args.h5:
-            model.save(f'./MuRETPackage/SymbolClassifier/SymbolClassifier.h5')
-        SymbolClassifier = model
-        tfjs.converters.save_keras_model(SymbolClassifier, './MuRETPackage/SymbolClassifier/tfjs/')
+            model_g.save(f'./MuRETPackage/agnostic_symbol_and_position_from_image/symbol/model.h5')
+            model_p.save(f'./MuRETPackage/agnostic_symbol_and_position_from_image/position/model.h5')
+        
+        tfjs.converters.save_keras_model(model_g, './MuRETPackage/agnostic_symbol_and_position_from_image/symbol/tfjs/')
+        tfjs.converters.save_keras_model(model_p, './MuRETPackage/agnostic_symbol_and_position_from_image/position/tfjs/')
 
 if __name__ == '__main__':
     SymbDG.main()

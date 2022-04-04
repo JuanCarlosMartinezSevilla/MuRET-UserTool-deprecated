@@ -96,15 +96,15 @@ def main(fileList, ligatures, args):
             #model_pr.save_weights("model_weights.h5")
             if ligatures:
                 if args.h5:
-                    model_pr.save(f'./MuRETPackage/EndToEnd/EndToEndLigatures.h5')
+                    model_pr.save(f'./MuRETPackage/agnostic_end2end/agnostic_end2end_ligatures.h5')
                 # Save model to use it with tensorflow.js
                 EndToEndLigatures = model_pr
-                tfjs.converters.save_keras_model(EndToEndLigatures, './MuRETPackage/EndToEnd/')
+                tfjs.converters.save_keras_model(EndToEndLigatures, './MuRETPackage/agnostic_end2end/')
             else:
                 if args.h5:
-                    model_pr.save(f'./MuRETPackage/EndToEnd/EndToEnd.h5')
+                    model_pr.save(f'./MuRETPackage/agnostic_end2end/agnostic_end2end.h5')
                 EndToEnd = model_pr
-                tfjs.converters.save_keras_model(EndToEnd, './MuRETPackage/EndToEnd/tfjs/')
+                tfjs.converters.save_keras_model(EndToEnd, './MuRETPackage/agnostic_end2end/tfjs/')
 
 
 def build_argument_parser():
