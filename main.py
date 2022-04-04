@@ -102,6 +102,8 @@ class Main:
                                 help='Train a symbol classifier model.')
         parser.add_argument('-rl', '--reload', action='store_true',
                                 help='Reload dataset.')
+        parser.add_argument('-ni', '--new_images', action='store', type=int,
+                                help='Number of new images.')
         parser.add_argument('-h5', '--h5', action='store_true',
                                 help='Save models in .h5 format.')
 
