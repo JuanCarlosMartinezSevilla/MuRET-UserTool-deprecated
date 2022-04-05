@@ -112,10 +112,10 @@ class UtilsCRNN():
         
         #Saving for tests
         
-        with open('./MuRETPackage/EndToEnd/i2w.json', 'w') as fp:
+        with open('./MuRETPackage/agnostic_end2end_ligatures/i2w.json', 'w') as fp:
             json.dump(i2w, fp)
 
-        with open('./MuRETPackage/EndToEnd/w2i.json', 'w') as fp:
+        with open('./MuRETPackage/agnostic_end2end_ligatures/w2i.json', 'w') as fp:
             json.dump(w2i, fp)
         
         return X, Y, w2i, i2w
@@ -157,6 +157,12 @@ class UtilsCRNN():
 
         w2i = {symbol: idx for idx, symbol in enumerate(vocabulary)}
         i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
+
+        with open('./MuRETPackage/agnostic_end2end/i2w.json', 'w') as fp:
+            json.dump(i2w, fp)
+
+        with open('./MuRETPackage/agnostic_end2end/w2i.json', 'w') as fp:
+            json.dump(w2i, fp)
 
         print("{} samples loaded with {}-sized vocabulary\n".format(len(X), len(w2i)))
         
