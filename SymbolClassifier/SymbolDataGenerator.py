@@ -66,14 +66,17 @@ class SymbDG:
                                                             # Symbol type and position
                                                             type_s = s['agnostic_symbol_type']
                                                             pos_s = s['position_in_staff']
+                                                            
+                                                            img_g = img[top_s:bottom_s, left_s:right_s]
+                                                            img_p = img[top_r:bottom_r, left_s:right_s]
 
-                                                            if (bottom_s - top_s) != 0 and (right_s - left_s) != 0:
-                                                                if (right_s - left_s) != 0:
-                                                                    if (bottom_r - top_r) != 0 and (right_s - left_s) != 0:
-                                                                        X_glyph.append(img[top_s:bottom_s, left_s:right_s])
-                                                                        Y_glyph.append(type_s)
-                                                                        X_pos.append(img[top_r:bottom_r, left_s:right_s])
-                                                                        Y_pos.append(pos_s)
+                                                            if img_g.shape[0] != 0 and img_g.shape[1] != 0:
+                                                                if img_p.shape[0] != 0 and img_p.shape[1] != 0:
+                                                            
+                                                                    X_glyph.append(img_g)
+                                                                    Y_glyph.append(type_s)
+                                                                    X_pos.append(img_p)
+                                                                    Y_pos.append(pos_s)
 
         Y_glyph_cats = set(Y_glyph)
         Y_pos_cats = set(Y_pos)
@@ -90,7 +93,6 @@ class SymbDG:
 
     def resize_glyph(image):
         # Normalizing images
-        print(image.shape)
         height = Configuration.img_height_g
         width = Configuration.img_width_g
         img = cv2.resize(image, (width, height)) / 255
@@ -146,12 +148,12 @@ class SymbDG:
                 
             yield (input_g), (output_g)
 
-    def save_dict(name, data):
+    def save_dict(name, data, path):
 
-        if not os.path.exists('./MuRETPackage/agnostic_symbol_and_position_from_image'):
-            os.mkdir('./MuRETPackage/agnostic_symbol_and_position_from_image')
+        if not os.path.exists(path):
+            os.mkdir(path)
         
-        with open(f'./MuRETPackage/agnostic_symbol_and_position_from_image/{name}.json', 'w') as fp:
+        with open(f'{path}{name}.json', 'w') as fp:
             json.dump(data, fp, indent=4)
 
     def createVocabs(glyphs, positions):
@@ -161,10 +163,10 @@ class SymbDG:
         i2w_glyphs_vocab = {w2i_glyphs_vocab[i] : i for i in w2i_glyphs_vocab}
         i2w_pos_vocab    = {w2i_pos_vocab[i]    : i for i in w2i_pos_vocab}
 
-        SymbDG.save_dict('w2i_glyphs', w2i_glyphs_vocab)
-        SymbDG.save_dict('w2i_pos', w2i_pos_vocab)
-        SymbDG.save_dict('i2w_glyphs', i2w_glyphs_vocab)
-        SymbDG.save_dict('i2w_pos', i2w_pos_vocab)
+        SymbDG.save_dict('w2i', w2i_glyphs_vocab, 'MuRETPackage/agnostic_symbol_and_position_from_image/symbol/')
+        SymbDG.save_dict('w2i', w2i_pos_vocab, 'MuRETPackage/agnostic_symbol_and_position_from_image/position/')
+        SymbDG.save_dict('i2w', i2w_glyphs_vocab, 'MuRETPackage/agnostic_symbol_and_position_from_image/symbol/')
+        SymbDG.save_dict('i2w', i2w_pos_vocab, 'MuRETPackage/agnostic_symbol_and_position_from_image/position/')
 
         return w2i_glyphs_vocab, w2i_pos_vocab, i2w_glyphs_vocab, i2w_pos_vocab
         
@@ -209,7 +211,7 @@ class SymbDG:
         steps = len(X_g)//batch_size
 
         print('\n=== Starting training process ===\n')
-        epochs = 15
+        epochs = 1
 
         description.model_epochs = epochs
         description.save_description()
@@ -218,12 +220,12 @@ class SymbDG:
 
         model_p.fit(generator_p,
                 steps_per_epoch=steps,
-                epochs=50,
+                epochs=epochs,
                 verbose=1)
 
         model_g.fit(generator_g,
                 steps_per_epoch=steps,
-                epochs=50,
+                epochs=epochs,
                 verbose=1)
 
 

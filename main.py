@@ -5,6 +5,8 @@ import os
 import argparse
 import errno
 from messages import Messages
+import shutil
+
 
 class Main:
 
@@ -18,6 +20,18 @@ class Main:
 
             if not os.path.exists('./MuRETPackage'):
                 os.mkdir('./MuRETPackage')
+            else:
+                shutil.rmtree('./MuRETPackage')
+                os.mkdir('./MuRETPackage')
+                if args.doc_analysis:
+                    os.mkdir('./MuRETPackage/document_analysis')
+                if args.end_to_end:
+                    os.mkdir('./MuRETPackage/agnostic_end2end')
+                if args.end_to_end_ligatures:
+                    os.mkdir('./MuRETPackage/agnostic_end2end_ligatures')
+                if args.symb_classifier:
+                    os.mkdir('./MuRETPackage/agnostic_symbol_and_position_from_image')
+
 
             if os.path.exists(path_to_download_images):
                 shutil.rmtree(path_to_download_images)
