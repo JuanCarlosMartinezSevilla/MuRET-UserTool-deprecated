@@ -67,7 +67,7 @@ def main(fileList, ligatures, args):
     #if args.model:
     #    best_ser_val = 100
     best_ser_val = 100
-    epochs = 1000
+    epochs = 150
 
     description.model_epochs = epochs
     description.batch = batch_size

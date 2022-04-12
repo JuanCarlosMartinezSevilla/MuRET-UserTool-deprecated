@@ -253,17 +253,17 @@ class Utils:
     def decompressFile (aux_path, path ):  
 
         #tar_file = "./capitan.tgz"
-        tar_file = aux_path
-        
-        print("\nExtracting from .tgz file \n")
+        for tar_file in aux_path:
+            
+            print(f"\nExtracting from {tar_file} file \n")
 
-        tar = tarfile.open(tar_file, mode="r:gz")
-        
-        members = tar.getmembers()
+            tar = tarfile.open(tar_file, mode="r:gz")
+            
+            members = tar.getmembers()
 
-        for member in members:
-            tar.extract(member, path=path)            
-        tar.close()
+            for member in members:
+                tar.extract(member, path=path)            
+            tar.close()
 
         print(f"\nFiles extracted in {path} ...\n")
         return True

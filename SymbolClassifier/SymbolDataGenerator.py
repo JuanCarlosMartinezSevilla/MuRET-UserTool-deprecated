@@ -9,6 +9,7 @@ import tensorflowjs as tfjs
 from SymbolClassifier.configuration import Configuration
 from description import SymbolClassifierDescription
 import sys
+from tensorflow import keras
 
 class SymbDG:
 
@@ -114,43 +115,38 @@ class SymbDG:
             for f in range(batch_size):
                 idx = random.randint(0,len(X_g)-1)
 
-
                 if f == 0:
-                    input_g = np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)
                     input_p = np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)
-                    output_g = np.expand_dims(w2i_g[Y_g[idx]], axis=0)
                     output_p.append(w2i_p[Y_p[idx]])
-                    #output_p = np.expand_dims(w2i_p[Y_p[idx]], axis=0)
+
                 else:
-                    input_g = np.concatenate((input_g, np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)), axis=0)
                     input_p = np.concatenate((input_p, np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)), axis=0)
-                    output_g = np.concatenate((output_g, np.expand_dims(w2i_g[Y_g[idx]], axis=0)), axis=0)
                     output_p.append(w2i_p[Y_p[idx]])
-                    #output_p = np.concatenate((output_p, np.expand_dims(w2i_p[Y_p[idx]], axis=0)), axis=0)
-                
-            print(input_p, output_p)
-            yield (input_p), [output_p]
+
+            output_p = keras.utils.to_categorical(output_p, len(w2i_p))
+
+            yield input_p, output_p
     
     def batchCreatorG(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
 
         while True:
-            
+            output_g = []
+
             for f in range(batch_size):
                 idx = random.randint(0,len(X_g)-1)
 
 
                 if f == 0:
                     input_g = np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)
-                    input_p = np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)
-                    output_g = np.expand_dims(w2i_g[Y_g[idx]], axis=0)
-                    output_p = np.expand_dims(w2i_p[Y_p[idx]], axis=0)
+                    output_g.append(w2i_g[Y_g[idx]])
+           
                 else:
                     input_g = np.concatenate((input_g, np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)), axis=0)
-                    input_p = np.concatenate((input_p, np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)), axis=0)
-                    output_g = np.concatenate((output_g, np.expand_dims(w2i_g[Y_g[idx]], axis=0)), axis=0)
-                    output_p = np.concatenate((output_p, np.expand_dims(w2i_p[Y_p[idx]], axis=0)), axis=0)
+                    output_g.append(w2i_g[Y_g[idx]])
                 
-            yield (input_g), (output_g)
+            output_g = keras.utils.to_categorical(output_g, len(w2i_g))
+                
+            yield input_g, output_g
 
     def save_dict(name, data, path):
 
@@ -203,21 +199,10 @@ class SymbDG:
         description.input_h_2 = Configuration.img_height_p
         description.input_w_2 = Configuration.img_width_p
 
-        
-        # [ 
-        #   [[img_glyph , img_pos ]] ,
-        #   [[gt_glyph  , gt_pos  ]] 
-        # ]
 
-        #while True:
-        #    a = next(generator_p)
-        #    print(a)
-        #    input()
-
-
-        model_p = SymbolCNN.model(len(Y_p_cats), 112, 40)
+        model_p = SymbolCNN.model(len(Y_p_cats), 224, 112)
         model_g = SymbolCNN.model(len(Y_g_cats), 40, 40)
-        #model, model_g, model_p = SymbolCNN.model(len(Y_g_cats), len(Y_p_cats))
+
         steps = len(X_g)//batch_size
 
         print('\n=== Starting training process ===\n')

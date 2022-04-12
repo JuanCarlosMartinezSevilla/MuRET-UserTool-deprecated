@@ -10,7 +10,7 @@ import shutil
 
 class Main:
 
-    def seeDir(aux_path):
+    def seeDir(args):
         
         path_to_download_images = './dataset'
         aux_path = args.path
@@ -48,8 +48,8 @@ class Main:
             #
             #file = os.path.join('./', file)
             #print(file)
-
-            if os.path.exists(aux_path):
+            a = all(os.path.exists(aux) for aux in aux_path)
+            if a:
 
                 Utils.decompressFile(aux_path, path_to_download_images)
                 fileList = FileManager.listFilesRecursive(path_to_download_images)
@@ -104,7 +104,7 @@ class Main:
         parser = argparse.ArgumentParser(description=__doc__, add_help=True,
                                             formatter_class=argparse.RawDescriptionHelpFormatter)
 
-        parser.add_argument("-p", "--path", required=True, type=Main.validate_file,
+        parser.add_argument("-p", "--path", required=True, nargs='+', type=Main.validate_file,
                                 help="Path to dataset .tgz file.")
         parser.add_argument('-da', '--doc_analysis', action='store_true',
                                 help='Train a document analysis model.')
