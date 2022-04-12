@@ -178,8 +178,7 @@ class SymbDG:
 
     def main(fileList: dict, args):
 
-        #batch_size = 32
-        batch_size = 2
+        batch_size = 32
 
         train_dict, val_dict, test_dict = SymbDG.split_data(fileList)
 
