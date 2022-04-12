@@ -1,6 +1,6 @@
-from unicodedata import name
+import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras import layers, losses, Model
+from keras import layers, losses, Model, optimizers
 
 class SymbolCNN:
 
@@ -52,6 +52,8 @@ class SymbolCNN:
         #model_g = Model(inputs=[input_img_glyph], outputs=[out_glyph])
         #model_p = Model(inputs=[input_img_pos], outputs=[out_pos])
 
-        model.compile(optimizer='RMSprop', loss=losses.SparseCategoricalCrossentropy())
+        #opt = optimizers.rmsprop_v2()
+
+        model.compile(optimizer='RMSprop', loss= losses.SparseCategoricalCrossentropy())
         #return model,  model_g, model_p
         return model

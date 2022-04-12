@@ -109,6 +109,7 @@ class SymbDG:
     def batchCreatorP(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
 
         while True:
+            output_p = []
             
             for f in range(batch_size):
                 idx = random.randint(0,len(X_g)-1)
@@ -118,14 +119,17 @@ class SymbDG:
                     input_g = np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)
                     input_p = np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)
                     output_g = np.expand_dims(w2i_g[Y_g[idx]], axis=0)
-                    output_p = np.expand_dims(w2i_p[Y_p[idx]], axis=0)
+                    output_p.append(w2i_p[Y_p[idx]])
+                    #output_p = np.expand_dims(w2i_p[Y_p[idx]], axis=0)
                 else:
                     input_g = np.concatenate((input_g, np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)), axis=0)
                     input_p = np.concatenate((input_p, np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)), axis=0)
                     output_g = np.concatenate((output_g, np.expand_dims(w2i_g[Y_g[idx]], axis=0)), axis=0)
-                    output_p = np.concatenate((output_p, np.expand_dims(w2i_p[Y_p[idx]], axis=0)), axis=0)
+                    output_p.append(w2i_p[Y_p[idx]])
+                    #output_p = np.concatenate((output_p, np.expand_dims(w2i_p[Y_p[idx]], axis=0)), axis=0)
                 
-            yield (input_p), (output_p)
+            print(input_p, output_p)
+            yield (input_p), [output_p]
     
     def batchCreatorG(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
 
@@ -151,7 +155,7 @@ class SymbDG:
     def save_dict(name, data, path):
 
         if not os.path.exists(path):
-            os.mkdir(path)
+            os.makedirs(path)
         
         with open(f'{path}{name}.json', 'w') as fp:
             json.dump(data, fp, indent=4)
@@ -163,10 +167,10 @@ class SymbDG:
         i2w_glyphs_vocab = {w2i_glyphs_vocab[i] : i for i in w2i_glyphs_vocab}
         i2w_pos_vocab    = {w2i_pos_vocab[i]    : i for i in w2i_pos_vocab}
 
-        SymbDG.save_dict('w2i', w2i_glyphs_vocab, 'MuRETPackage/agnostic_symbol_and_position_from_image/symbol/')
-        SymbDG.save_dict('w2i', w2i_pos_vocab, 'MuRETPackage/agnostic_symbol_and_position_from_image/position/')
-        SymbDG.save_dict('i2w', i2w_glyphs_vocab, 'MuRETPackage/agnostic_symbol_and_position_from_image/symbol/')
-        SymbDG.save_dict('i2w', i2w_pos_vocab, 'MuRETPackage/agnostic_symbol_and_position_from_image/position/')
+        SymbDG.save_dict('w2i', w2i_glyphs_vocab, './MuRETPackage/agnostic_symbol_and_position_from_image/symbol/')
+        SymbDG.save_dict('w2i', w2i_pos_vocab, './MuRETPackage/agnostic_symbol_and_position_from_image/position/')
+        SymbDG.save_dict('i2w', i2w_glyphs_vocab, './MuRETPackage/agnostic_symbol_and_position_from_image/symbol/')
+        SymbDG.save_dict('i2w', i2w_pos_vocab, './MuRETPackage/agnostic_symbol_and_position_from_image/position/')
 
         return w2i_glyphs_vocab, w2i_pos_vocab, i2w_glyphs_vocab, i2w_pos_vocab
         
@@ -178,7 +182,8 @@ class SymbDG:
 
     def main(fileList: dict, args):
 
-        batch_size = 32
+        #batch_size = 32
+        batch_size = 2
 
         train_dict, val_dict, test_dict = SymbDG.split_data(fileList)
 
@@ -203,6 +208,11 @@ class SymbDG:
         #   [[img_glyph , img_pos ]] ,
         #   [[gt_glyph  , gt_pos  ]] 
         # ]
+
+        #while True:
+        #    a = next(generator_p)
+        #    print(a)
+        #    input()
 
 
         model_p = SymbolCNN.model(len(Y_p_cats), 112, 40)
