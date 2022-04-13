@@ -205,7 +205,7 @@ class SymbDG:
         steps = len(X_g)//batch_size
 
         print('\n=== Starting training process ===\n')
-        epochs = 1
+        epochs = 15
 
         description.model_epochs = epochs
         description.save_description()
