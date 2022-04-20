@@ -7,9 +7,21 @@ import argparse
 import logging
 from sklearn.model_selection import train_test_split
 import tensorflowjs as tfjs
+import json
 
 from description import Description, End2EndDescription
 import sys
+
+def save_dicts(dg, ligatures):
+    aux = ''
+    if ligatures:
+        aux = '_ligatures' 
+    
+    with open(f'{args.pkg_name}/agnostic_end2end{aux}/i2w.json', 'w') as fp:
+            json.dump(dg.i2w, fp)
+
+    with open(f'{args.pkg_name}/agnostic_end2end{aux}/w2i.json', 'w') as fp:
+        json.dump(dg.w2i, fp)
 
 def split_data(fileList):
     print(f"\n ■ Number of images in the dataset: {len(fileList)}")
@@ -27,21 +39,30 @@ def split_data(fileList):
 def main(fileList, ligatures, args):
 
     description = End2EndDescription('agnostic_end2end', None, None, None, None, fileList)
+    batch_size = 8
 
-    #if ligatures:
-    #    fileList = U.clean_data(fileList)
+    #   We make this first so we get all the dataset symbols, if we split the data first
+    #   we can lose some
+    dg = DataGenerator(dataset_list_path=fileList,
+                       aug_factor=3, # seq (1 5)
+                       batch_size=batch_size,
+                       num_channels=3,
+                       width_reduction=8, ligatures=ligatures)
+
+    # Save dictionaries
+    save_dicts(dg, ligatures)
+
     train_dict, val_dict, test_dict = split_data(fileList)
 
-    #print(fileList)
     print("\n=== Train data ===")
-    batch_size = 8
+    
     dg = DataGenerator(dataset_list_path=train_dict,
                        aug_factor=3, # seq (1 5)
                        batch_size=batch_size,
                        num_channels=3,
                        width_reduction=8, ligatures=ligatures)
 
-
+    
 
     model_tr, model_pr = get_model(vocabulary_size=len(dg.w2i))
 

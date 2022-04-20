@@ -207,12 +207,12 @@ class SAE:
 
         SAEmodel.fit(
             generator,
-            verbose=1,
+            verbose=2,
             steps_per_epoch=steps,
             epochs=epochs)
         
         if args.h5:
-            SAEmodel.save(f'./MuRETPackage/document_analysis/document_analysis.h5')
+            SAEmodel.save(f'{args.pkg_name}/document_analysis/document_analysis.h5')
         
         # Save model to use it with tensorflow.js
-        tfjs.converters.save_keras_model(SAEmodel, './MuRETPackage/document_analysis/tfjs/')
+        tfjs.converters.save_keras_model(SAEmodel, f'{args.pkg_name}/document_analysis/tfjs/')

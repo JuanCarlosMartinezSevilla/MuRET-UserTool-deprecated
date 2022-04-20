@@ -17,8 +17,8 @@ class Messages:
     def welcome():
         print("\n:musical_notes: Welcome to [bold cyan u]MuRET User's tool[/bold cyan u] :musical_note:")
 
-    def end():
-        print("\n[yellow]The tool has ended. You can find your results in [bold]MuRETPackage.tgz[/bold][yellow]\n")
+    def end(args):
+        print(f"\n[yellow]The tool has ended. You can find your results in [bold]{args.pkg_name}.tgz[/bold][yellow]\n")
 
     def main():
         print("Messages main")

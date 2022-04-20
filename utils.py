@@ -13,6 +13,7 @@ from SymbolClassifier.SymbolDataGenerator import SymbDG
 import re
 from description import Description, DocumentAnalysisDescription
 import sys
+import subprocess
 
 class Utils:
 
@@ -153,7 +154,7 @@ class Utils:
         Utils.printCV2(X, Y, 'Staff', False)
 
     @staticmethod
-    def callDataAug(number_images):
+    def callDataAug(number_images, path):
         rotation = True, 
         vertical_resizing = True,
         rf = 0.2,
@@ -161,7 +162,8 @@ class Utils:
         kernel = 0.2,
         angle = 3
 
-        DataAugmentationGenerator.generateNewImageFromListByBoundingBoxesRandomSelectionAuto('./dataset', number_images, rotation, vertical_resizing, rf, window, kernel, angle)
+        DataAugmentationGenerator.generateNewImageFromListByBoundingBoxesRandomSelectionAuto(
+            path, number_images, rotation, vertical_resizing, rf, window, kernel, angle)
 
     @staticmethod
     def getURLJSON(file, json_classes, path_to_save):
@@ -252,10 +254,9 @@ class Utils:
     @staticmethod
     def decompressFile (aux_path, path ):  
 
-        #tar_file = "./capitan.tgz"
         for tar_file in aux_path:
             
-            print(f"\nExtracting from {tar_file} file \n")
+            print(f"\nExtracting from {tar_file} file")
 
             tar = tarfile.open(tar_file, mode="r:gz")
             
@@ -264,6 +265,9 @@ class Utils:
             for member in members:
                 tar.extract(member, path=path)            
             tar.close()
+            print(f"\n{tar_file} extracted in {path} ...")
 
-        print(f"\nFiles extracted in {path} ...\n")
         return True
+
+    def save_folder_compressed(args):
+        subprocess.call(['tar', '-czf', f'{args.pkg_name}.tgz', args.pkg_name])

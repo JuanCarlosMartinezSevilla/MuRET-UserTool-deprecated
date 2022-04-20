@@ -215,12 +215,12 @@ class SymbDG:
         model_p.fit(generator_p,
                 steps_per_epoch=steps,
                 epochs=epochs,
-                verbose=1)
+                verbose=2)
 
         model_g.fit(generator_g,
                 steps_per_epoch=steps,
                 epochs=epochs,
-                verbose=1)
+                verbose=2)
 
 
         # model_g, model_p

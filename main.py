@@ -6,32 +6,35 @@ import argparse
 import errno
 from messages import Messages
 import shutil
+import sys
 
 
 class Main:
 
-    def seeDir(args):
-        
-        path_to_download_images = './dataset'
+    def create_package_tree(args):
+        os.mkdir(args.pkg_name)
+        if args.doc_analysis:
+            os.makedirs(f'{args.pkg_name}/document_analysis/tfjs')
+        if args.end_to_end:
+            os.makedirs(f'{args.pkg_name}/agnostic_end2end/tfjs')
+        if args.end_to_end_ligatures:
+            os.makedirs(f'{args.pkg_name}/agnostic_end2end_ligatures/tfjs')
+        if args.symb_classifier:
+            os.makedirs(f'{args.pkg_name}/agnostic_symbol_and_position_from_image/tfjs')
+
+    def seeDir(args, path_to_download_images):
+
         aux_path = args.path
+
+        # Check if there is a MuRETPackage already
+        if os.path.exists(args.pkg_name):
+            print('\nErasing existing MuRETPackage')
+            shutil.rmtree(args.pkg_name)
+            # Comparison
+        Main.create_package_tree(args)
 
         # To not retrieve the images again
         if args.reload:
-
-            if not os.path.exists('./MuRETPackage'):
-                os.mkdir('./MuRETPackage')
-            else:
-                shutil.rmtree('./MuRETPackage')
-                os.mkdir('./MuRETPackage')
-                if args.doc_analysis:
-                    os.mkdir('./MuRETPackage/document_analysis')
-                if args.end_to_end:
-                    os.mkdir('./MuRETPackage/agnostic_end2end')
-                if args.end_to_end_ligatures:
-                    os.mkdir('./MuRETPackage/agnostic_end2end_ligatures')
-                if args.symb_classifier:
-                    os.mkdir('./MuRETPackage/agnostic_symbol_and_position_from_image')
-
 
             if os.path.exists(path_to_download_images):
                 shutil.rmtree(path_to_download_images)
@@ -39,22 +42,15 @@ class Main:
             else:
                 os.mkdir(path_to_download_images)
 
-            ## IF WE GET THE .TGZ AUTO FROM
-            #files = FileManager.listFiles('./')
-            #for f in files:
-            #    if f.split('.')[-1] == 'tgz':
-            #        file = f
-            #        break
-            #
-            #file = os.path.join('./', file)
-            #print(file)
-            a = all(os.path.exists(aux) for aux in aux_path)
-            if a:
+            # if we have multiple datasets
+            all_paths_checker = all(os.path.exists(aux) for aux in aux_path)
 
+            if all_paths_checker:
+                                # path of the dataset, path to extract images
                 Utils.decompressFile(aux_path, path_to_download_images)
                 fileList = FileManager.listFilesRecursive(path_to_download_images)
-
                 Utils.readJSONGetImagesFromUrl(fileList, path_to_download_images)
+
             else:
                 raise FileNotFoundError( errno.ENOENT, os.strerror(errno.ENOENT), aux_path.split('/')[-1])
             
@@ -64,24 +60,28 @@ class Main:
 
     def local_main(args):
 
+        path_to_download_images = './dataset'
+
         Messages.welcome()
 
-        fileList = Main.seeDir(args)
+        fileList = Main.seeDir(args, path_to_download_images)
 
         if args.doc_analysis:
             Messages.using_document()
-
+            
             new_images = args.new_images
-
+            
             Messages.new_images(new_images)
-
-            Utils.callDataAug(new_images)
+            
+            Utils.callDataAug(new_images, path_to_download_images)
             Utils.callSAE(args)
+            print()
 
         if args.end_to_end:
-            # Launch E2E
+            #Launch E2E
             Messages.e2e()
             Utils.callE2E(fileList, args)
+            print()
         
         if args.end_to_end_ligatures:
             Utils.callE2ELigatures(fileList, args)
@@ -89,8 +89,10 @@ class Main:
         if args.symb_classifier:
             Messages.sc()
             Utils.callSymbClassifier(fileList, args)
-        
-        Messages.end()
+            
+
+        Utils.save_folder_compressed(args)
+        Messages.end(args)
         
 
     def validate_file(f):
@@ -106,6 +108,8 @@ class Main:
 
         parser.add_argument("-p", "--path", required=True, nargs='+', type=Main.validate_file,
                                 help="Path to dataset .tgz file.")
+        parser.add_argument("-pkg", "--pkg_name", required=True, type=str,
+                                help="Generated package's name.")
         parser.add_argument('-da', '--doc_analysis', action='store_true',
                                 help='Train a document analysis model.')
         parser.add_argument('-e2e', '--end_to_end', action='store_true',
@@ -116,7 +120,7 @@ class Main:
                                 help='Train a symbol classifier model.')
         parser.add_argument('-rl', '--reload', action='store_true',
                                 help='Reload dataset.')
-        parser.add_argument('-ni', '--new_images', action='store', type=int, required=True,
+        parser.add_argument('-ni', '--new_images', action='store', type=int, default=0,
                                 help='Number of new images.')
         parser.add_argument('-h5', '--h5', action='store_true',
                                 help='Save models in .h5 format.')

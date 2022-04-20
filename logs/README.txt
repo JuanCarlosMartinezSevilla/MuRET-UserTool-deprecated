@@ -1,0 +1,1 @@
+This folder should be the one to store your log files when training.

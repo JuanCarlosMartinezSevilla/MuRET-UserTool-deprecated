@@ -53,25 +53,6 @@ class UtilsCRNN():
 
         return current[n]
 
-    def clean_data(fileList):
-        aux_dict = {}
-        if not fileList == None:
-            for key in fileList:
-                json_path = key
-                page_path = fileList[key]
-            
-                with open(json_path) as json_file:
-                    data = json.load(json_file)
-                    if 'ligatures' in data:
-                        for l in data['ligatures']:
-                            if 'symbols' in l:
-                                symbols = l['symbols']
-                                if len(symbols) > 0:
-                                    aux_dict[f'{json_path}'] =  page_path
-        
-        return aux_dict
-
-
     def parse_lst_dict_ligatures(lst_path: dict):
 
         print("Tamaño dataset ligatures: ", len(lst_path))
@@ -87,37 +68,29 @@ class UtilsCRNN():
                 with open(json_path) as json_file:
                     data = json.load(json_file)
                     image = cv2.imread(page_path, cv2.IMREAD_COLOR)
-                    for l in data['ligatures']:
-                        if 'bounding_box' in l:
-                            top, left, bottom, right = l['bounding_box']['fromY'], \
-                                                       l['bounding_box']['fromX'], \
-                                                       l['bounding_box']['toY'],   \
-                                                       l['bounding_box']['toX']
-                        if 'symbols' in l:
-                            symbols = l['symbols']
-                            if len(symbols) > 0:
-                                X.append(image[top:bottom, left:right])
+                    if 'ligatures' in data:
+                        for l in data['ligatures']:
+                            if 'bounding_box' in l:
+                                top, left, bottom, right = l['bounding_box']['fromY'], \
+                                                           l['bounding_box']['fromX'], \
+                                                           l['bounding_box']['toY'],   \
+                                                           l['bounding_box']['toX']
+                            if 'symbols' in l:
+                                symbols = l['symbols']
+                                if len(symbols) > 0:
+                                    X.append(image[top:bottom, left:right])
 
-                                gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
-                                    for s in symbols]
+                                    gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
+                                        for s in symbols]
 
-                                #FileManager.saveString(str(json_pred), os.path.join(path_to_save_pred, name + '_' +str(image_id) + '.dict'), True)
-                                Y.append(gt)
-                                vocabulary.update(gt)
+                                    #FileManager.saveString(str(json_pred), os.path.join(path_to_save_pred, name + '_' +str(image_id) + '.dict'), True)
+                                    Y.append(gt)
+                                    vocabulary.update(gt)
 
         w2i = {symbol: idx for idx, symbol in enumerate(vocabulary)}
         i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
 
-        print("{} samples loaded with {}-sized vocabulary".format(len(X), len(w2i)))
-        
-        #Saving for tests
-        
-        with open('./MuRETPackage/agnostic_end2end_ligatures/i2w.json', 'w') as fp:
-            json.dump(i2w, fp)
-
-        with open('./MuRETPackage/agnostic_end2end_ligatures/w2i.json', 'w') as fp:
-            json.dump(w2i, fp)
-        
+        print("{} samples loaded with {}-sized vocabulary".format(len(X), len(w2i)))        
         return X, Y, w2i, i2w
 
     def parse_lst_dict(lst_path: dict):
@@ -157,12 +130,6 @@ class UtilsCRNN():
 
         w2i = {symbol: idx for idx, symbol in enumerate(vocabulary)}
         i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
-
-        with open('./MuRETPackage/agnostic_end2end/i2w.json', 'w') as fp:
-            json.dump(i2w, fp)
-
-        with open('./MuRETPackage/agnostic_end2end/w2i.json', 'w') as fp:
-            json.dump(w2i, fp)
 
         print("{} samples loaded with {}-sized vocabulary\n".format(len(X), len(w2i)))
         
