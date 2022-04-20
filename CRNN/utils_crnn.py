@@ -83,7 +83,6 @@ class UtilsCRNN():
                                     gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
                                         for s in symbols]
 
-                                    #FileManager.saveString(str(json_pred), os.path.join(path_to_save_pred, name + '_' +str(image_id) + '.dict'), True)
                                     Y.append(gt)
                                     vocabulary.update(gt)
 
