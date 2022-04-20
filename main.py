@@ -62,7 +62,10 @@ class Main:
 
     def local_main(args):
 
-        path_to_download_images = './dataset'
+        path_to_download_images = 'dataset'
+
+        if not os.path.exists(path_to_download_images):
+            os.mkdir(path_to_download_images)
 
         Messages.welcome()
 
