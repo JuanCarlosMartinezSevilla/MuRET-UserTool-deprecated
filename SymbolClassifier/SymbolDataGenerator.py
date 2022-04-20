@@ -92,20 +92,10 @@ class SymbDG:
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    def resize_glyph(image):
+    def resize(image, height, width):
         # Normalizing images
-        height = Configuration.img_height_g
-        width = Configuration.img_width_g
         img = cv2.resize(image, (width, height)) / 255
         return img
-
-    def resize_pos(image):
-        # Normalizing images
-        height = Configuration.img_height_p
-        width = Configuration.img_width_p
-        img = cv2.resize(image, (width, height))/255
-        return img
-
 
     def batchCreatorP(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
 
@@ -116,11 +106,12 @@ class SymbDG:
                 idx = random.randint(0,len(X_g)-1)
 
                 if f == 0:
-                    input_p = np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)
+                    input_p = np.expand_dims(SymbDG.resize(X_p[idx], Configuration.img_height_p, Configuration.img_width_p), axis=0)
                     output_p.append(w2i_p[Y_p[idx]])
 
                 else:
-                    input_p = np.concatenate((input_p, np.expand_dims(SymbDG.resize_pos(X_p[idx]), axis=0)), axis=0)
+                    input_p = np.concatenate((input_p, 
+                                            np.expand_dims(SymbDG.resize(X_p[idx], Configuration.img_height_p, Configuration.img_width_p), axis=0)), axis=0)
                     output_p.append(w2i_p[Y_p[idx]])
 
             output_p = keras.utils.to_categorical(output_p, len(w2i_p))
@@ -135,13 +126,13 @@ class SymbDG:
             for f in range(batch_size):
                 idx = random.randint(0,len(X_g)-1)
 
-
                 if f == 0:
-                    input_g = np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)
+                    input_g = np.expand_dims(SymbDG.resize(X_g[idx], Configuration.img_height_g, Configuration.img_width_g), axis=0)
                     output_g.append(w2i_g[Y_g[idx]])
            
                 else:
-                    input_g = np.concatenate((input_g, np.expand_dims(SymbDG.resize_glyph(X_g[idx]), axis=0)), axis=0)
+                    input_g = np.concatenate((input_g, 
+                                        np.expand_dims(SymbDG.resize(X_g[idx], Configuration.img_height_g, Configuration.img_width_g), axis=0)), axis=0)
                     output_g.append(w2i_g[Y_g[idx]])
                 
             output_g = keras.utils.to_categorical(output_g, len(w2i_g))
@@ -156,17 +147,17 @@ class SymbDG:
         with open(f'{path}{name}.json', 'w') as fp:
             json.dump(data, fp, indent=4)
 
-    def createVocabs(glyphs, positions):
+    def createVocabs(glyphs, positions, args):
         w2i_glyphs_vocab = {i: idx for idx, i in enumerate(glyphs)}
         w2i_pos_vocab    = {i: idx for idx, i in enumerate(positions)}
 
         i2w_glyphs_vocab = {w2i_glyphs_vocab[i] : i for i in w2i_glyphs_vocab}
         i2w_pos_vocab    = {w2i_pos_vocab[i]    : i for i in w2i_pos_vocab}
 
-        SymbDG.save_dict('w2i', w2i_glyphs_vocab, './MuRETPackage/agnostic_symbol_and_position_from_image/symbol/')
-        SymbDG.save_dict('w2i', w2i_pos_vocab, './MuRETPackage/agnostic_symbol_and_position_from_image/position/')
-        SymbDG.save_dict('i2w', i2w_glyphs_vocab, './MuRETPackage/agnostic_symbol_and_position_from_image/symbol/')
-        SymbDG.save_dict('i2w', i2w_pos_vocab, './MuRETPackage/agnostic_symbol_and_position_from_image/position/')
+        SymbDG.save_dict('w2i', w2i_glyphs_vocab, f'{args.pkg_name}/agnostic_symbol_and_position_from_image/symbol/')
+        SymbDG.save_dict('w2i', w2i_pos_vocab, f'{args.pkg_name}/agnostic_symbol_and_position_from_image/position/')
+        SymbDG.save_dict('i2w', i2w_glyphs_vocab, f'{args.pkg_name}/agnostic_symbol_and_position_from_image/symbol/')
+        SymbDG.save_dict('i2w', i2w_pos_vocab, f'{args.pkg_name}/agnostic_symbol_and_position_from_image/position/')
 
         return w2i_glyphs_vocab, w2i_pos_vocab, i2w_glyphs_vocab, i2w_pos_vocab
         
@@ -180,15 +171,18 @@ class SymbDG:
 
         batch_size = 32
 
+        # TO see all categories =============================================
+        X_g, X_p, Y_g, Y_p, Y_g_cats, Y_p_cats = SymbDG.parse_files(fileList)
+        w2i_g, w2i_p, i2w_g, i2w_p = SymbDG.createVocabs(Y_g_cats, Y_p_cats, args)
+        #====================================================================
         train_dict, val_dict, test_dict = SymbDG.split_data(fileList)
 
         X_g, X_p, Y_g, Y_p, Y_g_cats, Y_p_cats = SymbDG.parse_files(train_dict)
 
-        w2i_g, w2i_p, i2w_g, i2w_p = SymbDG.createVocabs(Y_g_cats, Y_p_cats)
-
         generator_p, generator_g = SymbDG.batchCreatorMain(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
 
-        description = SymbolClassifierDescription('agnostic_symbol_and_position_from_image', None, Configuration.img_height_g, Configuration.img_width_g,
+        description = SymbolClassifierDescription('agnostic_symbol_and_position_from_image', 
+                                                None, Configuration.img_height_g, Configuration.img_width_g,
                                                 batch_size, fileList)
 
         description.i2w_g = i2w_g
@@ -210,8 +204,6 @@ class SymbDG:
         description.model_epochs = epochs
         description.save_description()
 
-        #sys.exit(-1)
-
         model_p.fit(generator_p,
                 steps_per_epoch=steps,
                 epochs=epochs,
@@ -225,11 +217,11 @@ class SymbDG:
 
         # model_g, model_p
         if args.h5:
-            model_g.save(f'./MuRETPackage/agnostic_symbol_and_position_from_image/symbol/model.h5')
-            model_p.save(f'./MuRETPackage/agnostic_symbol_and_position_from_image/position/model.h5')
+            model_g.save(f'{args.pkg_name}/agnostic_symbol_and_position_from_image/symbol/model.h5')
+            model_p.save(f'{args.pkg_name}/agnostic_symbol_and_position_from_image/position/model.h5')
         
-        tfjs.converters.save_keras_model(model_g, './MuRETPackage/agnostic_symbol_and_position_from_image/symbol/tfjs/')
-        tfjs.converters.save_keras_model(model_p, './MuRETPackage/agnostic_symbol_and_position_from_image/position/tfjs/')
+        tfjs.converters.save_keras_model(model_g, f'{args.pkg_name}/agnostic_symbol_and_position_from_image/symbol/tfjs/')
+        tfjs.converters.save_keras_model(model_p, f'{args.pkg_name}/agnostic_symbol_and_position_from_image/position/tfjs/')
 
 if __name__ == '__main__':
     SymbDG.main()

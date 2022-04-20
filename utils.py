@@ -17,13 +17,10 @@ import subprocess
 
 class Utils:
 
-    def printCV2(X, Y, window_name, flag):
-        for i, a in enumerate(X[:10]):
-            if flag:
-                print(Y[i])
-            cv2.imshow(window_name, X[i])
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+    def printCV2(X, window_name):
+        cv2.imshow(window_name, X)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     @staticmethod
     def callSymbClassifier(fileList, args):
@@ -242,7 +239,7 @@ class Utils:
         path_to_save = os.path.join(path, 'SRC')
 
         if not os.path.exists(path_to_save):
-            os.mkdir(path_to_save)
+            os.makedirs(path_to_save)
         
         print("\n---- Fetching images from URLs ----\n")
         print(f"Saving images in {path_to_save} \n")

@@ -322,7 +322,7 @@ class FileManager:
             listOfFile = os.listdir(path_dir)
         except Exception:
             pathdir_exec = os.path.dirname(os.path.abspath(__file__))
-            path_dir = pathdir_exec + "/" + path_dir
+            path_dir = os.path.join(pathdir_exec, path_dir)
             listOfFile = os.listdir(path_dir)
 
         list_files = list()

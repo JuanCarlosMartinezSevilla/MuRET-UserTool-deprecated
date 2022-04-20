@@ -6,7 +6,7 @@ import argparse
 import errno
 from messages import Messages
 import shutil
-import sys
+import pathlib
 
 
 class Main:
@@ -20,7 +20,9 @@ class Main:
         if args.end_to_end_ligatures:
             os.makedirs(f'{args.pkg_name}/agnostic_end2end_ligatures/tfjs')
         if args.symb_classifier:
-            os.makedirs(f'{args.pkg_name}/agnostic_symbol_and_position_from_image/tfjs')
+            os.makedirs(f'{args.pkg_name}/agnostic_symbol_and_position_from_image/symbol/tfjs')
+            os.makedirs(f'{args.pkg_name}/agnostic_symbol_and_position_from_image/position/tfjs')
+            
 
     def seeDir(args, path_to_download_images):
 
@@ -95,18 +97,11 @@ class Main:
         Messages.end(args)
         
 
-    def validate_file(f):
-        if not os.path.exists(f):
-            # Argparse uses the ArgumentTypeError to give a rejection message like:
-            # error: argument input: x does not exist
-            raise argparse.ArgumentTypeError("{0} does not exist".format(f))
-        return f
-
     def argument_parser():
         parser = argparse.ArgumentParser(description=__doc__, add_help=True,
                                             formatter_class=argparse.RawDescriptionHelpFormatter)
 
-        parser.add_argument("-p", "--path", required=True, nargs='+', type=Main.validate_file,
+        parser.add_argument("-p", "--path", required=True, nargs='+', type=pathlib.Path,
                                 help="Path to dataset .tgz file.")
         parser.add_argument("-pkg", "--pkg_name", required=True, type=str,
                                 help="Generated package's name.")
@@ -128,7 +123,6 @@ class Main:
         return parser
 
 if __name__ == '__main__':
-
 
     parser = Main.argument_parser()
     args = parser.parse_args()
