@@ -12,7 +12,7 @@ import json
 from description import Description, End2EndDescription
 import sys
 
-def save_dicts(dg, ligatures):
+def save_dicts(dg, ligatures, args):
     aux = ''
     if ligatures:
         aux = '_ligatures' 
@@ -50,7 +50,7 @@ def main(fileList, ligatures, args):
                        width_reduction=8, ligatures=ligatures)
 
     # Save dictionaries
-    save_dicts(dg, ligatures)
+    save_dicts(dg, ligatures, args)
 
     train_dict, val_dict, test_dict = split_data(fileList)
 

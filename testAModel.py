@@ -5,6 +5,7 @@ from keras.models import load_model
 import argparse
 import numpy as np
 import os
+import shutil
 
 
 from CRNN.utils_crnn import UtilsCRNN as U
@@ -33,25 +34,51 @@ def test_sc(model, routes_dict, selection, i2w):
     #img_height_g = 40 #img_height_p = 224 #img_width_g = 40 #img_width_p = 112
 
     X_g, X_p, Y_g, Y_p, _, _ = SymbDG.parse_files(routes_dict)
+    
 
     #position classifier
     if selection:
+        counter = 0
         for idx, img in enumerate(X_p):
-            pred = model.predict(SymbDG.resize(img, 224, 112))
+
+            aux = SymbDG.resize(img, 224, 112)
+            aux = np.expand_dims(aux, axis=-1)
+            aux = np.expand_dims(aux, axis=0)
+            pred = model.predict(aux)
             # Its onehot encoding
-            best_cat = np.argmax(pred, axis=0)
-            cat_name = i2w[best_cat]
-            Utils.printCV2(img, f"Tag: {Y_p[idx]} | Pred: {cat_name}")
+            best_cat = np.argmax(pred)
+            
+            cat_name = i2w[f'{best_cat}']
+
+            #Utils.printCV2(img, f"Tag: {Y_p[idx]} | Pred: {cat_name}")
+            if Y_p[idx] == cat_name:
+                print(f"Tag: {Y_p[idx]} | Pred: {cat_name} ✓✓✓")
+                counter += 1
+            else:
+                print(f"Tag: {Y_p[idx]} | Pred: {cat_name}")
+        print(f"Number of good predictions: {counter} out of {len(X_p)} --> {counter/len(X_p)}")
+
 
     #symbol/glyph classifier
     else:
+        counter = 0
         for idx, img in enumerate(X_g):
-            pred = model.predict(SymbDG.resize(img, 40, 40))
+            aux = SymbDG.resize(img, 40, 40)
+            aux = np.expand_dims(aux, axis=-1)
+            aux = np.expand_dims(aux, axis=0)
+            pred = model.predict(aux)
             # Its onehot encoding
-            best_cat = np.argmax(pred, axis=0)
-            cat_name = i2w[best_cat]
-            Utils.printCV2(img, f"Tag: {Y_g[idx]} | Pred: {cat_name}")
+            best_cat = np.argmax(pred)
 
+            cat_name = i2w[f'{best_cat}']
+            
+            #Utils.printCV2(img, f"Tag: {Y_g[idx]} | Pred: {cat_name}")
+            if Y_g[idx] == cat_name:
+                #print(f"Tag: {Y_g[idx]} | Pred: {cat_name} ✓✓✓")
+                counter += 1
+            #else:
+                #print(f"Tag: {Y_g[idx]} | Pred: {cat_name}")
+        print(f"Number of good predictions: {counter} out of {len(X_g)} --> {counter/len(X_g)}")
 
 def test_e2e(model, routes_dict):
     print()
@@ -86,14 +113,14 @@ def main(args):
     if args.symb_classifier_symb:
         print('Testing symbol classifier\n') 
         i2w = load_dict(args.dictionary)
+        print(i2w)
         test_sc(model, routes_dict, False, i2w)
     if args.symb_classifier_pos:
         print('Testing position classifier\n')
         i2w = load_dict(args.dictionary)
         test_sc(model, routes_dict, True, i2w)
 
-    os.rmdir('testImages/SRC')
-    
+    shutil.rmtree('testImages/SRC')
 
 
 def argument_parser():

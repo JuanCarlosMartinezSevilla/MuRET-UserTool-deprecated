@@ -175,6 +175,7 @@ class SymbDG:
         X_g, X_p, Y_g, Y_p, Y_g_cats, Y_p_cats = SymbDG.parse_files(fileList)
         w2i_g, w2i_p, i2w_g, i2w_p = SymbDG.createVocabs(Y_g_cats, Y_p_cats, args)
         #====================================================================
+        
         train_dict, val_dict, test_dict = SymbDG.split_data(fileList)
 
         X_g, X_p, Y_g, Y_p, Y_g_cats, Y_p_cats = SymbDG.parse_files(train_dict)
