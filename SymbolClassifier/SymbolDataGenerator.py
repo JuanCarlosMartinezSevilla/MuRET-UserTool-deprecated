@@ -103,7 +103,7 @@ class SymbDG:
             output_p = []
             
             for f in range(batch_size):
-                idx = random.randint(0,len(X_g)-1)
+                idx = random.randint(0,len(X_p)-1)
 
                 if f == 0:
                     input_p = np.expand_dims(SymbDG.resize(X_p[idx], Configuration.img_height_p, Configuration.img_width_p), axis=0)
@@ -193,10 +193,11 @@ class SymbDG:
         description.input_w_2 = Configuration.img_width_p
 
 
-        model_p = SymbolCNN.model(len(Y_p_cats), 224, 112)
-        model_g = SymbolCNN.model(len(Y_g_cats), 40, 40)
+        model_p = SymbolCNN.model(len(Y_p_cats), Configuration.img_height_p, Configuration.img_width_p)
+        model_g = SymbolCNN.model(len(Y_g_cats), Configuration.img_height_g, Configuration.img_width_g)
 
-        steps = len(X_g)//batch_size
+        steps_p = len(X_p)//batch_size
+        steps_g = len(X_g)//batch_size
 
         print('\n=== Starting training process ===\n')
         epochs = 15
@@ -204,13 +205,13 @@ class SymbDG:
         description.model_epochs = epochs
         description.save_description()
 
-        model_p.fit(generator_p,
-                steps_per_epoch=steps,
-                epochs=epochs,
-                verbose=2)
+        #model_p.fit(generator_p,
+        #        steps_per_epoch=steps_p,
+        #        epochs=epochs,
+        #        verbose=2)
 
         model_g.fit(generator_g,
-                steps_per_epoch=steps,
+                steps_per_epoch=steps_g,
                 epochs=epochs,
                 verbose=2)
 
