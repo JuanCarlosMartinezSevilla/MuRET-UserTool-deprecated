@@ -30,7 +30,7 @@ class Main:
 
         # Check if there is a MuRETPackage already
         if os.path.exists(args.pkg_name):
-            print('\nErasing existing MuRETPackage')
+            print(f'\nErasing existing MuRETPackage with name: {args.pkg_name}')
             shutil.rmtree(args.pkg_name)
             # Comparison
         Main.create_package_tree(args)

@@ -195,7 +195,7 @@ class SymbDG:
         description.input_w_2 = Configuration.img_width_p
 
 
-        model_p = SymbolCNN.model(len(Y_p_cats), Configuration.img_height_p, Configuration.img_width_p)
+        model_p = SymbolCNN.model(len(w2i_p), Configuration.img_height_p, Configuration.img_width_p)
         model_g = SymbolCNN.model(len(w2i_g), Configuration.img_height_g, Configuration.img_width_g)
 
         steps_p = len(X_p)//batch_size
@@ -207,10 +207,10 @@ class SymbDG:
         description.model_epochs = epochs
         description.save_description()
 
-        #model_p.fit(generator_p,
-        #        steps_per_epoch=steps_p,
-        #        epochs=epochs,
-        #        verbose=2)
+        model_p.fit(generator_p,
+                steps_per_epoch=steps_p,
+                epochs=epochs,
+                verbose=2)
 
         model_g.fit(generator_g,
                 steps_per_epoch=steps_g,
