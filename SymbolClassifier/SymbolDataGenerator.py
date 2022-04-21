@@ -181,6 +181,8 @@ class SymbDG:
 
         generator_p, generator_g = SymbDG.batchCreatorMain(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
 
+        print(f"Size glyphs {len(Y_g_cats)} || {len(w2i_g)}")
+
         description = SymbolClassifierDescription('agnostic_symbol_and_position_from_image', 
                                                 None, Configuration.img_height_g, Configuration.img_width_g,
                                                 batch_size, fileList)
@@ -194,7 +196,7 @@ class SymbDG:
 
 
         model_p = SymbolCNN.model(len(Y_p_cats), Configuration.img_height_p, Configuration.img_width_p)
-        model_g = SymbolCNN.model(len(Y_g_cats), Configuration.img_height_g, Configuration.img_width_g)
+        model_g = SymbolCNN.model(len(w2i_g), Configuration.img_height_g, Configuration.img_width_g)
 
         steps_p = len(X_p)//batch_size
         steps_g = len(X_g)//batch_size
