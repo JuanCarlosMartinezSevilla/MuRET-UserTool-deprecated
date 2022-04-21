@@ -167,15 +167,6 @@ class SAE:
             GrayImages.append(gray_img_resized)
             BinarizedImages.append(bin_img_resized)
 
-        
-
-            #background = GrayImages[0]
-            #overlay = BinarizedImages[0]*255
-            #added_image = cv2.addWeighted(background,1,overlay,0.5,0)
-            #cv2.imshow('GTImage', added_image)
-            #cv2.waitKey(0)
-            #cv2.destroyAllWindows()
-
         return np.array(GrayImages), np.array(BinarizedImages)
 
     def dataGen(routes_dict, batch_size, img_tam, classes_to_predict):

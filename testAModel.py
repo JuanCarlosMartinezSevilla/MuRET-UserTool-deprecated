@@ -4,6 +4,7 @@ from tensorflow import keras
 from keras.models import load_model
 import argparse
 import numpy as np
+import os
 
 
 from CRNN.utils_crnn import UtilsCRNN as U
@@ -90,6 +91,8 @@ def main(args):
         print('Testing position classifier\n')
         i2w = load_dict(args.dictionary)
         test_sc(model, routes_dict, True, i2w)
+
+    os.rmdir('testImages/SRC')
     
 
 
