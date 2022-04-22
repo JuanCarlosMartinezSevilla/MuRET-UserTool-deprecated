@@ -178,7 +178,11 @@ class Utils:
                 url = re.sub('(localhost:)\w+', 'muret.dlsi.ua.es/images', url)
                 
             filename = json_read["filename"]
-            urllib.request.urlretrieve(url, os.path.join(path_to_save, filename))
+            try:
+                urllib.request.urlretrieve(url, os.path.join(path_to_save, filename))
+            except:
+                print(f"Couldn't get the image from {url}")
+                pass
         else:
             erase = True
             
