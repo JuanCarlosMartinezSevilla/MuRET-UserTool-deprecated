@@ -6,6 +6,7 @@ import argparse
 import numpy as np
 import os
 import shutil
+import cv2
 
 
 from CRNN.utils_crnn import UtilsCRNN as U
@@ -49,6 +50,7 @@ def test_sc(model, routes_dict, selection, i2w):
             best_cat = np.argmax(pred)
             
             cat_name = i2w[f'{best_cat}']
+            
 
             #Utils.printCV2(img, f"Tag: {Y_p[idx]} | Pred: {cat_name}")
             if Y_p[idx] == cat_name:
@@ -67,6 +69,9 @@ def test_sc(model, routes_dict, selection, i2w):
             aux = np.expand_dims(aux, axis=-1)
             aux = np.expand_dims(aux, axis=0)
             pred = model.predict(aux)
+            print(pred)
+            print(best_cat)
+            input()
             # Its onehot encoding
             best_cat = np.argmax(pred)
 
@@ -74,10 +79,10 @@ def test_sc(model, routes_dict, selection, i2w):
             
             #Utils.printCV2(img, f"Tag: {Y_g[idx]} | Pred: {cat_name}")
             if Y_g[idx] == cat_name:
-                #print(f"Tag: {Y_g[idx]} | Pred: {cat_name} ✓✓✓")
+                print(f"Tag: {Y_g[idx]} | Pred: {cat_name} ✓✓✓")
                 counter += 1
-            #else:
-                #print(f"Tag: {Y_g[idx]} | Pred: {cat_name}")
+            else:
+                print(f"Tag: {Y_g[idx]} | Pred: {cat_name}")
         print(f"Number of good predictions: {counter} out of {len(X_g)} --> {counter/len(X_g)}")
 
 def test_e2e(model, routes_dict):
@@ -148,6 +153,8 @@ def argument_parser():
 
 
 if __name__ == '__main__':
+
+    #746,117,777,215
 
     parser = argument_parser()
     args = parser.parse_args()

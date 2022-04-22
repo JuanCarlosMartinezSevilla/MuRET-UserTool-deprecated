@@ -1,6 +1,7 @@
 .MuRET
 /images
 /dataset
+/testImages
 /ligaturesDataset
 # Byte-compiled / optimized / DLL files
 __pycache__/
