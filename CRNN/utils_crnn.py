@@ -119,13 +119,16 @@ class UtilsCRNN():
                                                                        region['bounding_box']['toY'],   \
                                                                        region['bounding_box']['toX']
     
-                                            X.append(image[top:bottom, left:right])
+                                            img_x = image[top:bottom, left:right]
+
+                                            if img_x.shape[0] != 0 and img_x.shape[1] != 0:
+                                                X.append(img_x)
     
-                                            gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
-                                                for s in symbols]
-                                            
-                                            Y.append(gt)
-                                            vocabulary.update(gt)
+                                                gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
+                                                    for s in symbols]
+                                                
+                                                Y.append(gt)
+                                                vocabulary.update(gt)
 
         w2i = {symbol: idx for idx, symbol in enumerate(vocabulary)}
         i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
