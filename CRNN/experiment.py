@@ -38,7 +38,7 @@ def split_data(fileList):
 
 def main(fileList, ligatures, args):
 
-    description = End2EndDescription('agnostic_end2end', None, None, None, None, fileList)
+    #description = End2EndDescription('agnostic_end2end', None, None, None, None, fileList)
     batch_size = 8
 
     #   We make this first so we get all the dataset symbols, if we split the data first
@@ -90,12 +90,12 @@ def main(fileList, ligatures, args):
     best_ser_val = 100
     epochs = 150
 
-    description.model_epochs = epochs
-    description.batch = batch_size
-    description.input_h = Config.img_height
-    description.i2w = dg.i2w
-    description.w2i = dg.w2i
-    description.save_description()
+    #description.model_epochs = epochs
+    #description.batch = batch_size
+    #description.input_h = Config.img_height
+    #description.i2w = dg.i2w
+    #description.w2i = dg.w2i
+    #description.save_description()
     
 
     for super_epoch in range(epochs):
