@@ -51,6 +51,7 @@ def main(fileList, ligatures, args):
 
     # Save dictionaries
     save_dicts(dg, ligatures, args)
+    full_dict_i2w = dg.i2w
 
     train_dict, val_dict, test_dict = split_data(fileList)
 
@@ -64,7 +65,7 @@ def main(fileList, ligatures, args):
 
     
 
-    model_tr, model_pr = get_model(vocabulary_size=len(dg.w2i))
+    model_tr, model_pr = get_model(vocabulary_size=len(full_dict_i2w))
 
     #X_val, Y_val, _, _ = U.parse_lst(args.validation)
     #fileList = dict(itertools.islice(fileList.items(), 4))
@@ -106,8 +107,8 @@ def main(fileList, ligatures, args):
                      verbose=2)
 
         print(f"\tEvaluating...\tBest SER val: {best_ser_val:.2f}")
-        ser_val = evaluator_val.eval(model_pr, dg.i2w)
-        ser_test = evaluator_test.eval(model_pr, dg.i2w)
+        ser_val = evaluator_val.eval(model_pr, full_dict_i2w)
+        ser_test = evaluator_test.eval(model_pr, full_dict_i2w)
         print("\tEpoch {}\t\tSER_val: {:.2f}\tSER_test: {:.2f}\n".format(super_epoch, ser_val, ser_test))
 
         #if args.model:

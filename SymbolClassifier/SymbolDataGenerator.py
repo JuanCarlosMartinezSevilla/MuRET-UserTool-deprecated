@@ -184,16 +184,16 @@ class SymbDG:
 
         print(f"Size glyphs {len(Y_g_cats)} || {len(w2i_g)}")
 
-        description = SymbolClassifierDescription('agnostic_symbol_and_position_from_image', 
-                                                None, Configuration.img_height_g, Configuration.img_width_g,
-                                                batch_size, fileList)
-
-        description.i2w_g = i2w_g
-        description.w2i_g = w2i_g
-        description.i2w_p = i2w_p
-        description.w2i_p = w2i_p
-        description.input_h_2 = Configuration.img_height_p
-        description.input_w_2 = Configuration.img_width_p
+        #description = SymbolClassifierDescription('agnostic_symbol_and_position_from_image', 
+        #                                        None, Configuration.img_height_g, Configuration.img_width_g,
+        #                                        batch_size, fileList)
+        #
+        #description.i2w_g = i2w_g
+        #description.w2i_g = w2i_g
+        #description.i2w_p = i2w_p
+        #description.w2i_p = w2i_p
+        #description.input_h_2 = Configuration.img_height_p
+        #description.input_w_2 = Configuration.img_width_p
 
 
         model_p = SymbolCNN.model(len(w2i_p), Configuration.img_height_p, Configuration.img_width_p)
@@ -205,8 +205,8 @@ class SymbDG:
         print('\n=== Starting training process ===\n')
         epochs = 15
 
-        description.model_epochs = epochs
-        description.save_description()
+        #description.model_epochs = epochs
+        #description.save_description()
 
         model_p.fit(generator_p,
                 steps_per_epoch=steps_p,
