@@ -3,6 +3,9 @@ import itertools
 from CRNN.augmentation import ImageModificator
 import cv2
 import json
+from guppy import hpy
+import os
+import shutil
 
 class UtilsCRNN():
 
@@ -32,6 +35,15 @@ class UtilsCRNN():
         out_best = np.argmax(prediction, axis=1)
         out_best = [k for k, g in itertools.groupby(list(out_best))]
         return [i2w[s] for s in out_best if s != len(i2w)]
+
+    def listFiles(extension, path):
+        result = []
+        files = os.listdir(path)
+        for f in files:
+            if extension in f:
+                result.append(f)
+        
+        return result
 
     def levenshtein(a,b):
         "Computes the Levenshtein distance between a and b."
@@ -94,22 +106,32 @@ class UtilsCRNN():
 
     def parse_lst_dict(lst_path: dict):
 
-        X = []
-        Y = []
+
+        path_to_save_crops = "./dataset/e2e_crops"
+
+        X = 0
+
+        #shutil.rmtree("./dataset/e2e_crops")
+        if not os.path.exists(path_to_save_crops):
+            os.makedirs(path_to_save_crops)
+
         vocabulary = set()
 
+        print("=== Cropping images ===")
+
         if not lst_path == None:
-            for key in lst_path:
+            for file_num ,key in enumerate(lst_path):
                 json_path = key
                 page_path = lst_path[key]
 
                 with open(json_path) as json_file:
                     data = json.load(json_file)
                     image = cv2.imread(page_path, cv2.IMREAD_COLOR)
+                    #print(idx, image.shape)
                     if 'pages' in data:
-                        for page in data['pages']:
+                        for page_num, page in enumerate(data['pages']):
                             if 'regions' in page:
-                                for region in page['regions']:
+                                for reg_number, region in enumerate(page['regions']):
                                     if region['type'] == 'staff' and 'symbols' in region:
                                         symbols = region['symbols']
     
@@ -122,20 +144,37 @@ class UtilsCRNN():
                                             img_x = image[top:bottom, left:right]
 
                                             if img_x.shape[0] != 0 and img_x.shape[1] != 0:
-                                                X.append(img_x)
+                                                #X.append(img_x)
+                                                X = X + 1
+                                                cv2.imwrite(f"{path_to_save_crops}/crop_{file_num+1}.{page_num+1}.{reg_number+1}.png", img_x)
     
                                                 gt = ['{}:{}'.format(s['agnostic_symbol_type'], s["position_in_staff"])
                                                     for s in symbols]
+
+                                                aux_dict = {"info": gt}
+                                                with open(f"{path_to_save_crops}/crop_{file_num+1}.{page_num+1}.{reg_number+1}.json", 'w') as fp:
+                                                    json.dump(aux_dict, fp)
                                                 
-                                                Y.append(gt)
+                                                #Y.append(gt)
                                                 vocabulary.update(gt)
 
         w2i = {symbol: idx for idx, symbol in enumerate(vocabulary)}
         i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
 
-        print("{} samples loaded with {}-sized vocabulary\n".format(len(X), len(w2i)))
+        print("{} samples loaded with {}-sized vocabulary\n".format(X, len(w2i)))
         
-        return X, Y, w2i, i2w
+        return w2i, i2w
+
+    def appendSymbols(images):
+        Y = []
+        for img in images:
+            img = img.replace('png', 'json')
+
+            with open(f'./dataset/e2e_crops/{img}') as json_file:
+                data = json.load(json_file)
+            Y.append(data['info'])
+
+        return Y
 
     def parse_lst(lst_path):
         X = []

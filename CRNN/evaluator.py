@@ -1,6 +1,8 @@
+from cv2 import IMREAD_COLOR
 from CRNN.utils_crnn import UtilsCRNN as U
 from CRNN.config import Config
 import numpy as np
+import cv2
 
 class ModelEvaluator:
 
@@ -17,7 +19,8 @@ class ModelEvaluator:
 
             # aug factor == 0 means no augmentation at all
             if self.aug_factor == 0:
-                sample_image = self.X[idx]
+                name = self.X[idx]
+                sample_image = cv2.imread(f'./dataset/e2e_crops/{name}', cv2.IMREAD_COLOR)
                 sample_image = U.normalize(sample_image)
                 sample_image = U.resize(sample_image, Config.img_height)
 

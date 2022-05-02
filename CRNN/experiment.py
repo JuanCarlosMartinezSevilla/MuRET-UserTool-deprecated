@@ -12,56 +12,53 @@ import json
 from description import Description, End2EndDescription
 import sys
 
-def save_dicts(dg, ligatures, args):
+from guppy import hpy
+
+def save_dicts(w2i, i2w, ligatures, args):
     aux = ''
     if ligatures:
         aux = '_ligatures' 
     
     with open(f'{args.pkg_name}/agnostic_end2end{aux}/i2w.json', 'w') as fp:
-            json.dump(dg.i2w, fp)
+            json.dump(i2w, fp)
 
     with open(f'{args.pkg_name}/agnostic_end2end{aux}/w2i.json', 'w') as fp:
-        json.dump(dg.w2i, fp)
+        json.dump(w2i, fp)
 
 def split_data(fileList):
     print(f"\n ■ Number of images in the dataset: {len(fileList)}")
-    aux = []
-    [aux.append(k) for k in fileList.keys()]
-    train, test = train_test_split(aux, test_size=0.2)
+    train, test = train_test_split(fileList, test_size=0.2)
     test, val = train_test_split(test, test_size=0.5)
 
-    train_dict = {name: fileList[f'{name}'] for name in train}
-    val_dict = {name: fileList[f'{name}'] for name in val}
-    test_dict = {name: fileList[f'{name}'] for name in test}
+    #train_dict = {name: name.replace('png', 'json') for name in train}
+    #val_dict = {name: name.replace('png', 'json') for name in val}
+    #test_dict = {name: name.replace('png', 'json') for name in test}
     
-    return train_dict, val_dict, test_dict
+    return train, val, test
 
 def main(fileList, ligatures, args):
 
     #description = End2EndDescription('agnostic_end2end', None, None, None, None, fileList)
     batch_size = 8
 
+    # Genero los diccionarios y los crops
+    if ligatures:
+        w2i, i2w = U.parse_lst_dict_ligatures(fileList) # llamar con mi diccionario
+    else:
+        w2i, i2w = U.parse_lst_dict(fileList) # llamar con mi diccionario
+
+    save_dicts(w2i, i2w, ligatures, args)
+    full_dict_i2w = i2w
+
+    train, val, test = split_data(U.listFiles('png', './dataset/e2e_crops'))
+    
     #   We make this first so we get all the dataset symbols, if we split the data first
     #   we can lose some
-    dg = DataGenerator(dataset_list_path=fileList,
+    dg = DataGenerator(dataset_list_path=train,
                        aug_factor=3, # seq (1 5)
                        batch_size=batch_size,
                        num_channels=3,
-                       width_reduction=8, ligatures=ligatures)
-
-    # Save dictionaries
-    save_dicts(dg, ligatures, args)
-    full_dict_i2w = dg.i2w
-
-    train_dict, val_dict, test_dict = split_data(fileList)
-
-    print("\n=== Train data ===")
-    
-    dg = DataGenerator(dataset_list_path=train_dict,
-                       aug_factor=3, # seq (1 5)
-                       batch_size=batch_size,
-                       num_channels=3,
-                       width_reduction=8, ligatures=ligatures)
+                       width_reduction=8, ligatures=ligatures, w2i=w2i, i2w=i2w)
 
     
 
@@ -70,19 +67,17 @@ def main(fileList, ligatures, args):
     #X_val, Y_val, _, _ = U.parse_lst(args.validation)
     #fileList = dict(itertools.islice(fileList.items(), 4))
     print("\n=== Validation data ===")
-    if ligatures:
-        X_val, Y_val, _, _ = U.parse_lst_dict_ligatures(val_dict)
-    else:
-        X_val, Y_val, _, _ = U.parse_lst_dict(val_dict)
+    X_val = val
+    Y_val = U.appendSymbols(val)
+
     #evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=args.aug_test)
     evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=0)
 
     #X_test, Y_test, _, _ = U.parse_lst(args.test)
     print("\n=== Test data ===")
-    if ligatures:
-        X_test, Y_test, _, _ = U.parse_lst_dict_ligatures(test_dict)
-    else:
-        X_test, Y_test, _, _ = U.parse_lst_dict(test_dict)
+
+    X_test = test
+    Y_test = U.appendSymbols(test)
     #evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=args.aug_test)
     evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=0)
 

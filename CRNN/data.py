@@ -1,18 +1,25 @@
 import numpy as np
 from CRNN.config import Config
 from CRNN.utils_crnn import UtilsCRNN as U
-import itertools
+import random
+import cv2
+import json
+
+
+def chooseRandomImageFromFolder(listOfFiles):
+    for file in random.choice(listOfFiles):
+        cv2.imread(file)
+
 
 class DataGenerator:
 
-    def __init__(self, dataset_list_path, aug_factor, width_reduction, num_channels, batch_size, ligatures):
+    def __init__(self, dataset_list_path, aug_factor, width_reduction, num_channels, batch_size, ligatures, w2i, i2w):
         self.ligatures = ligatures
         #print(dataset_list_path)
         #dataset_list_path = dict(itertools.islice(dataset_list_path.items(), 4))
-        if ligatures:
-            self.X, self.Y, self.w2i, self.i2w = U.parse_lst_dict_ligatures(dataset_list_path) # llamar con mi diccionario
-        else:
-            self.X, self.Y, self.w2i, self.i2w = U.parse_lst_dict(dataset_list_path) # llamar con mi diccionario
+        self.i2w = i2w
+        self.w2i = w2i
+        self.X = dataset_list_path
         self.aug_factor = aug_factor
         self.batch_size = batch_size
         self.width_reduction = width_reduction
@@ -32,13 +39,18 @@ class DataGenerator:
 
             # aug factor == 0 means no augmentation at all
             #print(self.idx)
-            sample_image = self.X[self.idx]
+
+            ### Seleccionar imagen de random de /dataset/e2e_crops
+            name = self.X[self.idx]
+            sample_image = cv2.imread(f'./dataset/e2e_crops/{name}', cv2.IMREAD_COLOR)
             sample_image = U.normalize(sample_image)
             sample_image = U.resize(sample_image, Config.img_height)
             max_image_width = max(max_image_width, sample_image.shape[1])
 
             X_batch.append(sample_image)
-            Y_batch.append([self.w2i[symbol] for symbol in self.Y[self.idx]])
+            with open(f'./dataset/e2e_crops/{name.replace("png", "json")}') as json_file:
+                data = json.load(json_file)
+            Y_batch.append([self.w2i[symbol] for symbol in data["info"]])
             self.idx = (self.idx + 1) % len(self.X)
 
         X_train = np.zeros(
