@@ -12,8 +12,6 @@ import json
 from description import Description, End2EndDescription
 import sys
 
-from guppy import hpy
-
 def save_dicts(w2i, i2w, ligatures, args):
     aux = ''
     if ligatures:

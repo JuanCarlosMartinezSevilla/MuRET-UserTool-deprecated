@@ -3,7 +3,7 @@ import itertools
 from CRNN.augmentation import ImageModificator
 import cv2
 import json
-from guppy import hpy
+
 import os
 import shutil
 
