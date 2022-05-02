@@ -1,4 +1,5 @@
 import json
+import shutil
 from sklearn.model_selection import train_test_split
 import cv2
 import random
@@ -14,28 +15,31 @@ from tensorflow import keras
 class SymbDG:
 
     def split_data(fileList):
-        print(f"\n ■ Number of images in the dataset: {len(fileList )-1}")
-        aux = []
-        [aux.append(k) for k in fileList.keys()]
-        train, test = train_test_split(aux, test_size=0.2)
+        print(f"\n ■ Number of images in the dataset: {len(fileList)}")
+        train, test = train_test_split(fileList, test_size=0.2)
         test, val = train_test_split(test, test_size=0.5)
 
-        train_dict = {name: fileList[f'{name}'] for name in train}
-        val_dict = {name: fileList[f'{name}'] for name in val}
-        test_dict = {name: fileList[f'{name}'] for name in test}
+        #train_dict = {name: fileList[f'{name}'] for name in train}
+        #val_dict = {name: fileList[f'{name}'] for name in val}
+        #test_dict = {name: fileList[f'{name}'] for name in test}
         
-        return train_dict, val_dict, test_dict
+        return train, val, test
 
 
     def parse_files(files: dict):
 
-        X_pos = list() 
-        X_glyph = list()
-        Y_pos = list() 
-        Y_glyph = list()
+        path_to_save_crops = './dataset/sc_crops'
+
+        shutil.rmtree(path_to_save_crops)
+        if not os.path.exists(path_to_save_crops):
+            os.makedirs(path_to_save_crops)
+
+        X = 0
+        Y_pos_cats = set() 
+        Y_glyph_cats = set()
 
         if not files == None:
-            for key in files:
+            for file_num, key in enumerate(files):
                 json_path = key
                 img_path = files[key]
                 with open(json_path) as json_file:
@@ -43,10 +47,10 @@ class SymbDG:
                     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
                     if 'pages' in data:
                         pages = data['pages']
-                        for p in pages:
+                        for page_num, p in enumerate(pages):
                             if 'regions' in p:
                                 regions = p['regions']
-                                for r in regions:
+                                for reg_num, r in enumerate(regions):
                                     # Stave coords
                                     top_r, _, bottom_r, _ = r['bounding_box']['fromY'], \
                                                             r['bounding_box']['fromX'], \
@@ -55,7 +59,7 @@ class SymbDG:
                                     if 'symbols' in r:
                                         symbols = r['symbols']
                                         if len(symbols) > 0:
-                                            for s in symbols:
+                                            for sym_num, s in enumerate(symbols):
                                                 if 'bounding_box' in s:
                                                     # Symbol coords
                                                     top_s, left_s, bottom_s, right_s = s['bounding_box']['fromY'], \
@@ -73,17 +77,21 @@ class SymbDG:
 
                                                             if img_g.shape[0] != 0 and img_g.shape[1] != 0:
                                                                 if img_p.shape[0] != 0 and img_p.shape[1] != 0:
-                                                            
-                                                                    X_glyph.append(img_g)
-                                                                    Y_glyph.append(type_s)
-                                                                    X_pos.append(img_p)
-                                                                    Y_pos.append(pos_s)
+                                                                    
+                                                                    X = X + 1
 
-        Y_glyph_cats = set(Y_glyph)
-        Y_pos_cats = set(Y_pos)
-        print(f"{len(X_glyph)} symbols loaded with {len(Y_glyph_cats)} different types and {len(Y_pos_cats)} different positions.\n")
+                                                                    cv2.imwrite(f"{path_to_save_crops}/crop_glyph_{file_num+1}.{page_num+1}.{reg_num+1}.{sym_num}.{type_s}.png", img_g)
+                                                                    cv2.imwrite(f"{path_to_save_crops}/crop_pos_{file_num+1}.{page_num+1}.{reg_num+1}.{sym_num}.{pos_s}.png", img_p)
+                                                                    
+                                                                    #X_glyph.append(img_g)
+                                                                    Y_glyph_cats.update(type_s)
+                                                                    #X_pos.append(img_p)
+                                                                    Y_pos_cats.update(pos_s)
 
-        return X_glyph, X_pos, Y_glyph, Y_pos, Y_glyph_cats, Y_pos_cats
+        
+        print(f"{X} symbols loaded with {len(Y_glyph_cats)} different types and {len(Y_pos_cats)} different positions.\n")
+
+        return Y_glyph_cats, Y_pos_cats
 
 
     def printCV2(X, window_name='sample'):
@@ -97,43 +105,50 @@ class SymbDG:
         img = cv2.resize(image, (width, height)) / 255
         return img
 
-    def batchCreatorP(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
+    def batchCreatorP(batch_size, train, w2i_g, w2i_p):
 
         while True:
             output_p = []
             
             for f in range(batch_size):
-                idx = random.randint(0,len(X_p)-1)
+                idx = random.randint(0,len(train)-1)
+
+                img = cv2.imread(f'./dataset/sc_crops/{train[idx]}', cv2.IMREAD_GRAYSCALE) 
+                symb = train[idx].split('.')[-1]
 
                 if f == 0:
-                    input_p = np.expand_dims(SymbDG.resize(X_p[idx], Configuration.img_height_p, Configuration.img_width_p), axis=0)
-                    output_p.append(w2i_p[Y_p[idx]])
+                    input_p = np.expand_dims(SymbDG.resize(img, Configuration.img_height_p, Configuration.img_width_p), axis=0)
+                    output_p.append(w2i_p[symb])
 
                 else:
                     input_p = np.concatenate((input_p, 
-                                            np.expand_dims(SymbDG.resize(X_p[idx], Configuration.img_height_p, Configuration.img_width_p), axis=0)), axis=0)
-                    output_p.append(w2i_p[Y_p[idx]])
+                                            np.expand_dims(SymbDG.resize(img, Configuration.img_height_p, Configuration.img_width_p), axis=0)), axis=0)
+                    output_p.append(w2i_p[symb])
 
             output_p = keras.utils.to_categorical(output_p, len(w2i_p))
 
             yield input_p, output_p
+        
     
-    def batchCreatorG(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
+    def batchCreatorG(batch_size, train, w2i_g, w2i_p):
 
         while True:
             output_g = []
 
             for f in range(batch_size):
-                idx = random.randint(0,len(X_g)-1)
+                idx = random.randint(0,len(train)-1)
+
+                img = cv2.imread(f'./dataset/sc_crops/{train[idx]}', cv2.IMREAD_GRAYSCALE) 
+                symb = train[idx].split('.')[-1]
 
                 if f == 0:
-                    input_g = np.expand_dims(SymbDG.resize(X_g[idx], Configuration.img_height_g, Configuration.img_width_g), axis=0)
-                    output_g.append(w2i_g[Y_g[idx]])
+                    input_g = np.expand_dims(SymbDG.resize(img, Configuration.img_height_g, Configuration.img_width_g), axis=0)
+                    output_g.append(w2i_g[symb])
            
                 else:
                     input_g = np.concatenate((input_g, 
-                                        np.expand_dims(SymbDG.resize(X_g[idx], Configuration.img_height_g, Configuration.img_width_g), axis=0)), axis=0)
-                    output_g.append(w2i_g[Y_g[idx]])
+                                        np.expand_dims(SymbDG.resize(img, Configuration.img_height_g, Configuration.img_width_g), axis=0)), axis=0)
+                    output_g.append(w2i_g[symb])
                 
             output_g = keras.utils.to_categorical(output_g, len(w2i_g))
                 
@@ -161,26 +176,34 @@ class SymbDG:
 
         return w2i_glyphs_vocab, w2i_pos_vocab, i2w_glyphs_vocab, i2w_pos_vocab
         
-    def batchCreatorMain(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p):
-        gen_p = SymbDG.batchCreatorP(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
-        gen_g = SymbDG.batchCreatorG(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
+    def batchCreatorMain(batch_size, train, w2i_g, w2i_p):
+        gen_p = SymbDG.batchCreatorP(batch_size, train, w2i_g, w2i_p)
+        gen_g = SymbDG.batchCreatorG(batch_size, train, w2i_g, w2i_p)
 
         return gen_p, gen_g
+
+    def listFiles(extension, path):
+        result = []
+        files = os.listdir(path)
+        for f in files:
+            if extension in f:
+                result.append(f)
+        
+        return result
 
     def main(fileList: dict, args):
 
         batch_size = 32
 
         # TO see all categories =============================================
-        X_g, X_p, Y_g, Y_p, Y_g_cats, Y_p_cats = SymbDG.parse_files(fileList)
+        Y_g_cats, Y_p_cats = SymbDG.parse_files(fileList)
         w2i_g, w2i_p, i2w_g, i2w_p = SymbDG.createVocabs(Y_g_cats, Y_p_cats, args)
         #====================================================================
         
-        train_dict, val_dict, test_dict = SymbDG.split_data(fileList)
+        # Dividir en datos de posición y glyph
+        train, val, test = SymbDG.split_data(SymbDG.listFiles('png', './dataset/sc_crops'))
 
-        X_g, X_p, Y_g, Y_p, Y_g_cats, Y_p_cats = SymbDG.parse_files(train_dict)
-
-        generator_p, generator_g = SymbDG.batchCreatorMain(batch_size, X_g, X_p, Y_g, Y_p, w2i_g, w2i_p)
+        generator_p, generator_g = SymbDG.batchCreatorMain(batch_size, train, w2i_g, w2i_p)
 
         print(f"Size glyphs {len(Y_g_cats)} || {len(w2i_g)}")
 
