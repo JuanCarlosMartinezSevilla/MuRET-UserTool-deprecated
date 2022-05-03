@@ -148,12 +148,12 @@ class SymbDG:
 
                 if f == 0:
                     input_g = np.expand_dims(SymbDG.resize(img, Configuration.img_height_g, Configuration.img_width_g), axis=0)
-                    output_g.append(w2i_g[f'{symb}'])
+                    output_g.append(w2i_g[symb])
            
                 else:
                     input_g = np.concatenate((input_g, 
                                         np.expand_dims(SymbDG.resize(img, Configuration.img_height_g, Configuration.img_width_g), axis=0)), axis=0)
-                    output_g.append(w2i_g[f'{symb}'])
+                    output_g.append(w2i_g[symb])
                 
             output_g = keras.utils.to_categorical(output_g, len(w2i_g))
                 
