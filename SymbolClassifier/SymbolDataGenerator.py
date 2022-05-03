@@ -171,8 +171,6 @@ class SymbDG:
         w2i_glyphs_vocab = {i: idx for idx, i in enumerate(glyphs)}
         w2i_pos_vocab    = {i: idx for idx, i in enumerate(positions)}
 
-        print(w2i_glyphs_vocab)
-
         i2w_glyphs_vocab = {w2i_glyphs_vocab[i] : i for i in w2i_glyphs_vocab}
         i2w_pos_vocab    = {w2i_pos_vocab[i]    : i for i in w2i_pos_vocab}
 
