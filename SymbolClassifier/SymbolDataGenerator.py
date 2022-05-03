@@ -85,8 +85,8 @@ class SymbDG:
                                                                     
                                                                     X = X + 1
 
-                                                                    cv2.imwrite(f"{path_to_save_crops}/crop_glyph_{file_num+1}.{page_num+1}.{reg_num+1}.{sym_num}.{type_s}.png", img_g)
-                                                                    cv2.imwrite(f"{path_to_save_crops}/crop_pos_{file_num+1}.{page_num+1}.{reg_num+1}.{sym_num}.{pos_s}.png", img_p)
+                                                                    cv2.imwrite(f"{path_to_save_crops}/crop_glyph_{file_num+1}.{page_num+1}.{reg_num+1}.{sym_num}.-{type_s}-.png", img_g)
+                                                                    cv2.imwrite(f"{path_to_save_crops}/crop_pos_{file_num+1}.{page_num+1}.{reg_num+1}.{sym_num}-{pos_s}-.png", img_p)
                                                                     
                                                                     #X_glyph.append(img_g)
                                                                     Y_glyph_cats.add(type_s)
@@ -119,7 +119,8 @@ class SymbDG:
                 idx = random.randint(0,len(train)-1)
 
                 img = cv2.imread(f'./dataset_crops/sc_crops/{train[idx]}', cv2.IMREAD_GRAYSCALE) 
-                symb = train[idx].split('.')[-2]
+                symb = train[idx].split('-')[-2]
+                print(symb)
 
                 if f == 0:
                     input_p = np.expand_dims(SymbDG.resize(img, Configuration.img_height_p, Configuration.img_width_p), axis=0)
@@ -144,7 +145,8 @@ class SymbDG:
                 idx = random.randint(0,len(train)-1)
 
                 img = cv2.imread(f'./dataset_crops/sc_crops/{train[idx]}', cv2.IMREAD_GRAYSCALE) 
-                symb = train[idx].split('.')[-2]
+                symb = train[idx].split('-')[-2]
+                print(symb)
 
                 if f == 0:
                     input_g = np.expand_dims(SymbDG.resize(img, Configuration.img_height_g, Configuration.img_width_g), axis=0)
@@ -242,10 +244,10 @@ class SymbDG:
         #description.model_epochs = epochs
         #description.save_description()
 
-        model_p.fit(generator_p,
-                steps_per_epoch=steps_p,
-                epochs=epochs,
-                verbose=2)
+        #model_p.fit(generator_p,
+        #        steps_per_epoch=steps_p,
+        #        epochs=epochs,
+        #        verbose=2)
 
         model_g.fit(generator_g,
                 steps_per_epoch=steps_g,
