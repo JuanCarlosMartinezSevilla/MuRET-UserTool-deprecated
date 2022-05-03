@@ -120,7 +120,6 @@ class SymbDG:
 
                 img = cv2.imread(f'./dataset_crops/sc_crops/{train[idx]}', cv2.IMREAD_GRAYSCALE) 
                 symb = train[idx].split('#')[-2]
-                print(symb)
 
                 if f == 0:
                     input_p = np.expand_dims(SymbDG.resize(img, Configuration.img_height_p, Configuration.img_width_p), axis=0)
@@ -146,7 +145,6 @@ class SymbDG:
 
                 img = cv2.imread(f'./dataset_crops/sc_crops/{train[idx]}', cv2.IMREAD_GRAYSCALE) 
                 symb = train[idx].split('#')[-2]
-                print(symb)
 
                 if f == 0:
                     input_g = np.expand_dims(SymbDG.resize(img, Configuration.img_height_g, Configuration.img_width_g), axis=0)

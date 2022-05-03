@@ -1,5 +1,6 @@
 .MuRET
 /images
+/dataset_crops
 /dataset
 /testImages
 /ligaturesDataset
