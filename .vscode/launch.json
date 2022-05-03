@@ -11,7 +11,7 @@
             "program": "main.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["-p" , "MuRETDatasets/collection_1_trainingsets.tgz", "MuRETDatasets/collection_6_trainingsets.tgz", "-pkg", "debug", "-e2e"]
+            "args": ["-p" , "MuRETDatasets/collection_1_trainingsets.tgz", "MuRETDatasets/collection_6_trainingsets.tgz", "-pkg", "debug", "-sc"]
         }
     ]
 }
