@@ -107,14 +107,16 @@ class UtilsCRNN():
     def parse_lst_dict(lst_path: dict):
 
 
-        path_to_save_crops = "./dataset/e2e_crops"
+        path_to_save_crops = "./dataset_crops/e2e_crops"
 
         X = 0
 
-        #shutil.rmtree("./dataset/e2e_crops")
-        if not os.path.exists(path_to_save_crops):
+        if os.path.exists(path_to_save_crops):
+            shutil.rmtree(path_to_save_crops)
             os.makedirs(path_to_save_crops)
-
+        else:
+            os.makedirs(path_to_save_crops)
+            
         vocabulary = set()
 
         print("=== Cropping images ===")
@@ -170,7 +172,7 @@ class UtilsCRNN():
         for img in images:
             img = img.replace('png', 'json')
 
-            with open(f'./dataset/e2e_crops/{img}') as json_file:
+            with open(f'./dataset_crops/e2e_crops/{img}') as json_file:
                 data = json.load(json_file)
             Y.append(data['info'])
 

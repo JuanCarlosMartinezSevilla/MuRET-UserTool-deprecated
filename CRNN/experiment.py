@@ -48,7 +48,7 @@ def main(fileList, ligatures, args):
     save_dicts(w2i, i2w, ligatures, args)
     full_dict_i2w = i2w
 
-    train, val, test = split_data(U.listFiles('png', './dataset/e2e_crops'))
+    train, val, test = split_data(U.listFiles('png', './dataset_crops/e2e_crops'))
     
     #   We make this first so we get all the dataset symbols, if we split the data first
     #   we can lose some

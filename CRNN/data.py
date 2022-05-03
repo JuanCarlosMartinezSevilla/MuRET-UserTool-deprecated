@@ -42,13 +42,13 @@ class DataGenerator:
 
             ### Seleccionar imagen de random de /dataset/e2e_crops
             name = self.X[self.idx]
-            sample_image = cv2.imread(f'./dataset/e2e_crops/{name}', cv2.IMREAD_COLOR)
+            sample_image = cv2.imread(f'./dataset_crops/e2e_crops/{name}', cv2.IMREAD_COLOR)
             sample_image = U.normalize(sample_image)
             sample_image = U.resize(sample_image, Config.img_height)
             max_image_width = max(max_image_width, sample_image.shape[1])
 
             X_batch.append(sample_image)
-            with open(f'./dataset/e2e_crops/{name.replace("png", "json")}') as json_file:
+            with open(f'./dataset_crops/e2e_crops/{name.replace("png", "json")}') as json_file:
                 data = json.load(json_file)
             Y_batch.append([self.w2i[symbol] for symbol in data["info"]])
             self.idx = (self.idx + 1) % len(self.X)

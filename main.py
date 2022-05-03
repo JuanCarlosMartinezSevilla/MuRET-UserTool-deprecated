@@ -80,13 +80,12 @@ class Main:
             
             Utils.callDataAug(new_images, path_to_download_images)
             Utils.callSAE(args)
-            print()
 
         if args.end_to_end:
             #Launch E2E
             Messages.e2e()
             Utils.callE2E(fileList, args)
-            print()
+            
         
         if args.end_to_end_ligatures:
             Utils.callE2ELigatures(fileList, args)
