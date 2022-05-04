@@ -20,7 +20,8 @@ When the training is done, it generates a [MuRET](https://muret.dlsi.ua.es/muret
 
 In order to use this tool, install [python](https://www.python.org/downloads/). 
 
-Second step is to create a Virtual Environment. More info at https://docs.python.org/3/library/venv.html
+Second step is to create a Virtual Environment. 
+More info at https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment
 
 ```shell
 python3 -m venv .venv
