@@ -43,8 +43,6 @@ Usage: python3 main.py [OPTIONS]
 Options:
   -h, --help             Shows this help message and exits
   -p, --path             Path to dataset .tgz file.
-  You can include multiple paths. Example:
-    -p /path1/data.tgz /path2/data.tgz /path3/data.tgz
   -pkg, --pkg_name       Name of generated package.
   -da, --doc_analysis    Train a document analysis model.
   -e2e, --end_to_end     Train an agnostic end to end model.
@@ -53,6 +51,8 @@ Options:
   -ni, --new_images      Number of new synthetic images (if required).
   -h5, --h5              Save models .h5 format.
   
+  You can include multiple paths:
+    -p /path1/data.tgz /path2/data.tgz /path3/data.tgz
   
   Example:
     python3 main.py -p MuRETDatasets/mensural_manuscript.tgz -pkg mens_manuscript -da -e2e -sc -ni 20 -rl
