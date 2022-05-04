@@ -1,4 +1,4 @@
-# MuRET User Training Tool
+# MuRET's User Training Tool
 
 Most of the musical heritage is only available as physical documents, given that the engraving process was carried out by handwriting or typesetting until the end of the 20th century. Their mere availability as scanned images does not enable tasks such as indexing or editing unless they are transcribed into a structured digital format. The transcription process from historical handwritten music manuscripts to a structured digital encoding has been traditionally performed following a fully manual workflow. At most, it has received some technological support in particular stages, like optical music recognition (OMR) of the source images, or transcription to modern notation with music edition applications.
 
@@ -6,7 +6,18 @@ A new online tool called MUsic Recognition, Encoding, and Transcription (MuRET) 
 
 The objective of this repository is to provide the users a simple way to train deep learning models an efficient transcription process.
 
-## Usage
+## Why?
+This tool is capable of training 3 classifiers:
+- End to end staff classifier: Receives a staff image and returns all the ordered symbols that appear.
+- Document analysis: Receives a full page image and returns a binarized image with its staves position.
+- Symbol classifier: Receives a symbol cropped image and returns the symbol's type and position in the staff (line or space *x*).
+
+
+
+When the training is done, it generates a [MuRET](https://muret.dlsi.ua.es/muret/#/about) package. You can upload it to [MuRET](https://muret.dlsi.ua.es/muret/#/about) and see them in action.
+
+
+### Installation
 
 In order to use this tool, install [python](https://www.python.org/downloads/). 
 
@@ -21,4 +32,32 @@ Once created, activate it and install package manager pip.
 source .venv/bin/activate
 pip install --upgrade pip
 ```
+Next step is to introduce all the dependencies.
+```shell
+python3 -m pip install -r requirements.txt
+```
+### Usage
+You have options when executing the program.
+```shell
+Usage: python3 main.py [OPTIONS]
 
+Options:
+  -h, --help             Shows this help message and exits
+  -p, --path             Path to dataset .tgz file.
+  You can include multiple paths. Example:
+    -p /path1/data.tgz /path2/data.tgz /path3/data.tgz
+  -pkg, --pkg_name       Name of generated package.
+  -da, --doc_analysis    Train a document analysis model.
+  -e2e, --end_to_end     Train an agnostic end to end model.
+  -sc, --symb_classifier Train a symbol classifier model.
+  -rl, --reload          Reload dataset (first time you always need to use it).
+  -ni, --new_images      Number of new synthetic images (if required).
+  -h5, --h5              Save models in .h5 format.
+  
+  
+  Example:
+    python3 main.py -p MuRETDatasets/mensural_manuscript.tgz -pkg mens_manuscript -da -e2e -sc -ni 20 -rl
+```
+When finalized you will find your pkg_name.tgz file in the same folder as the project.
+
+Thank you for using **MuRET's User Training Tool**
