@@ -57,6 +57,6 @@ Options:
   Example:
     python3 main.py -p MuRETDatasets/mensural_manuscript.tgz -pkg mens_manuscript -da -e2e -sc -ni 20 -rl
 ```
-When finalized you will find your pkg_name.tgz file in the same folder as the project.
+When finalized you will find your *MuRETPackage.tgz* file in the same folder as the project. Upload it to MuRET and see the magic happen.
 
 Thank you for using **MuRET's User Training Tool**
