@@ -41,15 +41,15 @@ You have options when executing the program.
 Usage: python3 main.py [OPTIONS]
 
 Options:
-  -h, --help             Shows this help message and exits
-  -p, --path             Path to dataset .tgz file.
-  -pkg, --pkg_name       Name of generated package.
-  -da, --doc_analysis    Train a document analysis model.
-  -e2e, --end_to_end     Train an agnostic end to end model.
-  -sc, --symb_classifier Train a symbol classifier model.
-  -rl, --reload          Reloads dataset from MuRET (first execution you always need to use it).
-  -ni, --new_images      Number of new synthetic images (if required).
-  -h5, --h5              Save models .h5 format.
+  -h,     --help              Shows this help message and exits
+  -p,     --path              Path to dataset .tgz file.
+  -pkg,   --pkg_name          Name of generated package.
+  -da,    --doc_analysis      Train a document analysis model.
+  -e2e,   --end_to_end        Train an agnostic end to end model.
+  -sc,    --symb_classifier   Train a symbol classifier model.
+  -rl,    --reload            Reloads dataset from MuRET (first execution you always need to use it).
+  -ni,    --new_images        Number of new synthetic images (if required).
+  -h5,    --h5                Save models .h5 format.
   
   You can include multiple paths:
     -p /path1/data.tgz /path2/data.tgz /path3/data.tgz
