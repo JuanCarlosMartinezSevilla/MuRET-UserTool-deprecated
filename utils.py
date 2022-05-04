@@ -4,7 +4,7 @@ from tqdm import tqdm
 import json
 import urllib.request
 from DataAugmentation.DataAugmentationGenerator import DataAugmentationGenerator
-from SAE.SAE import SAE
+from SAE.documentAnalysis import main as DAmain
 from DataAugmentation.file_manager import FileManager
 from CRNN.utils_crnn import UtilsCRNN
 import cv2
@@ -37,23 +37,10 @@ class Utils:
 
     @staticmethod
     def callSAE(args):
-        epochs = 10
-        classes_to_predict = 'staff'
-        image_size = 512
-        batch_size = 8
         list_json_pathfiles = FileManager.listFilesRecursive('./dataset')
         routes_dict = FileManager.createRoutesDict(list_json_pathfiles)
+        DAmain(routes_dict, args)
         
-        #description = DocumentAnalysisDescription('document_analysis', epochs, image_size, image_size, batch_size, routes_dict, classes_to_predict)
-        #description.model_epochs = 500
-        #description.save_description()
-
-        #sys.exit(-1)
-
-        generator = SAE.dataGen(routes_dict, batch_size, image_size, classes_to_predict)
-        
-        print("\n--- Training process ---\n")
-        SAE.model(image_size, epochs, generator, len(routes_dict)//batch_size, args)
 
     @staticmethod
     def SymbolsHeightParse(lst_path: dict):

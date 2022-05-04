@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
-from keras import layers, losses, Model, optimizers
+from keras import layers, losses, Model
 
 class SymbolCNN:
 
