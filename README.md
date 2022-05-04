@@ -1,4 +1,6 @@
 # MuRET's User Training Tool
+![GitHub all releases](https://img.shields.io/github/downloads/JuanCarlosMartinezSevilla/MuRET-UserTool/total) ![GitHub watchers](https://img.shields.io/github/watchers/JuanCarlosMartinezSevilla/MuRET-UserTool) ![GitHub last commit](https://img.shields.io/github/last-commit/JuanCarlosMartinezSevilla/MuRET-UserTool)
+
 
 Most of the musical heritage is only available as physical documents, given that the engraving process was carried out by handwriting or typesetting until the end of the 20th century. Their mere availability as scanned images does not enable tasks such as indexing or editing unless they are transcribed into a structured digital format. The transcription process from historical handwritten music manuscripts to a structured digital encoding has been traditionally performed following a fully manual workflow. At most, it has received some technological support in particular stages, like optical music recognition (OMR) of the source images, or transcription to modern notation with music edition applications.
 
