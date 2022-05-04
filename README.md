@@ -13,8 +13,7 @@ This tool is capable of training 3 classifiers:
 - Symbol classifier: Receives a symbol cropped image and returns the symbol's type and position in the staff (line or space *x*).
 
 
-
-When the training is done, it generates a [MuRET](https://muret.dlsi.ua.es/muret/#/about) package. You can upload it to [MuRET](https://muret.dlsi.ua.es/muret/#/about) and see them in action.
+When the training is done, it generates a [MuRET](https://muret.dlsi.ua.es/muret/#/about) package with all the required files. You can upload it to [MuRET](https://muret.dlsi.ua.es/muret/#/about) and see them in action.
 
 
 ### Installation
@@ -50,9 +49,9 @@ Options:
   -da, --doc_analysis    Train a document analysis model.
   -e2e, --end_to_end     Train an agnostic end to end model.
   -sc, --symb_classifier Train a symbol classifier model.
-  -rl, --reload          Reload dataset (first time you always need to use it).
+  -rl, --reload          Reloads dataset from MuRET (first execution you always need to use it).
   -ni, --new_images      Number of new synthetic images (if required).
-  -h5, --h5              Save models in .h5 format.
+  -h5, --h5              Save models .h5 format.
   
   
   Example:
