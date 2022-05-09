@@ -1,0 +1,1 @@
+{"name": "document_analysis", "img_h": 40, "img_w": 40, "reduction_factor": 20, "classes_to_predict": "staff", "batch_size": 8, "epochs": 10}

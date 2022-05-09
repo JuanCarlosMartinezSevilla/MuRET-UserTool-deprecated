@@ -1,0 +1,12 @@
+{
+    "note.eighth_down": 0,
+    "ligature": 1,
+    "note.whole": 2,
+    "note.half_down": 3,
+    "metersign.Ct": 4,
+    "note.eighth_up": 5,
+    "clef.Fpetrucci": 6,
+    "note.quarter_up": 7,
+    "accidental.sharp": 8,
+    "note.longa_down": 9
+}
