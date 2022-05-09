@@ -22,7 +22,7 @@ When the training is done, it generates a [MuRET](https://muret.dlsi.ua.es/muret
 
 ### Installation
 
-In order to use this tool, install [python](https://www.python.org/downloads/) and [CUDA](https://developer.nvidia.com/cuda-downloads?target_os=Windows&target_arch=x86_64). 
+In order to use this tool, install [python](https://www.python.org/downloads/) and [CUDA](https://developer.nvidia.com/cuda-downloads). 
 
 Second step is to clone this repository.
 ```shell
