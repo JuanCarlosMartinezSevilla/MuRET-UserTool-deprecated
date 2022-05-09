@@ -35,7 +35,6 @@ def split_data(fileList):
 
 def main(fileList, ligatures, args):
 
-    #description = End2EndDescription('agnostic_end2end', None, None, None, None, fileList)
     batch_size = Config.batch_size
 
     # Genero los diccionarios y los crops
@@ -84,18 +83,11 @@ def main(fileList, ligatures, args):
     best_ser_val = 100
     epochs = Config.epochs
 
-    #description.model_epochs = epochs
-    #description.batch = batch_size
-    #description.input_h = Config.img_height
-    #description.i2w = dg.i2w
-    #description.w2i = dg.w2i
-    #description.save_description()
-    
 
     for super_epoch in range(epochs):
         print("Epoch {}/{}".format(super_epoch, epochs))
         model_tr.fit(dg,
-                     steps_per_epoch=len(full_dict_i2w)//batch_size,
+                     steps_per_epoch=100,
                      epochs=1,
                      verbose=2)
 
