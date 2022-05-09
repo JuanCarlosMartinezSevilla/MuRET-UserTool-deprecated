@@ -5,6 +5,6 @@ class Config:
     batch_size = 8
     aug_factor = 3
     width_reduction = 8
-    epochs = 150
+    epochs = 5
 
     conv_filters = [16, 32, 64]
