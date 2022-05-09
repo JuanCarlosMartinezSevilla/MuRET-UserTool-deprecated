@@ -74,7 +74,7 @@ def main(routes_dict, args):
 
     SAEmodel.fit(
             gen,
-            verbose=2,
+            verbose=1,
             steps_per_epoch=steps,
             epochs=epochs)
         

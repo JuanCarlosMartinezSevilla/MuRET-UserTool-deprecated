@@ -13,7 +13,7 @@ class Messages:
         print("\nYou are about to train a Document Analysis model")
 
     def welcome():
-        print("\nWelcome to MuRET User's tool")
+        print("\nWelcome to MuRET's User Training Tool")
 
     def end(args):
         print(f"\nThe tool has ended. You can find your results in {args.pkg_name}.tgz\n")
