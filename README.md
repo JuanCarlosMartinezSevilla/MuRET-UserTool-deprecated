@@ -24,8 +24,13 @@ When the training is done, it generates a [MuRET](https://muret.dlsi.ua.es/muret
 
 In order to use this tool, install [python](https://www.python.org/downloads/). 
 
-Second step is to create a Virtual Environment. 
-More info at https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment
+Second step is to clone this repository.
+```shell
+git clone https://github.com/JuanCarlosMartinezSevilla/MuRET-UserTool.git
+```
+
+Next, inside the project folder (MuRET-UserTool/), create a Virtual Environment. 
+More info at https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment .
 
 ```shell
 python3 -m venv .venv
@@ -68,8 +73,6 @@ When finalized you will find your *MuRETPackage.tgz* file in the same folder as 
 This section allows users without a powerful machine to train the different deep learning models the same way this repository does. To achieve this purpose we have prepared a python notebook in Google Colaboratory that simplifies the process. However, this method is slower than using a desktop GPU, but it is completely free. Here you have it:
 
 - [MuRET_Tutorial.ipynb](https://colab.research.google.com/drive/1Fu5zTnb57h20ymINXAc-UsdFc__YD-YR?usp=sharing)
-
-
-
+<br>
   
 Thank you for using **MuRET's User Training Tool**
