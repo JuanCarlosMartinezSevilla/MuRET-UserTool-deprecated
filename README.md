@@ -8,7 +8,7 @@ Most of the musical heritage is only available as physical documents, given that
 
 A new online tool called MUsic Recognition, Encoding, and Transcription (MuRET) has been recently developed, which covers all transcription phases, from the manuscript image to the encoded digital content. MuRET is designed as a machine-learning based research tool, allowing different processing approaches to be used, and producing both the expected transcribed contents in standard encodings and data for the study of the transcription process.
 
-The objective of this repository is to provide the users a simple way to train deep learning models an efficient transcription process.
+The objective of this repository is to provide the users a simple way to train deep learning models allowing an efficient transcription process.
 
 ## Why?
 This tool is capable of training 3 classifiers:
