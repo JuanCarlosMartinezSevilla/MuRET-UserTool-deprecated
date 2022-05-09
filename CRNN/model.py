@@ -1,3 +1,4 @@
+from distutils.command.config import config
 import tensorflow as tf
 from CRNN.config import Config
 
@@ -10,7 +11,7 @@ def ctc_lambda_func(args):
 
 def get_model(vocabulary_size):
     input = tf.keras.layers.Input(shape=(Config.img_height, None, 3))
-    conv_filters = [16, 32, 64]
+    conv_filters = Config.conv_filters
     inner = input
     for f in conv_filters:
         inner = tf.keras.layers.Conv2D(f, 3, padding='same')(inner)

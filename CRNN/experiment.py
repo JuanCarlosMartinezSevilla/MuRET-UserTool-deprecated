@@ -9,13 +9,15 @@ from sklearn.model_selection import train_test_split
 import tensorflowjs as tfjs
 import json
 
+from description import end_to_end_description
+
 def save_dicts(w2i, i2w, ligatures, args):
     aux = ''
     if ligatures:
         aux = '_ligatures' 
     
     with open(f'{args.pkg_name}/agnostic_end2end{aux}/i2w.json', 'w') as fp:
-            json.dump(i2w, fp)
+        json.dump(i2w, fp)
 
     with open(f'{args.pkg_name}/agnostic_end2end{aux}/w2i.json', 'w') as fp:
         json.dump(w2i, fp)
@@ -47,6 +49,7 @@ def main(fileList, ligatures, args):
 
     train, val, test = split_data(U.listFiles('png', './dataset_crops/e2e_crops'))
     
+    end_to_end_description(args, train)
     #   We make this first so we get all the dataset symbols, if we split the data first
     #   we can lose some
     dg = DataGenerator(dataset_list_path=train,

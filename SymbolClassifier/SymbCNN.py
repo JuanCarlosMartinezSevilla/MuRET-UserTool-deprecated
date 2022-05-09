@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow import keras
 from keras import layers, losses, Model
+from SymbolClassifier.configuration import Configuration
 
 class SymbolCNN:
 
@@ -15,9 +16,9 @@ class SymbolCNN:
 
     def model(cats, i_h, i_w):
 
-        filters = [32, 32, 64, 64]
-        kernel = (3 , 3)
-        pooling_kernel = (2,2)
+        filters = Configuration.filters
+        kernel = Configuration.kernel
+        pooling_kernel = Configuration.pooling_kernel
 
         input_img = layers.Input(shape=(i_h, i_w, 1))
         

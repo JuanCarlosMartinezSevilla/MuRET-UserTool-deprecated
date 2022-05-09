@@ -6,6 +6,8 @@ import cv2
 import numpy as np
 import tensorflowjs as tfjs
 
+from description import document_analysis_description
+
 def resizeImage(img):
     h = DAConfig.image_size
     return cv2.resize(img, (h, h), interpolation=cv2.INTER_LINEAR)
@@ -78,6 +80,8 @@ def main(routes_dict, args):
             steps_per_epoch=steps,
             epochs=epochs)
         
+    document_analysis_description(args)
+
     if args.h5:
         SAEmodel.save(f'{args.pkg_name}/document_analysis/document_analysis.h5')
     
