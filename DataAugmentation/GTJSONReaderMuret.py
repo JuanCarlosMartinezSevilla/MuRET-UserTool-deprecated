@@ -2,8 +2,6 @@ from enum import Enum
 import numpy as np
 
 from DataAugmentation.CustomJson import CustomJson
-from DataAugmentation.file_manager import FileManager
-import json
 
 class PropertyType(Enum):
     PROPERTY_TYPE_PAGES,\

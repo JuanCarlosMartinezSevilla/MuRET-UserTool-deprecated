@@ -11,8 +11,6 @@ import cv2
 from CRNN.experiment import main as CRNNMain
 from SymbolClassifier.SymbolDataGenerator import SymbDG
 import re
-from description import Description, DocumentAnalysisDescription
-import sys
 import subprocess
 
 class Utils:

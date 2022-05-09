@@ -9,9 +9,6 @@ from sklearn.model_selection import train_test_split
 import tensorflowjs as tfjs
 import json
 
-from description import Description, End2EndDescription
-import sys
-
 def save_dicts(w2i, i2w, ligatures, args):
     aux = ''
     if ligatures:
@@ -37,7 +34,7 @@ def split_data(fileList):
 def main(fileList, ligatures, args):
 
     #description = End2EndDescription('agnostic_end2end', None, None, None, None, fileList)
-    batch_size = 8
+    batch_size = Config.batch_size
 
     # Genero los diccionarios y los crops
     if ligatures:
@@ -53,10 +50,10 @@ def main(fileList, ligatures, args):
     #   We make this first so we get all the dataset symbols, if we split the data first
     #   we can lose some
     dg = DataGenerator(dataset_list_path=train,
-                       aug_factor=3, # seq (1 5)
+                       aug_factor=Config.aug_factor, # seq (1 5)
                        batch_size=batch_size,
-                       num_channels=3,
-                       width_reduction=8, ligatures=ligatures, w2i=w2i, i2w=i2w)
+                       num_channels=Config.num_channels,
+                       width_reduction=Config.width_reduction, ligatures=ligatures, w2i=w2i, i2w=i2w)
 
     
 
@@ -82,7 +79,7 @@ def main(fileList, ligatures, args):
     #if args.model:
     #    best_ser_val = 100
     best_ser_val = 100
-    epochs = 150
+    epochs = Config.epochs
 
     #description.model_epochs = epochs
     #description.batch = batch_size
@@ -95,7 +92,7 @@ def main(fileList, ligatures, args):
     for super_epoch in range(epochs):
         print("Epoch {}/{}".format(super_epoch, epochs))
         model_tr.fit(dg,
-                     steps_per_epoch=100,
+                     steps_per_epoch=len(full_dict_i2w)//batch_size,
                      epochs=1,
                      verbose=2)
 

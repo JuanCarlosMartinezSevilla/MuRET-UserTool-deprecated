@@ -8,8 +8,6 @@ import numpy as np
 import os
 import tensorflowjs as tfjs
 from SymbolClassifier.configuration import Configuration
-from description import SymbolClassifierDescription
-import sys
 from tensorflow import keras
 
 class SymbDG:
