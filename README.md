@@ -64,4 +64,12 @@ Options:
 ```
 When finalized you will find your *MuRETPackage.tgz* file in the same folder as the project. Upload it to MuRET and see the magic happen.
 
+### In case you don't have a good setup
+This section allows users without a powerful machine to train the different deep learning models the same way this repository does. To achieve this purpose we have prepared a python notebook in Google Colaboratory that simplifies the process. However, this method is slower than using a desktop GPU, but it is completely free. Here you have it:
+
+- [MuRET_Tutorial.ipynb](https://colab.research.google.com/drive/1Fu5zTnb57h20ymINXAc-UsdFc__YD-YR?usp=sharing)
+
+
+
+  
 Thank you for using **MuRET's User Training Tool**
