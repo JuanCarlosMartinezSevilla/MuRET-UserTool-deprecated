@@ -8,6 +8,7 @@ from messages import Messages
 import shutil
 import pathlib
 import sys
+import tensorflow as tf
 
 
 class Main:
@@ -126,6 +127,9 @@ class Main:
         return parser
 
 if __name__ == '__main__':
+
+    tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
 
     
     parser = Main.argument_parser()
