@@ -66,7 +66,11 @@ def dataGen(routes_dict):
 def main(routes_dict, args):
     
     epochs = DAConfig.epochs
-    steps = len(routes_dict)//DAConfig.batch_size
+
+    if len(routes_dict) < DAConfig.batch_size:
+        steps = 1
+    else:
+        steps = len(routes_dict)//DAConfig.batch_size
 
     gen = dataGen(routes_dict)
 

@@ -224,8 +224,15 @@ class SymbDG:
         model_p = SymbolCNN.model(len(w2i_p), Configuration.img_height_p, Configuration.img_width_p)
         model_g = SymbolCNN.model(len(w2i_g), Configuration.img_height_g, Configuration.img_width_g)
 
-        steps_p = len(posFiles)//batch_size
-        steps_g = len(glyphFiles)//batch_size
+        if len(posFiles) < batch_size:
+            steps_p = 1
+        else:
+            steps_p = len(posFiles)//batch_size
+
+        if len(glyphFiles) < batch_size:
+            steps_g = 1
+        else:
+            steps_g = len(glyphFiles)//batch_size
 
         print('\n=== Starting training process ===\n')
         epochs = Configuration.epochs

@@ -7,6 +7,7 @@ import errno
 from messages import Messages
 import shutil
 import pathlib
+import sys
 
 
 class Main:
@@ -36,7 +37,7 @@ class Main:
         Main.create_package_tree(args)
 
         # To not retrieve the images again
-        if args.reload:
+        if (len(os.listdir('./dataset')) == 0) or (args.reload):
 
             if os.path.exists(path_to_download_images):
                 shutil.rmtree(path_to_download_images)
@@ -126,9 +127,23 @@ class Main:
 
 if __name__ == '__main__':
 
+    
     parser = Main.argument_parser()
     args = parser.parse_args()
+    repeat= False
 
+    for p in args.path:
+        
+        if os.path.exists(p):
+            pass
+        else:
+            print(f"\nPath < {p} > does not exist.")
+            repeat = True
+
+    if repeat:
+        print("\n#### Run again the program with correct parameters ####")
+        sys.exit(-1)
+    
     print(args)
 
     Main.local_main(args)
