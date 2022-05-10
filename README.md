@@ -65,9 +65,18 @@ Options:
     -p /path1/data.tgz /path2/data.tgz /path3/data.tgz
   
   Example:
-    python3 main.py -p MuRETDatasets/mensural_manuscript.tgz -pkg mens_manuscript -da -e2e -sc -ni 20 -rl
+    python3 main.py -p MuRETDatasets/mensural_manuscript.tgz -pkg tutorial -da -e2e -sc -ni 20 -rl
 ```
-When finalized you will find your *MuRETPackage.tgz* file in the same folder as the project. Upload it to MuRET and see the magic happen.
+When finalized you will find your *MuRETPackage.tgz* (in this case the name will be *tutorial.tgz*) file in the same folder as the project. 
+The structure inside this .tgz file is:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/97530443/167580141-2de57f01-72b6-42f9-84f6-e0ff309f529a.png" width="322" height="468">
+</p>
+
+
+
+Upload it to MuRET and see the magic happen.
 
 ### In case you don't have a good setup
 This section allows users without a powerful machine to train the different deep learning models the same way this repository does. To achieve this purpose we have prepared a python notebook in Google Colaboratory that simplifies the process. However, this method is slower than using a desktop GPU, but it is completely free. Here you have it:
