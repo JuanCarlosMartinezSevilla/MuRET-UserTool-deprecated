@@ -69,7 +69,12 @@ Options:
 ```
 When finalized you will find your *MuRETPackage.tgz* (in this case the name will be *tutorial.tgz*) file in the same folder as the project. 
 The structure inside this .tgz file is:
-![image](https://user-images.githubusercontent.com/97530443/167580141-2de57f01-72b6-42f9-84f6-e0ff309f529a.png)
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/97530443/167580141-2de57f01-72b6-42f9-84f6-e0ff309f529a.png" width="322" height="468">
+</p>
+
+
 
 Upload it to MuRET and see the magic happen.
 
