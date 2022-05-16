@@ -76,7 +76,11 @@ def main(routes_dict, args):
 
     SAEmodel = getModel()
 
+    print(f" ■ Number of images in the dataset: {len(routes_dict)}\n")
+
     print("\n--- Training process ---\n")
+
+    
 
     SAEmodel.fit(
             gen,
@@ -91,6 +95,7 @@ def main(routes_dict, args):
     
     # Save model to use it with tensorflow.js
     tfjs.converters.save_keras_model(SAEmodel, f'{args.pkg_name}/document_analysis/tfjs/')
+    print("\n--- Document Analysis training process finished ---\n")
 
 
 if __name__ == '__main__':

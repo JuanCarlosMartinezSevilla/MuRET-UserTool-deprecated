@@ -273,7 +273,7 @@ class DataAugmentationGenerator:
                 json_pathfile = random.choice(list_json_pathfiles)
                 img_pathfile = routes_dict[json_pathfile]
 
-                print("ID: " + str(idx_new_image + 1) + "-blur from: " + str(img_pathfile))
+                #print("ID: " + str(idx_new_image + 1) + "-blur from: " + str(img_pathfile))
                 img = FileManager.loadImage(img_pathfile, True)
                 blur_img = MuretInterface.applyBlurring(img=img, factor = 2)
                 new_img, new_bbox_regions, new_coords, regions_dicts = DataAugmentationGenerator.generateNewImageRandomAuto(blur_img, json_pathfile, list_json_pathfiles, 

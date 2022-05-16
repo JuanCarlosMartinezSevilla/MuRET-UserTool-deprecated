@@ -63,15 +63,11 @@ def main(fileList, ligatures, args):
 
     #X_val, Y_val, _, _ = U.parse_lst(args.validation)
     #fileList = dict(itertools.islice(fileList.items(), 4))
-    print("\n=== Validation data ===")
     X_val = val
     Y_val = U.appendSymbols(val)
 
     #evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=args.aug_test)
     evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=0)
-
-    #X_test, Y_test, _, _ = U.parse_lst(args.test)
-    print("\n=== Test data ===")
 
     X_test = test
     Y_test = U.appendSymbols(test)
@@ -83,6 +79,7 @@ def main(fileList, ligatures, args):
     best_ser_val = 100
     epochs = Config.epochs
 
+    print("\n--- Training process ---\n")
 
     for super_epoch in range(epochs):
         print("Epoch {}/{}".format(super_epoch, epochs))
@@ -112,6 +109,8 @@ def main(fileList, ligatures, args):
                     model_pr.save(f'{args.pkg_name}/agnostic_end2end/agnostic_end2end.h5')
                 EndToEnd = model_pr
                 tfjs.converters.save_keras_model(EndToEnd, f'{args.pkg_name}/agnostic_end2end/tfjs/')
+    
+    print("\n--- Staff-level symbol recognition training process finished ---\n")
 
 
 def build_argument_parser():

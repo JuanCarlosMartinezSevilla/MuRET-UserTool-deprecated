@@ -230,12 +230,12 @@ class Utils:
         if not os.path.exists(path_to_save):
             os.makedirs(path_to_save)
         
-        print("\n---- Fetching images from URLs ----\n")
+        print("\n--- Fetching images from URLs ---\n")
         print(f"Saving images in {path_to_save} \n")
         json_classes = []
         for f in tqdm(files):
             json_classes = Utils.getURLJSON(f, json_classes, path_to_save)
-        print(f'\nImporting finished, images saved in: {path_to_save}')
+        print(f'\nImporting finished, images saved in: {path_to_save}\n')
 
     @staticmethod
     def decompressFile (aux_path, path ):  
@@ -251,7 +251,7 @@ class Utils:
             for member in members:
                 tar.extract(member, path=path)            
             tar.close()
-            print(f"\n{tar_file} extracted in {path} ...")
+            print(f"\n{tar_file} extracted in /{path}\n")
 
         return True
 

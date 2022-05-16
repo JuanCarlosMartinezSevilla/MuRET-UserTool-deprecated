@@ -119,7 +119,7 @@ class UtilsCRNN():
             
         vocabulary = set()
 
-        print("=== Cropping images ===")
+        print("--- Cropping images ---")
 
         if not lst_path == None:
             for file_num ,key in enumerate(lst_path):

@@ -234,13 +234,15 @@ class SymbDG:
         else:
             steps_g = len(glyphFiles)//batch_size
 
-        print('\n=== Starting training process ===\n')
+        print('\n--- Training process (position classifier) ---\n')
         epochs = Configuration.epochs
 
         model_p.fit(generator_p,
                 steps_per_epoch=steps_p,
                 epochs=epochs,
                 verbose=1)
+
+        print('\n--- Training process (symbol classifier) ---\n')
 
         model_g.fit(generator_g,
                 steps_per_epoch=steps_g,
@@ -255,6 +257,8 @@ class SymbDG:
         
         tfjs.converters.save_keras_model(model_g, f'{args.pkg_name}/agnostic_symbol_and_position_from_image/symbol/tfjs/')
         tfjs.converters.save_keras_model(model_p, f'{args.pkg_name}/agnostic_symbol_and_position_from_image/position/tfjs/')
+
+        print('\n--- Symbol Classifier training process finished ---\n')
 
 if __name__ == '__main__':
     SymbDG.main()

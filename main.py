@@ -74,13 +74,13 @@ class Main:
         fileList = Main.seeDir(args, path_to_download_images)
 
         if args.doc_analysis:
-            Messages.using_document()
             
             new_images = args.new_images
             
-            Messages.new_images(new_images)
-            
-            Utils.callDataAug(new_images, path_to_download_images)
+            if new_images > 0:
+                Messages.new_images(new_images)
+                Utils.callDataAug(new_images, path_to_download_images)
+            Messages.using_document()
             Utils.callSAE(args)
 
         if args.end_to_end:
@@ -148,6 +148,6 @@ if __name__ == '__main__':
         print("\n#### Run again the program with correct parameters ####")
         sys.exit(-1)
     
-    print(args)
+    #print(args)
 
     Main.local_main(args)
