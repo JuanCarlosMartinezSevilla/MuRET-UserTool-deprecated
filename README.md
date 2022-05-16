@@ -12,7 +12,7 @@ The objective of this repository is to provide the users a simple way to train d
 
 ## Why?
 This tool is capable of training 3 classifiers:
-- End to end staff classifier: Receives a staff image and returns all the ordered symbols that appear.
+- Staff-level symbol recognition: Receives a staff image and returns all the ordered symbols that appear.
 - Document analysis: Receives a full page image and returns a binarized image with its staves position.
 - Symbol classifier: Receives a symbol cropped image and returns the symbol's type and position in the staff (line or space *x*).
 
@@ -55,7 +55,7 @@ Options:
   -p,     --path              Path to dataset .tgz file.
   -pkg,   --pkg_name          Name of generated package.
   -da,    --doc_analysis      Train a document analysis model.
-  -e2e,   --end_to_end        Train an agnostic end to end model.
+  -e2e,   --end_to_end        Train a staff-level symbol recognition (we call it end to end).
   -sc,    --symb_classifier   Train a symbol classifier model.
   -rl,    --reload            Reloads dataset from MuRET (first execution you always need to use it).
   -ni,    --new_images        Number of new synthetic images (if required).
