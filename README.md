@@ -1,4 +1,4 @@
-# MuRET's User Training Tool
+# MuRET's User Tool
 [![GitHub Repo stars](https://img.shields.io/github/stars/JuanCarlosMartinezSevilla/MuRET-UserTool)](https://github.com/JuanCarlosMartinezSevilla/MuRET-UserTool/stargazers)
 [![GitHub watchers](https://img.shields.io/github/watchers/JuanCarlosMartinezSevilla/MuRET-UserTool)](https://github.com/JuanCarlosMartinezSevilla/MuRET-UserTool/watchers) 
 [![GitHub last commit](https://img.shields.io/github/last-commit/JuanCarlosMartinezSevilla/MuRET-UserTool)](https://github.com/JuanCarlosMartinezSevilla/MuRET-UserTool/commits/main)
@@ -81,7 +81,7 @@ Upload it to MuRET and see the magic happen.
 ### In case you don't have a good setup
 This section allows users without a powerful machine to train the different deep learning models the same way this repository does. To achieve this purpose we have prepared a python notebook in Google Colaboratory that simplifies the process. However, this method is slower than using a desktop GPU, but it is completely free. Here you have it:
 
-- [MuRET_Tutorial.ipynb](https://colab.research.google.com/drive/1Fu5zTnb57h20ymINXAc-UsdFc__YD-YR?usp=sharing)
+- [MuRET-UserTool.ipynb](https://colab.research.google.com/drive/1Fu5zTnb57h20ymINXAc-UsdFc__YD-YR?usp=sharing)
 <br>
   
-Thank you for using **MuRET's User Training Tool**
+Thank you for using **MuRET's User Tool**
