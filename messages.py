@@ -13,7 +13,7 @@ class Messages:
     def new_images(images):
         print("\n###########################################")
         print("#    Launching Data Augmentation tool     #")
-        print("###########################################\n")
+        print("###########################################")
         print(f"\nFirst, we are going to create {images} new synthetic images. Please wait.\n")
 
     def using_document():

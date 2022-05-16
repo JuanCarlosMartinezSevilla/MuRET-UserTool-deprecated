@@ -1,7 +1,6 @@
 
 class Config:
-    #img_height = 256
-    img_height = 32
+    img_height = 256
     num_channels = 3
     batch_size = 8
     aug_factor = 3
