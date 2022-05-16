@@ -28,7 +28,7 @@ class SymbDG:
 
     def parse_files(files: dict):
 
-        print("=== Cropping images ===")
+        print("--- Cropping images ---")
 
         path_to_save_crops = './dataset_crops/sc_crops'
 

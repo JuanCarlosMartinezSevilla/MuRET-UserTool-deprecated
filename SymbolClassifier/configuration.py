@@ -4,7 +4,8 @@ class Configuration:
     img_width_g = 40
     img_width_p = 112
     batch_size = 32
-    epochs = 15
+    #epochs = 15
+    epochs = 10
 
     # Model
     filters = [32, 32, 64, 64]

@@ -1,3 +1,4 @@
+from distutils.command.config import config
 from CRNN.data import DataGenerator
 from CRNN.model import get_model
 from CRNN.evaluator import ModelEvaluator
@@ -84,7 +85,7 @@ def main(fileList, ligatures, args):
     for super_epoch in range(epochs):
         print("Epoch {}/{}".format(super_epoch, epochs))
         model_tr.fit(dg,
-                     steps_per_epoch=100,
+                     steps_per_epoch=Config.steps_per_epoch,
                      epochs=1,
                      verbose=2)
 
