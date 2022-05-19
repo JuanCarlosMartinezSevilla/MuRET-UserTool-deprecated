@@ -1,7 +1,6 @@
 class DAConfig:
     batch_size = 8
-    #image_size = 512
-    image_size = 32
+    image_size = 512
     classes_to_predict = 'staff'
     reduction_factor = 20
     epochs = 10
