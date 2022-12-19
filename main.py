@@ -7,6 +7,7 @@ import errno
 from messages import Messages
 import shutil
 import pathlib
+from pathlib import Path
 import sys
 import tensorflow as tf
 
@@ -14,16 +15,28 @@ import tensorflow as tf
 class Main:
 
     def create_package_tree(args):
-        os.mkdir(args.pkg_name)
+        # Path.mkdir(mode=0o777, parents=False, exist_ok=False)
+        package_path = Path(args.pkg_name)
+        package_path = args.output_folder / package_path
+        tfjs = Path('tfjs')
         if args.doc_analysis:
-            os.makedirs(f'{args.pkg_name}/document_analysis/tfjs')
+            doc_path = package_path / 'document_analysis' / tfjs
+            os.makedirs(doc_path, exist_ok=True)
+
         if args.end_to_end:
-            os.makedirs(f'{args.pkg_name}/agnostic_end2end/tfjs')
+            end_path = package_path / 'agnostic_end2end' / tfjs
+            os.makedirs(end_path, exist_ok=True)
+
         if args.end_to_end_ligatures:
-            os.makedirs(f'{args.pkg_name}/agnostic_end2end_ligatures/tfjs')
+            endl_path = package_path / 'agnostic_end2end_ligatures' / tfjs
+            os.makedirs(endl_path, exist_ok=True)
+
         if args.symb_classifier:
-            os.makedirs(f'{args.pkg_name}/agnostic_symbol_and_position_from_image/symbol/tfjs')
-            os.makedirs(f'{args.pkg_name}/agnostic_symbol_and_position_from_image/position/tfjs')
+            agnostic_path = Path('agnostic_symbol_and_position_from_image')
+            symbol_path = package_path / agnostic_path / 'symbol' / tfjs
+            os.makedirs(symbol_path, exist_ok=True)
+            position_path = package_path / agnostic_path / 'position' / tfjs
+            os.makedirs(position_path)
             
 
     def seeDir(args, path_to_download_images):
@@ -123,6 +136,15 @@ class Main:
                                 help='Number of new images.')
         parser.add_argument('-h5', '--h5', action='store_true',
                                 help='Save models in .h5 format.')
+        #### NEW ARGS
+        parser.add_argument('-files_folder', '--files_folder', type=pathlib.Path, default='dataset',
+                                help="Folder to download dataset files.")
+        
+        # parent directory for muret packages
+        parser.add_argument('-output_folder', '--output_folder', type=pathlib.Path, default='',
+                                help="Folder where MuRET Packages are generated.")
+        parser.add_argument('-desc', '--description', action='store', default='',
+                                help="Description of training execution.")
 
         return parser
 
