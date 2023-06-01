@@ -11,7 +11,7 @@ A new online tool called MUsic Recognition, Encoding, and Transcription (MuRET) 
 The objective of this repository is to provide the users a simple way to train deep learning models allowing an efficient transcription process.
 
 ## Why?
-This tool is capable of training 3 classifiers:
+This tool is capable of training 3 different classifiers:
 - Staff-level symbol recognition: Receives a staff image and returns all the ordered symbols that appear.
 - Document analysis: Receives a full page image and returns a binarized image with its staves position.
 - Symbol classifier: Receives a symbol cropped image and returns the symbol's type and position in the staff (line or space *x*).
