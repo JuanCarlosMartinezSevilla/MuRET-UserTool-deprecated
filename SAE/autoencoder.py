@@ -9,7 +9,7 @@ from keras.models import Model
 def getModel():
     img_tam = DAConfig.image_size
     
-    input_img = Input(shape=(img_tam, img_tam, 1))
+    input_img = Input(shape=(img_tam, img_tam, 1)) # gray scale image
 
     x = input_img
     
